@@ -24,6 +24,8 @@ const html = `<!DOCTYPE html><html><head><title>Freebuff: The free coding agent<
   <span id="hours">Daily hours: 5:00 of 5:00 remaining</span>
   <span id="mixed">Collapse 汉化项目</span>
   <span id="proj">Project actions for freebuff</span>
+  <span id="step">Step 2 of 5</span>
+  <span id="soon">in 10 minutes</span>
   <div id="host"></div>
   <input id="valueInput" type="submit" value="Save" />
 </header>
@@ -80,6 +82,8 @@ setTimeout(() => {
     ['每日小时规则', /每日小时：剩余 5:00 \/ 5:00/.test(doc.getElementById('hours').textContent)],
     ['中文项目名走规则', doc.getElementById('mixed').textContent === '收起汉化项目'],
     ['项目操作规则', doc.getElementById('proj').textContent === 'freebuff 的项目操作'],
+    ['步骤规则', doc.getElementById('step').textContent === '第 2 步，共 5 步'],
+    ['未来时间规则', doc.getElementById('soon').textContent === '10 分钟后'],
     ['空状态问句', /想让我帮你做点什么？/.test(all)],
     ['说明句', /选择下一条消息在哪里运行。/.test(all)],
     ['placeholder 搜索对话', /搜索对话/.test(input.placeholder)],

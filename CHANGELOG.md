@@ -24,6 +24,14 @@
 - 首屏等 `load` 后再延 1.2 秒，避开 Next.js 水合并发期（否则 React `#418`）。
 - 中文项目名混排的句式（`Collapse 汉化项目`）允许走规则，其余含中文的串不查表。
 
+**0.1.1 修订（本次全面审查）**
+
+- 逐条通读全部词表：统一 20 处术语（campaign→广告系列、account→账号、pinned→已置顶、pinned/unpin 一致、untitled 统一等），
+  修掉 9 处直译腔（holds、dismiss、smart & fast、start from、try again to open、proxy 拦截说明等）。
+- 新增「常用界面词」与「官网/商店页」两批：登录方式、编辑器/终端/ Git 操作、设置分区、错误提示、站点文案。
+- 规则扩到 36 条（`Step {0} of {1}`、`in {0} minutes`、`{0}% complete`、`{0} selected` 等），并补齐 `Delete/Remove/Archive/Discard {0}?` 一问一答句式。
+- 新增多路由巡检 `tests/routes.test.js`：把补丁注入 8 个公开路由，导出仍未翻译的英文，用来驱动下一轮词表。
+
 **测试**
 
 - `tests/`：引擎 30 项断言、结构不变、10 项对抗输入、900 行分片、性能（首屏 40 行 1.5s 含 1.2s 水合等待 / 1200 行 3.1s）。
