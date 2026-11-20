@@ -1,0 +1,117 @@
+{
+  "$meta": "带变量的文案：{0} {1} … 是捕获位，最多 80 字符，生成正则时逐字转义其余部分。",
+  "rules": [
+    {
+      "from": "Delete {0}?",
+      "to": "删除{0}？"
+    },
+    {
+      "from": "Remove {0}?",
+      "to": "移除{0}？"
+    },
+    {
+      "from": "Archive {0}?",
+      "to": "归档{0}？"
+    },
+    {
+      "from": "Discard {0}?",
+      "to": "放弃{0}？"
+    },
+    {
+      "from": "Are you sure you want to delete {0}?",
+      "to": "确定要删除{0}吗？"
+    },
+    {
+      "from": "Collapse {0}",
+      "to": "收起{0}"
+    },
+    {
+      "from": "Expand {0}",
+      "to": "展开{0}"
+    },
+    {
+      "from": "Close {0}",
+      "to": "关闭{0}"
+    },
+    {
+      "from": "Project actions for {0}",
+      "to": "{0} 的项目操作"
+    },
+    {
+      "from": "New chat in {0}",
+      "to": "在 {0} 中新建对话"
+    },
+    {
+      "from": "Loading {0}…",
+      "to": "正在加载{0}…"
+    },
+    {
+      "from": "Daily hours: {0} of {1} remaining",
+      "to": "每日小时：剩余 {0} / {1}"
+    },
+    {
+      "from": "{0} of {1} remaining",
+      "to": "剩余 {0} / {1}"
+    },
+    {
+      "from": "{0} hours remaining",
+      "to": "剩余 {0} 小时"
+    },
+    {
+      "from": "{0} left",
+      "to": "剩余 {0}"
+    },
+    {
+      "from": "Show {0} more",
+      "to": "再显示 {0} 条"
+    },
+    {
+      "from": "{0} more",
+      "to": "还有 {0} 条"
+    },
+    {
+      "from": "Just now",
+      "to": "刚刚"
+    },
+    {
+      "from": "{0} minutes ago",
+      "to": "{0} 分钟前"
+    },
+    {
+      "from": "{0} hours ago",
+      "to": "{0} 小时前"
+    },
+    {
+      "from": "{0} days ago",
+      "to": "{0} 天前"
+    },
+    {
+      "from": "{0} min ago",
+      "to": "{0} 分钟前"
+    },
+    {
+      "from": "{0} hr ago",
+      "to": "{0} 小时前"
+    },
+    {
+      "from": "{0} h ago",
+      "to": "{0} 小时前"
+    },
+    {
+      "from": "{0} m ago",
+      "to": "{0} 分钟前"
+    },
+    {
+      "from": "{0} d ago",
+      "to": "{0} 天前"
+    },
+    {
+      "from": "Yesterday",
+      "to": "昨天"
+    },
+    {
+      "from": "Today",
+      "to": "今天"
+    }
+  ]
+}

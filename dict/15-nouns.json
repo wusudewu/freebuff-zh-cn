@@ -1,0 +1,23 @@
+{
+ "chat": "对话",
+ "project": "项目",
+ "file": "文件",
+ "folder": "文件夹",
+ "thread": "会话",
+ "skill": "技能",
+ "model": "模型",
+ "terminal": "终端",
+ "tab": "标签页",
+ "workspace": "工作区",
+ "repository": "仓库",
+ "branch": "分支",
+ "preview": "预览",
+ "private": "私有",
+ "public": "公开",
+ "draft": "草稿",
+ "search": "搜索",
+ "settings": "设置",
+ "account": "账号",
+ "template": "模板",
+ "session": "会话"
+}

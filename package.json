@@ -1,0 +1,13 @@
+{
+  "name": "freebuff-zh-patch",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Freebuff Desktop 简体中文界面补丁",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "audit": "node tools/audit.mjs",
+    "glossary": "node tools/glossary.mjs",
+    "test": "cd tests && npm test"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "freebuff-zh-patch-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Freebuff 中文补丁：引擎、结构与浏览器集成测试",
+  "type": "commonjs",
+  "scripts": {
+    "test": "node engine.test.js && node structure.test.js && node adversarial.test.js && node chunk.test.js && node perf.test.js",
+    "test:engine": "node engine.test.js && node structure.test.js && node adversarial.test.js",
+    "test:perf": "node chunk.test.js && node perf.test.js",
+    "test:browser": "node integration.test.js"
+  },
+  "dependencies": {
+    "jsdom": "^31.0.1",
+    "puppeteer-core": "^25.18.1"
+  }
+}
