@@ -113,7 +113,7 @@ function Show-Status {
   $asar = Join-Path $dir 'resources\app.asar'
   if (Test-Path $asar) {
     $now = Get-Sha256 $asar
-    if ($now -ne $manifest.patchedAppAsarHash) {
+    if ($now -ne $manifest.appAsar.patchedHash) {
       Write-Host '  注意       app.asar 与安装时不一致：Freebuff 可能已更新，请重跑安装' -ForegroundColor Yellow
     }
   }
