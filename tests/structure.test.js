@@ -47,4 +47,4 @@ setTimeout(() => {
   console.log('结构被改动的元素数:', structural)
   console.log('拆分节点:', splitKept)
   process.exit(failed ? 1 : 0)
-}, 1000)
+}, 2600)

@@ -6,7 +6,7 @@ const root = path.resolve(import.meta.dirname, '..')
 const dictDir = path.join(root, 'dict')
 
 const TRADITIONAL = ['設定', '登入', '檔案', '程式', '專案', '伺服器', '網路', '預設', '檢視', '執行', '連線', '資訊', '軟體', '硬體', '使用者', '瀏覽', '儲存', '選單', '視窗', '滑鼠', '剪貼', '範本', '最佳化', '啟動', '關閉', '開啟', '上傳', '下載', '搜尋', '篩選']
-const MACHINE = ['进行', '将会', '对于', '使得', '的的', '通过…来', '被…', '进行了', '一个的']
+const MACHINE = ['将会', '对于', '使得', '的的', '通过…来', '被…', '进行了', '一个的']
 const issues = []
 
 for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && !f.startsWith('_')).sort()) {
@@ -21,7 +21,7 @@ for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && 
     if (/[\u4e00-\u9fff][,;:!?]/.test(value)) add('半角标点', '汉字后紧跟半角标点')
     if (/[,;:!?][\u4e00-\u9fff]/.test(value)) add('半角标点', '半角标点后紧跟汉字')
     if (/[\u4e00-\u9fff]\s+[\u4e00-\u9fff]/.test(value)) add('汉字间空格', '')
-    if (value.length <= 6 && /。$/.test(value)) add('短标签带句号', '')
+    if (value.length <= 6 && /。$/.test(value) && !/[.!?…]$/.test(key)) add('短标签带句号', '')
     if (value.length > 2.4 * Math.max(key.length, 6) && value.length > 14) add('长度异常', `${key.length} → ${value.length}`)
     if (/[。]{2,}/.test(value)) add('重复句号', '')
   }

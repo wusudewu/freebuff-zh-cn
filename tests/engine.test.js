@@ -107,4 +107,4 @@ setTimeout(() => {
   console.log('--- title:', doc.title)
   console.log('--- 失败:', failed)
   process.exit(failed ? 1 : 0)
-}, 1200)
+}, 2600)

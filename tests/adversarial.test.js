@@ -42,4 +42,4 @@ setTimeout(() => {
     console.log((ok ? 'PASS ' : 'FAIL ') + name)
   }
   process.exit(failed ? 1 : 0)
-}, 1000)
+}, 2600)

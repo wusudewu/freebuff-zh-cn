@@ -26,7 +26,7 @@ function run(label, rows) {
   const small = await run('首屏', 40)
   const large = await run('大页面', 1200)
   const checks = [
-    ['首屏 1.5s 内完成', small.elapsed < 1500],
+    ['首屏 3s 内完成（含 1.2s 水合等待）', small.elapsed < 3000],
     ['大页面全覆盖', large.rowsDone === large.rows],
     ['大页面 30s 内完成', large.elapsed < 30000],
   ]

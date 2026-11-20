@@ -151,6 +151,16 @@ function Install-Patch {
     Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $dir 'resources\orchestrator\ui\freebuff-zh-cn.js') -Force
     Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js') -Force
     Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $StateRoot 'freebuff-zh-cn.js') -Force -ErrorAction SilentlyContinue
+    if ($existing) {
+      $existing.patchVersion = $meta.version
+      $existing.entries = $meta.entries
+      $existing.rules = $meta.rules
+      $existing.asset.hash = (Get-Sha256 (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js'))
+      $existing | Add-Member -NotePropertyName refreshedAt -NotePropertyValue ((Get-Date).ToString('s')) -Force
+      Write-Manifest $existing
+    } else {
+      Write-Step '缺少安装记录，无法同步状态；请先运行「恢复英文.cmd」，再重新安装'
+    }
     $verify = (Invoke-Patcher 'verify' @()) | ConvertFrom-Json
     if (-not $verify.ok) { Fail ('安装校验未通过：' + ($verify.problems -join '；')) }
     Write-Step '词表已更新，重新打开 Freebuff 生效'
@@ -258,12 +268,16 @@ function Test-Patch {
     $asset = $manifest.asset.path
     if (Test-Path $asset) {
       $ok = (Get-Sha256 $asset) -eq $manifest.asset.hash
-      Write-Host ('  汉化脚本哈希   ' + $(if ($ok) { '与安装记录一致' } else { '与安装记录不一致' }))
-      if (-not $ok) { $verify.ok = $false }
+      Write-Host ('  汉化脚本哈希   ' + $(if ($ok) { '与安装记录一致' } else { '与安装记录不一致（重跑安装即可同步）' }))
+      if (-not $ok) {
+        $verify.ok = $false
+        $verify.problems = @($verify.problems) + '汉化脚本与安装记录不一致'
+      }
     }
   }
   if ($verify.ok) { Write-Host '  结论           通过' -ForegroundColor Green; Write-Host '' ; return }
-  Write-Host ('  结论           未通过：' + ($verify.problems -join '；')) -ForegroundColor Red
+  $problems = @($verify.problems) | Where-Object { $_ }
+  Write-Host ('  结论           未通过：' + ($problems -join '；')) -ForegroundColor Red
   Write-Host ''
   exit 1
 }
