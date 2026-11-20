@@ -48,6 +48,14 @@ Freebuff\resources\
 - 首屏在 `load` 之后再等 1.2 秒才开始翻译，避开 Next.js 的水合（hydration）对比，否则 React 会报 `#418` 文本不匹配；
 - 之后由 `MutationObserver` 跟随 React 的增量渲染继续翻译。
 
+## 实测覆盖
+
+| 界面 | 命中 / 未命中 | 未命中的是什么 |
+| --- | --- | --- |
+| 主界面（freebuff.com 应用壳、侧边栏、标签栏、模板区、余额） | 137 / 4 | Freebuff、Crosscut、Look Out Below、Puffwork（品牌与模板名） |
+| 登录 / 启动窗口 | 全量命中 | — |
+| 官网首页、定价、CLI 页（只在登出或跳转系统浏览器时可见） | 96 / 85、26 / 54、67 / 69 | 商品名、营销长句、示例提示词 |
+
 ## 已知情况
 
 - **Freebuff 更新会覆盖补丁**：`app.asar` 与 `resources\orchestrator\ui` 都在更新范围内，重跑 `安装.cmd` 即可。版本不在 `supported-versions.json` 里时脚本会拒绝安装并要求加 `-Force`。
