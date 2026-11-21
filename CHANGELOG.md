@@ -1,5 +1,17 @@
 # 更新日志
 
+## 0.2.3 · 2026-11-21
+
+第九轮（把"剩下的"扫干净）：
+
+- 词表 3,302 → **3,550 条**：补了电子表格函数用途说明（EXACT/TEXT/EDATE/…）、运行时错误与空状态
+  （`Couldn't load chats.`、`Couldn't fork this chat.`、`This couldn't be saved…`）、
+  推广与推荐规则说明、档位说明（`Default: thinks the task through before answering…`）、下载与更新提示。
+- **主进程字符串表**：新增 `tools/gen-main-strings.mjs` 生成 `dist/main-strings.json`，
+  把 57 处主进程文案（浏览器配置导入、图形缓存重置、单实例提示、更新器提示、打开方式、渲染进程崩溃）纳入安装流程；
+  支持"整句字面量"与"片段"两种锚点，命中数不符即中止。
+- 安装器修正：补丁版本变化时自动「还原 → 重打 asar」，不再只刷新词表（否则新增的原生替换不会生效）。
+
 ## 0.1.9 · 2026-11-21
 
 - **系统通知也走词表**：网页通知的标题/正文不经过 DOM，原来一律英文。现在引擎包了一层 `Notification` 构造函数，

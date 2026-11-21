@@ -1,0 +1,257 @@
+{
+ "electron/browser-native.cjs": [
+  [
+   "'Inspect element'",
+   "'检查元素'",
+   1
+  ],
+  [
+   "'Freebuff Browser'",
+   "'Freebuff 浏览器'",
+   1
+  ],
+  [
+   "'Import signed-in browser sessions'",
+   "'导入已登录的浏览器会话'",
+   1
+  ],
+  [
+   "'Choose a browser profile to copy into this Freebuff profile.'",
+   "'选择一个浏览器配置文件，复制到这个 Freebuff 配置文件里。'",
+   1
+  ],
+  [
+   "'Clear this browser profile’s site data?'",
+   "'清除这个浏览器配置文件的网站数据？'",
+   1
+  ],
+  [
+   "'Cookies and site storage will be removed. Sites in this Freebuff browser profile will sign out.'",
+   "'将删除 Cookie 和网站存储，这个 Freebuff 浏览器配置文件里的站点会退出登录。'",
+   1
+  ],
+  [
+   "'Its cookies, site data and imported extensions will be removed.'",
+   "'它的 Cookie、网站数据和已导入的扩展都会被删除。'",
+   1
+  ],
+  [
+   "'Import browser cookies (Netscape cookies.txt or JSON)'",
+   "'导入浏览器 Cookie（Netscape cookies.txt 或 JSON）'",
+   2
+  ]
+ ],
+ "electron/discord-presence.cjs": [
+  [
+   "'Get Freebuff'",
+   "'获取 Freebuff'",
+   1
+  ]
+ ],
+ "electron/display-cache-reset.cjs": [
+  [
+   "'Freebuff could not save the request. Nothing was changed.'",
+   "'Freebuff 无法保存请求，什么都没有改动。'",
+   1
+  ],
+  [
+   "'Cancelled. The graphics caches stay as they are.'",
+   "'已取消，图形缓存保持不变。'",
+   1
+  ],
+  [
+   "'The previous graphics caches come back the next time Freebuff starts.'",
+   "'下次启动 Freebuff 时会恢复之前的图形缓存。'",
+   1
+  ],
+  [
+   "'There is nothing left to undo.'",
+   "'没有可撤销的内容了。'",
+   1
+  ]
+ ],
+ "electron/hosted-workspace.cjs": [
+  [
+   "'Administrator access requested'",
+   "'请求管理员权限'",
+   1
+  ],
+  [
+   "'Publishing stopped before it finished. Check deployment activity in Manage site, then try again.'",
+   "'发布还没完成就停止了。到“管理站点”查看部署动态，然后重试。'",
+   1
+  ],
+  [
+   "'Choose project folder'",
+   "'选择项目文件夹'",
+   1
+  ],
+  [
+   "'Open a local project'",
+   "'打开本地项目'",
+   1
+  ],
+  [
+   "'Choose project'",
+   "'选择项目'",
+   1
+  ]
+ ],
+ "electron/main.cjs": [
+  [
+   "'Desktop Lab test'",
+   "'桌面版实验室测试'",
+   1
+  ],
+  [
+   "'Close this chat?'",
+   "'关闭这个对话？'",
+   2
+  ],
+  [
+   "'Mark as unread'",
+   "'标记为未读'",
+   1
+  ],
+  [
+   "'Rename Tab'",
+   "'重命名标签页'",
+   1
+  ],
+  [
+   "'Export as Markdown…'",
+   "'导出为 Markdown…'",
+   1
+  ],
+  [
+   "'Move to New Window'",
+   "'移到新窗口'",
+   1
+  ],
+  [
+   "'Close Tab'",
+   "'关闭标签页'",
+   1
+  ]
+ ],
+ "electron/open-in.cjs": [
+  [
+   "'Copy path'",
+   "'复制路径'",
+   1
+  ],
+  [
+   "'Could not open that path'",
+   "'无法打开该路径'",
+   1
+  ]
+ ],
+ "electron/orchestrator-failure.cjs": [
+  [
+   "'Freebuff is already open'",
+   "'Freebuff 已经打开'",
+   1
+  ],
+  [
+   "'Freebuff failed to start'",
+   "'Freebuff 启动失败'",
+   4
+  ],
+  [
+   "'Freebuff stopped'",
+   "'Freebuff 已停止'",
+   1
+  ],
+  [
+   "'The Freebuff orchestrator failed to start or stopped unexpectedly.'",
+   "'Freebuff 的编排服务启动失败，或意外停止了。'",
+   1
+  ],
+  [
+   "competing with it for your threads.",
+   "不再和它抢你的会话。",
+   1
+  ],
+  [
+   "process is still holding the workspace: quit \"bun\" in ",
+   "进程还占着工作区：在 ",
+   1
+  ],
+  [
+   ", then open Freebuff again.",
+   " 里退出 \"bun\"，再重新打开 Freebuff。",
+   2
+  ],
+  [
+   "'Another copy of Freebuff has your workspace open, so this one stopped instead of '",
+   "'另有一份 Freebuff 已经打开了你的工作区，所以这一份停下来了，'",
+   1
+  ],
+  [
+   "'If you can see a Freebuff window, use that one. If you cannot, a leftover background '",
+   "'如果你能看到 Freebuff 窗口，就用那一个。如果看不到，说明还有残留的后台'",
+   1
+  ]
+ ],
+ "electron/linux-launch.cjs": [
+  [
+   "'Freebuff could not start a required subprocess.'",
+   "'Freebuff 无法启动所需的子进程。'",
+   4
+  ]
+ ],
+ "electron/renderer-health.cjs": [
+  [
+   "'Freebuff window stopped'",
+   "'Freebuff 窗口已停止'",
+   1
+  ],
+  [
+   "'Reload the window to return to your conversation. Reloading does not restart the agent.'",
+   "'重新加载窗口即可回到对话。重新加载不会重启智能体。'",
+   1
+  ]
+ ],
+ "electron/updater.cjs": [
+  [
+   "'Freebuff is up to date.'",
+   "'Freebuff 已是最新版本。'",
+   1
+  ],
+  [
+   "'Couldn’t check for updates.'",
+   "'无法检查更新。'",
+   1
+  ],
+  [
+   "'Check your connection and try again.'",
+   "'检查网络后重试。'",
+   1
+  ],
+  [
+   "'Freebuff will ask to restart when the download finishes.'",
+   "'下载完成后 Freebuff 会提示重启。'",
+   1
+  ],
+  [
+   "'Restart now to update, or Freebuff restarts into it once it has been idle for a minute.'",
+   "'现在重启即可更新；也可以等 Freebuff 空闲一分钟后自动重启。'",
+   2
+  ],
+  [
+   "'The update couldn’t be installed.'",
+   "'更新安装失败。'",
+   1
+  ],
+  [
+   "'Move Freebuff to Applications to update it.'",
+   "'把 Freebuff 移到“应用程序”文件夹后再更新。'",
+   1
+  ],
+  [
+   "'Freebuff can’t update itself while it runs from a disk image or Downloads.'",
+   "'Freebuff 在磁盘映像或“下载”目录里运行时无法自我更新。'",
+   1
+  ]
+ ]
+}

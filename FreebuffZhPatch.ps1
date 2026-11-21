@@ -153,6 +153,15 @@ function Install-Patch {
   $shellText = Get-Content -LiteralPath $shell -Raw -Encoding UTF8
   $alreadyPatched = $shellText.Contains('<!-- freebuff-zh:start -->')
 
+  # 补丁版本变了（例如新增了原生菜单/对话框的替换）就必须重打 asar，只刷新词表是不够的。
+  $needsFullPatch = $alreadyPatched -and (-not $existing -or $existing.patchVersion -ne $meta.version -or $Force)
+  if ($alreadyPatched -and $needsFullPatch) {
+    Write-Step "补丁版本变化（$($existing.patchVersion) → $($meta.version)），先还原再重打"
+    $raw = Invoke-Patcher 'restore' @('--backup', $existing.backupDir)
+    if (-not $existing) { Fail '缺少安装记录，无法安全重打；请用官方安装包重装 Freebuff。' }
+    $alreadyPatched = $false
+  }
+
   if ($alreadyPatched) {
     Write-Step '检测到已安装，只更新词表' 
     Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $dir 'resources\orchestrator\ui\freebuff-zh-cn.js') -Force

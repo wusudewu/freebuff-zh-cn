@@ -313,6 +313,17 @@ function apply() {
     contents.set(key, Buffer.from(applyEdits(contents.get(key).toString('utf8'), edits, file), 'utf8'))
   }
 
+  // 主进程字符串表（由 tools/gen-main-strings.mjs 生成）：同样是锚点断言替换。
+  const mainStringsPath = path.join(path.dirname(assetPath), 'main-strings.json')
+  if (fs.existsSync(mainStringsPath)) {
+    const table = JSON.parse(fs.readFileSync(mainStringsPath, 'utf8'))
+    for (const [file, edits] of Object.entries(table)) {
+      const key = [...contents.keys()].find((name) => name.toLowerCase() === file.toLowerCase())
+      if (!key) continue
+      contents.set(key, Buffer.from(applyEdits(contents.get(key).toString('utf8'), edits, file), 'utf8'))
+    }
+  }
+
   const tempAsar = asarPath + '.zh-new'
   writeAsar(tempAsar, header, contents)
 
