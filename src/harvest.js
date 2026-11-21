@@ -1,42 +1,32 @@
-// 界面巡检探针（第三轮）：把登录后能安全打开的面板与弹窗全部走一遍。
-// 只在 %LOCALAPPDATA%\FreebuffZh\harvest 存在时由注入钩子调用；
-// 只打开、截图、关掉——不创建项目、不发送消息、不购买、不退出登录。
+// 界面巡检探针（第四轮）：打开新建对话、输入区菜单、标签菜单、模板详情、集成详情、技能、广告向导等界面。
+// 只在 %LOCALAPPDATA%\FreebuffZh\harvest 存在时由注入钩子调用。
+// 它只点开界面并取消：不发送消息、不创建项目、不保存、不购买、不退出登录。
 ;(() => {
   'use strict'
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
   const STEPS = [
-    { name: '设置', labels: ['设置', 'Settings'], close: true },
-    { name: '设置-通用', labels: ['通用'], close: false },
-    { name: '设置-账号', labels: ['账号'], close: false },
-    { name: '设置-外观', labels: ['外观'], close: false },
-    { name: '设置-用量', labels: ['用量'], close: false },
-    { name: '设置-账单', labels: ['账单'], close: false },
-    { name: '设置-赚取', labels: ['赚取'], close: false },
-    { name: '设置-模型提供商', labels: ['模型提供商', 'Model providers'], close: false },
-    { name: '设置-开发者API', labels: ['开发者 API'], close: false },
-    { name: '设置-项目设置', labels: ['项目设置'], close: false },
-    { name: '设置-技能', labels: ['技能'], close: false },
-    { name: '设置-产物', labels: ['产物'], close: false },
-    { name: '模型选择器', labels: ['选择模型', '当前模型', '模型', 'Model', 'Choose a model'], close: true },
-    { name: '模型-推理强度', labels: ['推理', 'Reasoning'], close: true },
-    { name: '文件面板', labels: ['文件', '显示或隐藏文件', 'Files'], close: false },
-    { name: '终端面板', labels: ['终端', '显示或隐藏底部终端', 'Terminal'], close: false },
-    { name: '变更面板', labels: ['变更', 'Changes'], close: false },
-    { name: '产物面板', labels: ['产物', 'Artifacts'], close: false },
-    { name: '概览面板', labels: ['概览', 'Overview'], close: false },
-    { name: '云端浏览器', labels: ['云端浏览器', 'Cloud browser'], close: false },
-    { name: '新建项目对话框', labels: ['新建项目', '添加项目', 'New project'], close: true },
-    { name: '模板库', labels: ['模板', '从模板开始', 'Templates'], close: true },
-    { name: '邀请好友', labels: ['邀请好友', 'Invite friends'], close: true },
-    { name: '集成', labels: ['集成', 'Integrations'], close: true },
-    { name: 'MCP', labels: ['MCP'], close: true },
-    { name: '帮助', labels: ['帮助', 'Help'], close: true },
-    { name: '账号菜单', labels: ['账号', 'Account'], close: true },
-    { name: '键盘快捷键', labels: ['键盘快捷键', '快捷键', 'Keyboard shortcuts'], close: true },
-    { name: '技能', labels: ['技能', 'Skills'], close: true },
-    { name: '反馈', labels: ['反馈', 'Feedback'], close: true },
-    { name: '广告选项', labels: ['广告选项', 'Ad options'], close: true },
+    { name: '新建对话', find: ['新建对话', 'New chat'], open: true },
+    { name: '输入区', find: ['输入编程任务', 'Ask Freebuff', '发送消息'], snapshotOnly: true },
+    { name: '模型选择器', find: ['模型', '选择模型', 'Model'], close: true },
+    { name: '运行位置', find: ['运行位置', '本地', 'Run location'], close: true },
+    { name: '添加文件菜单', find: ['添加文件', '添加附件', 'Attach'], close: true },
+    { name: '语音输入', find: ['开始语音输入', '语音输入', 'Start dictation'], close: true },
+    { name: '对话标签菜单', find: ['对话选项', 'Chat options', '标签页选项'], close: true },
+    { name: '模板卡详情', find: ['模板', 'Template'], close: true },
+    { name: '集成卡详情', find: ['集成', 'Integrations'], close: true },
+    { name: '技能-新建', find: ['技能', 'Skills'], close: true },
+    { name: '广告向导', find: ['广告', 'Ad options'], close: true },
+    { name: '帮助菜单', find: ['帮助', 'Help'], close: true },
+    { name: '通知', find: ['通知', 'Notifications'], close: true },
+    { name: '账号菜单', find: ['账号', 'Account'], close: true },
+    { name: '键盘快捷键', find: ['键盘快捷键', '快捷键', 'Keyboard shortcuts'], close: true },
+    { name: '检查更新', find: ['检查更新', 'Check for updates'], close: true },
+    { name: '关于', find: ['关于', 'About'], close: true },
+    { name: '文件面板-新建文件', find: ['新建文件', 'New file'], close: true },
+    { name: '终端面板-新建终端', find: ['新建终端', 'New terminal'], close: true },
+    { name: '变更面板', find: ['变更', 'Changes'], close: false },
+    { name: '产物面板-新建', find: ['新建产物', 'New artifact'], close: true },
   ]
 
   const label = (element) => {
@@ -45,7 +35,7 @@
   }
 
   const clickable = () =>
-    [...document.querySelectorAll('[aria-label],[title],button,a[href],[role="button"],[role="menuitem"],[role="tab"],[role="option"]')]
+    [...document.querySelectorAll('[aria-label],[title],button,a[href],[role="button"],[role="menuitem"],[role="tab"],[role="option"],[role="combobox"]')]
 
   const find = (labels) => {
     const wanted = labels.map((x) => x.toLowerCase())
@@ -71,7 +61,7 @@
     while (node) {
       const value = (node.nodeValue || '').replace(/\s+/g, ' ').trim()
       const inScript = node.parentElement && /^(SCRIPT|STYLE)$/.test(node.parentElement.tagName)
-      if (!inScript && value && /[A-Za-z]{2,}/.test(value) && value.length <= 200) nodes.push(value)
+      if (!inScript && value && /[A-Za-z]{2,}/.test(value) && value.length <= 220) nodes.push(value)
       node = walker.nextNode()
     }
     const attrs = []
@@ -81,12 +71,25 @@
         if (value) attrs.push(value.replace(/\s+/g, ' ').trim())
       }
     }
-    return { nodes: [...new Set(nodes)].slice(0, 800), attrs: [...new Set(attrs)].slice(0, 600) }
+    return { nodes: [...new Set(nodes)].slice(0, 900), attrs: [...new Set(attrs)].slice(0, 600) }
   }
 
-  const escape = () => {
+  const press = (key) => {
     for (const type of ['keydown', 'keyup']) {
-      document.dispatchEvent(new KeyboardEvent(type, { key: 'Escape', code: 'Escape', keyCode: 27, bubbles: true }))
+      document.dispatchEvent(new KeyboardEvent(type, { key, code: key, keyCode: key === 'Escape' ? 27 : 0, bubbles: true }))
+    }
+  }
+
+  const closeLayer = async () => {
+    for (let i = 0; i < 2; i += 1) {
+      const cancel = find(['取消', 'Cancel', '关闭', 'Close'])
+      if (cancel) {
+        try {
+          cancel.click()
+        } catch (error) {}
+      }
+      press('Escape')
+      await sleep(400)
     }
   }
 
@@ -95,7 +98,7 @@
     const screens = []
     screens.push({ target: '__initial__', ...snapshot() })
     for (const step of STEPS) {
-      const node = find(step.labels)
+      const node = find(step.find)
       if (!node) {
         screens.push({ target: step.name, missing: true })
         continue
@@ -109,13 +112,9 @@
       }
       await sleep(1500)
       screens.push({ target: step.name, label: label(node), ...snapshot() })
-      if (step.close) {
-        escape()
-        await sleep(500)
-        escape()
-        await sleep(300)
-      }
+      if (step.close) await closeLayer()
     }
+    await closeLayer()
     return { href: location.href, at: new Date().toISOString(), patch: Boolean(globalThis.__FREEBUFF_ZH__), screens }
   })()
 })()
