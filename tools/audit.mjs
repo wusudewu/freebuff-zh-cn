@@ -24,6 +24,10 @@ for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && 
     if (value.length <= 6 && /。$/.test(value) && !/[.!?…]$/.test(key)) add('短标签带句号', '')
     if (value.length > 2.4 * Math.max(key.length, 6) && value.length > 14) add('长度异常', `${key.length} → ${value.length}`)
     if (/[。]{2,}/.test(value)) add('重复句号', '')
+    if ((value.match(/的/g) || []).length >= 3) add('的太多（直译腔）', '')
+    if (/^(请)?(进行|对.{0,6}进行)/.test(value)) add('机器味起步', '')
+    if (/[一-鿿]{2,}的[一-鿿]{2,}的[一-鿿]{2,}/.test(value)) add('名词堆叠', '')
+    if (/^(可以|你可以|您)/.test(value)) add('称呼/语气', '')
   }
 }
 
