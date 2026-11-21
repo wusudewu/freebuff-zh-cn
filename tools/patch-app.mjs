@@ -510,9 +510,12 @@ function verify() {
       }
       const source = contents.get(key).toString('utf8')
       for (const [needle, replacement] of edits) {
-        const hasReplacement = countOf(source, replacement) > 0
-        if (hasReplacement) report.anchors += 1
-        else absent.push(`${file}: ${replacement.slice(0, 40)}`)
+        if (countOf(source, replacement) === 0) {
+          // 译文没出现：这条替换整个没生效，只记「缺失」，不再重复记一笔「残留」。
+          absent.push(`${file}: ${replacement.slice(0, 40)}`)
+          continue
+        }
+        report.anchors += 1
         if (needle !== replacement && countOf(source, needle) > 0) residual.push(`${file}: ${needle.slice(0, 40)}`)
       }
     }

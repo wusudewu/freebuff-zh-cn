@@ -333,6 +333,8 @@ function Test-Patch {
   Write-Host "  界面入口标记   $($verify.shellMarkers)"
   Write-Host "  app.asar 标记  $($verify.hostedMarkers)"
   Write-Host "  原生文案锚点   $($verify.anchors) 处"
+  Write-Host "  译文缺失       $($verify.missing) 处"
+  Write-Host "  原文残留       $($verify.residual) 处"
   $manifest = Read-Manifest
   if ($manifest) {
     $dir = Resolve-AppDir
