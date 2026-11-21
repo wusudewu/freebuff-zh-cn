@@ -31,6 +31,7 @@ for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && 
     if (value.length <= 10 && /的$/.test(value) && !/[。？]$/.test(value) && !/^(我的|你的|他的|她的|它的|共享给我的)/.test(value)) add('短标签悬空', '')
     if (/\.\.\./.test(value)) add('省略号写法', '')
     if (/[一-鿿]\?/.test(value)) add('半角问号', '')
+    if (/[一-鿿][\"'“]\S/.test(value) && /"/.test(value)) add('半角引号', '')
   }
 }
 
