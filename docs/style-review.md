@@ -53,3 +53,34 @@
 npm run build && node tools/audit.mjs
 cd tests && node engine.test.js
 ```
+
+---
+
+# 第二轮（2026-11-21 · 0.3.1）
+
+第一轮只盖了主表；这轮补上前一轮没覆盖的 8 个文件（491 条）并加做**语义准确性**审查。
+
+## 文风（改 23 条）
+
+- `Resize explorer panel` →「调整资源管理器面板宽度」（与「调整左侧边栏宽度」对齐，补回 panel）
+- `Earn free usage` →「赚取免费用量」（usage 统一「用量」，hours 才用「时长」）
+- `Daily hours` →「每日小时数」（补量词）
+- `Page not found` →「页面不存在」（404 通用说法，不再逐字「页面未找到」）
+- `Payment card` →「银行卡」（全库 card 统一）
+- `One plan for desktop` →「桌面版只需一个套餐」（补谓语）
+- `Live in a full-access country?` →「你所在的国家有完整访问权限吗？」（条件从句拆句）
+- `Top-up amount: US$25 for 500 hours` →「充值金额：US$25 可购 500 小时」
+
+## 语义（351 条里的确认错误 5 条）
+
+| 英文 | 原译 | 改后 | 问题 |
+| --- | --- | --- | --- |
+| Could not delete that item | 无法删除该项目 | 无法删除该条目 | item 与 project（项目）撞车，用户会读成"删项目失败" |
+| Could not edit that item | 无法编辑该项目 | 无法编辑该条目 | 同上 |
+| Approved, but not funded yet | 已批准，但尚未注资 | 已批准，但尚未充值 | funded 在本表统一为「充值」，「注资」指向公司投资 |
+| Stays on your computer. Freebuff never reads it. | 不会读取 | 从不读取 | never 是绝对承诺，弱化成「不会」降低了承诺强度 |
+| Not serving — your balance reached zero | 服务已停止 —— 余额为零 | 未投放 —— 余额为零 | 主语错位，用户会以为 Freebuff 服务中断 |
+
+## 边界收紧（8 条，采纳审查建议）
+
+`Not deploying yet` → 尚未开始部署；`After proof approval…` → 凭证审核通过、广告主确认后；`No models are available for this harness yet.` → 此执行框架还没有可用模型；`staging` → 预发布服务；`rasterized` → 栅格化；`Couldn't send that item` → 无法发送该条目；`Attach up to nine files, including up to eight smaller image previews.` → 其中最多八张是较小的图片预览。

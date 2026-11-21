@@ -96,7 +96,7 @@
  "Available once your first credits arrive.": "首次额度到账后可用。",
  "Create key": "创建密钥",
  "Add it to your project": "添加到你的项目",
- "Any OpenAI-compatible SDK works. Point it at the base URL and pass your key.": "任何兼容 OpenAI 的 SDK 都能用：把接口地址设为 base URL，填入密钥即可。",
+ "Any OpenAI-compatible SDK works. Point it at the base URL and pass your key.": "任何兼容 OpenAI 的 SDK 都能用：把 base URL 指过来，再填入密钥即可。",
  "Quickstart": "快速开始",
  "Copy example": "复制示例",
  "See all models": "查看全部模型",

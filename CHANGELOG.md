@@ -1,5 +1,19 @@
 # 更新日志
 
+## 0.3.1 · 2026-11-21
+
+第十一轮（第二轮文风 + 语义审查）：
+
+- 上一轮没覆盖到的 8 个词表文件（491 条）重新过一遍，改 **23 条**：`Resize explorer panel` 补回「面板」、
+  `Earn free usage` 统一「用量」、`Daily hours` 补量词、`Page not found` →「页面不存在」、`Payment card` →「银行卡」、
+  `One plan for desktop` 补谓语、`Live in a full-access country?` 条件从句拆句等。
+- **语义准确性审查**（专挑否定/限定/条件/数量/时序/情态，351 条）：确认 5 条译错并改正——
+  `item` 被译成「项目」（与 project 冲突）→「条目」、`funded` 统一为「充值」、
+  `never reads it` 的绝对否定被弱化成「不会读取」→「从不读取」、`Not serving` 主语错位 →「未投放」。
+- 另按审查建议收紧 8 条边界：`Not deploying yet` →「尚未开始部署」、`proof approval` 补回「凭证」、
+  `harness` 统一「执行框架」、`staging` →「预发布」、`rasterized` →「栅格化」等。
+- `docs/style-review.md` 追加第二轮的判断记录。
+
 ## 0.3.0 · 2026-11-21
 
 第十轮（文风审查）：
