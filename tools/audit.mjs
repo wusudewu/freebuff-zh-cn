@@ -28,6 +28,9 @@ for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && 
     if (/^(请)?(进行|对.{0,6}进行)/.test(value)) add('机器味起步', '')
     if (/[一-鿿]{2,}的[一-鿿]{2,}的[一-鿿]{2,}/.test(value)) add('名词堆叠', '')
     if (/^(可以|你可以|您)/.test(value)) add('称呼/语气', '')
+    if (value.length <= 10 && /的$/.test(value) && !/[。？]$/.test(value) && !/^(我的|你的|他的|她的|它的|共享给我的)/.test(value)) add('短标签悬空', '')
+    if (/\.\.\./.test(value)) add('省略号写法', '')
+    if (/[一-鿿]\?/.test(value)) add('半角问号', '')
   }
 }
 
