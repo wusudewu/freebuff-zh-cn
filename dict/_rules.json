@@ -1,41 +1,217 @@
 {
-  "$meta": "带变量的文案：{0} {1} … 是捕获位，最多 80 字符；生成正则时其余字面量逐字转义。",
+  "$meta": "带变量的文案：{0} {1} … 是捕获位，最多 80 字符；生成正则时其余字面量逐字转义。顺序即优先级，具体的写前面。",
   "rules": [
-    { "from": "Step {0} of {1}", "to": "第 {0} 步，共 {1} 步" },
-    { "from": "{0} selected", "to": "已选 {0}" },
-    { "from": "{0}% complete", "to": "{0}% 完成" },
-    { "from": "Show {0} results", "to": "显示 {0} 条结果" },
-    { "from": "in {0} minutes", "to": "{0} 分钟后" },
-    { "from": "in {0} hours", "to": "{0} 小时后" },
-    { "from": "in {0} days", "to": "{0} 天后" },
-    { "from": "{0} running", "to": "{0} 个运行中" },
-    { "from": "Daily hours: {0} of {1} remaining", "to": "每日小时：剩余 {0} / {1}" },
-    { "from": "Delete {0}?", "to": "删除{0}？" },
-    { "from": "Remove {0}?", "to": "移除{0}？" },
-    { "from": "Archive {0}?", "to": "归档{0}？" },
-    { "from": "Discard {0}?", "to": "放弃{0}？" },
-    { "from": "Are you sure you want to delete {0}?", "to": "确定要删除{0}吗？" },
-    { "from": "Collapse {0}", "to": "收起{0}" },
-    { "from": "Expand {0}", "to": "展开{0}" },
-    { "from": "Close {0}", "to": "关闭{0}" },
-    { "from": "Project actions for {0}", "to": "{0} 的项目操作" },
-    { "from": "New chat in {0}", "to": "在 {0} 中新建对话" },
-    { "from": "Loading {0}…", "to": "正在加载{0}…" },
-    { "from": "{0} of {1} remaining", "to": "剩余 {0} / {1}" },
-    { "from": "{0} hours remaining", "to": "剩余 {0} 小时" },
-    { "from": "{0} left", "to": "剩余 {0}" },
-    { "from": "Show {0} more", "to": "再显示 {0} 条" },
-    { "from": "{0} more", "to": "还有 {0} 条" },
-    { "from": "Just now", "to": "刚刚" },
-    { "from": "Yesterday", "to": "昨天" },
-    { "from": "Today", "to": "今天" },
-    { "from": "{0} minutes ago", "to": "{0} 分钟前" },
-    { "from": "{0} hours ago", "to": "{0} 小时前" },
-    { "from": "{0} days ago", "to": "{0} 天前" },
-    { "from": "{0} min ago", "to": "{0} 分钟前" },
-    { "from": "{0} hr ago", "to": "{0} 小时前" },
-    { "from": "{0} h ago", "to": "{0} 小时前" },
-    { "from": "{0} m ago", "to": "{0} 分钟前" },
-    { "from": "{0} d ago", "to": "{0} 天前" }
+    {
+      "from": "Auto-archive cloud chats after: {0}",
+      "to": "云端对话自动归档：{0}"
+    },
+    {
+      "from": "Peak day, {0}",
+      "to": "峰值日：{0}"
+    },
+    {
+      "from": "{0} hours available",
+      "to": "可用 {0} 小时"
+    },
+    {
+      "from": "{0} hours wallet bonus each month, not rolled over",
+      "to": "每月赠送 {0} 小时钱包时长，不结转"
+    },
+    {
+      "from": "{0} hours a day",
+      "to": "每天 {0} 小时"
+    },
+    {
+      "from": "Invite friends, {0}/{1} joined: open your referrals",
+      "to": "邀请好友，已加入 {0}/{1}：打开推荐页"
+    },
+    {
+      "from": "{0} of 7 days, days 1 to 7",
+      "to": "7 天中已连续 {0} 天"
+    },
+    {
+      "from": "Step {0} of {1}",
+      "to": "第 {0} 步，共 {1} 步"
+    },
+    {
+      "from": "Daily hours: {0} of {1} remaining",
+      "to": "每日小时：剩余 {0} / {1}"
+    },
+    {
+      "from": "{0} left of {1}",
+      "to": "剩余 {0} / {1}"
+    },
+    {
+      "from": "{0} of {1} remaining",
+      "to": "剩余 {0} / {1}"
+    },
+    {
+      "from": "{0} hours remaining",
+      "to": "剩余 {0} 小时"
+    },
+    {
+      "from": "{0}/{1} joined",
+      "to": "已加入 {0}/{1}"
+    },
+    {
+      "from": "Day {0}: today",
+      "to": "第 {0} 天：今天"
+    },
+    {
+      "from": "Day {0}",
+      "to": "第 {0} 天"
+    },
+    {
+      "from": "{0} selected",
+      "to": "已选 {0}"
+    },
+    {
+      "from": "{0}% complete",
+      "to": "{0}% 完成"
+    },
+    {
+      "from": "Show {0} results",
+      "to": "显示 {0} 条结果"
+    },
+    {
+      "from": "Show {0} more",
+      "to": "再显示 {0} 条"
+    },
+    {
+      "from": "in {0} minutes",
+      "to": "{0} 分钟后"
+    },
+    {
+      "from": "in {0} hours",
+      "to": "{0} 小时后"
+    },
+    {
+      "from": "in {0} days",
+      "to": "{0} 天后"
+    },
+    {
+      "from": "{0} running",
+      "to": "{0} 个运行中"
+    },
+    {
+      "from": "{0} hrs",
+      "to": "{0} 小时"
+    },
+    {
+      "from": "{0} left",
+      "to": "剩余 {0}"
+    },
+    {
+      "from": "Delete {0}?",
+      "to": "删除{0}？"
+    },
+    {
+      "from": "Remove {0}?",
+      "to": "移除{0}？"
+    },
+    {
+      "from": "Archive {0}?",
+      "to": "归档{0}？"
+    },
+    {
+      "from": "Discard {0}?",
+      "to": "放弃{0}？"
+    },
+    {
+      "from": "Are you sure you want to delete {0}?",
+      "to": "确定要删除{0}吗？"
+    },
+    {
+      "from": "Collapse {0}",
+      "to": "收起{0}"
+    },
+    {
+      "from": "Expand {0}",
+      "to": "展开{0}"
+    },
+    {
+      "from": "Close {0}",
+      "to": "关闭{0}"
+    },
+    {
+      "from": "Connect {0}",
+      "to": "连接 {0}"
+    },
+    {
+      "from": "About {0}",
+      "to": "关于{0}"
+    },
+    {
+      "from": "All {0} apps",
+      "to": "全部{0}应用"
+    },
+    {
+      "from": "{0} apps",
+      "to": "{0}应用"
+    },
+    {
+      "from": "{0} preset",
+      "to": "{0} 预设"
+    },
+    {
+      "from": "Project actions for {0}",
+      "to": "{0} 的项目操作"
+    },
+    {
+      "from": "New chat in {0}",
+      "to": "在 {0} 中新建对话"
+    },
+    {
+      "from": "Loading {0}…",
+      "to": "正在加载{0}…"
+    },
+    {
+      "from": "{0} more",
+      "to": "还有 {0} 条"
+    },
+    {
+      "from": "Just now",
+      "to": "刚刚"
+    },
+    {
+      "from": "Yesterday",
+      "to": "昨天"
+    },
+    {
+      "from": "Today",
+      "to": "今天"
+    },
+    {
+      "from": "{0} minutes ago",
+      "to": "{0} 分钟前"
+    },
+    {
+      "from": "{0} hours ago",
+      "to": "{0} 小时前"
+    },
+    {
+      "from": "{0} days ago",
+      "to": "{0} 天前"
+    },
+    {
+      "from": "{0} min ago",
+      "to": "{0} 分钟前"
+    },
+    {
+      "from": "{0} hr ago",
+      "to": "{0} 小时前"
+    },
+    {
+      "from": "{0} h ago",
+      "to": "{0} 小时前"
+    },
+    {
+      "from": "{0} m ago",
+      "to": "{0} 分钟前"
+    },
+    {
+      "from": "{0} d ago",
+      "to": "{0} 天前"
+    }
   ]
 }

@@ -57,7 +57,8 @@ function injectionBlock(eol) {
     "        const zhPath = require('node:path')",
     "        const zhDir = zhPath.join(process.resourcesPath, 'freebuff-zh')",
     "        const zhAsset = zhPath.join(zhDir, 'freebuff-zh-cn.js')",
-    "        const zhDebugPath = zhPath.join(process.env.LOCALAPPDATA || '', 'FreebuffZh', 'debug')",
+    "        const zhStateDir = zhPath.join(process.env.LOCALAPPDATA || '', 'FreebuffZh')",
+    "        const zhDebugPath = zhPath.join(zhStateDir, 'debug')",
     "        const zhDebug = zhFs.existsSync(zhDebugPath) || zhFs.existsSync(zhPath.join(zhDir, 'debug'))",
     '        const zhLog = (message) => {',
     '          if (!zhDebug) return',
@@ -92,7 +93,20 @@ function injectionBlock(eol) {
     '              .catch(() => {})',
     '          }, 10000)',
     '        }',
-    "        win.webContents.on('dom-ready', zhInject)",
+    "        const zhHarvest = () => {",
+    "          if (!zhFs.existsSync(zhPath.join(zhStateDir, 'harvest'))) return",
+    "          try {",
+    "            const zhCode = zhFs.readFileSync(zhPath.join(zhDir, 'harvest.js'), 'utf8')",
+    "            setTimeout(() => {",
+    "              if (win.isDestroyed()) return",
+    '              win.webContents.executeJavaScriptInIsolatedWorld(1001, [{ code: zhCode }]).then(',
+    "                (result) => zhFs.writeFileSync(zhPath.join(zhStateDir, 'harvest.json'), JSON.stringify(result, null, 2)),",
+    "                (error) => zhLog('harvest failed: ' + (error && error.message)),",
+    '              ).catch(() => {})',
+    '            }, 7000)',
+    '          } catch (error) {}',
+    '        }',
+    "        win.webContents.on('dom-ready', () => { zhInject(); zhHarvest() })",
     '      } catch (error) {}',
     JS_END,
   ]
@@ -184,6 +198,8 @@ function apply() {
   fs.copyFileSync(assetPath, shellAssetPath)
   fs.mkdirSync(path.dirname(hostedAssetPath), { recursive: true })
   fs.copyFileSync(assetPath, hostedAssetPath)
+  const harvestPath = path.join(path.dirname(assetPath), 'harvest.js')
+  if (fs.existsSync(harvestPath)) fs.copyFileSync(harvestPath, path.join(path.dirname(hostedAssetPath), 'harvest.js'))
   fs.renameSync(tempAsar, asarPath)
 
   const result = {

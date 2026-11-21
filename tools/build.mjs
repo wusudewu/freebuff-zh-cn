@@ -58,6 +58,7 @@ if (out.includes('__DICT__') || out.includes('__RULES__') || out.includes('__PAT
 
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true })
 fs.writeFileSync(path.join(root, 'dist', 'freebuff-zh-cn.js'), out)
+fs.copyFileSync(path.join(root, 'src', 'harvest.js'), path.join(root, 'dist', 'harvest.js'))
 fs.writeFileSync(
   path.join(root, 'dist', 'patch-meta.json'),
   JSON.stringify({ version: pkg.version, entries: Object.keys(dict).length, rules: rules.length, builtAt: new Date().toISOString() }, null, 2),

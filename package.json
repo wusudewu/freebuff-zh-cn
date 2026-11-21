@@ -1,6 +1,6 @@
 {
   "name": "freebuff-zh-patch",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "private": true,
   "description": "Freebuff Desktop 简体中文界面补丁",
   "type": "module",

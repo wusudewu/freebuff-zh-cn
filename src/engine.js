@@ -179,7 +179,7 @@
       if (hit !== undefined) out = hit + '：'
     }
     if (out === undefined && !mixed) {
-      const counted = /^(\d+)\s+([A-Za-z][A-Za-z ]*)$/.exec(core)
+      const counted = /^([\d][\d,.]*)\s+([A-Za-z][A-Za-z ]*)$/.exec(core)
       if (counted) {
         const unit = COUNT_UNITS[counted[2].toLowerCase().trim()]
         if (unit) out = counted[1] + ' ' + unit
@@ -424,6 +424,7 @@
     stats: () => ({ applied, misses: misses.size, entries: exact.size }),
     dump: () => ({ applied, misses: [...misses.keys()] }),
     rescan: () => translateTree(document.body),
+    translate: (value) => translateValue(value),
     dispose,
     setEnabled(on) {
       try {
