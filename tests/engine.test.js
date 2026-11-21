@@ -99,6 +99,8 @@ setTimeout(() => {
     ['shadow DOM', shadow.textContent === '新建项目'],
     ['nav 无英文残留', !/Home|Sites|Projects|Settings/.test(nav.textContent)],
     ['调试口可用', typeof window.__FREEBUFF_ZH__.stats === 'function' && window.__FREEBUFF_ZH__.stats().applied > 10],
+    ['系统通知被包装', typeof window.Notification === 'function' ? Boolean(window.Notification.__freebuffZh) : true],
+    ['通知标题可翻译', typeof window.__FREEBUFF_ZH__.translate === 'function' ? window.__FREEBUFF_ZH__.translate('New chat') === '新建对话' : false],
   ]
 
   let failed = 0

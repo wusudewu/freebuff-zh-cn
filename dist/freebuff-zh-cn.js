@@ -9,7 +9,7 @@
   'use strict'
 
   const PATCH_ID = 'freebuff-zh-cn'
-  const PATCH_VERSION = '0.1.8'
+  const PATCH_VERSION = '0.1.9'
   const existing = globalThis.__FREEBUFF_ZH__
   if (existing && existing.id === PATCH_ID && existing.version === PATCH_VERSION) return
   if (existing && existing.dispose) {
@@ -374,12 +374,43 @@
     step()
   }
 
+  /* ---------------------------------------------------------------- 系统通知 */
+
+  // 网页通知的标题与正文不走 DOM，词表够不到；这里包一层构造函数，
+  // 用同一张词表翻译 title/body，让 Windows 通知条也保持中文。
+  function patchNotifications() {
+    const Native = window.Notification
+    if (!Native || Native.__freebuffZh) return
+    const wrapped = new Proxy(Native, {
+      construct(target, args) {
+        const [title, options] = args
+        const nextTitle = typeof title === 'string' ? translateValue(title) : null
+        let nextOptions = options
+        if (options && typeof options === 'object') {
+          nextOptions = { ...options }
+          if (typeof options.body === 'string') {
+            const body = translateValue(options.body)
+            if (body !== null) nextOptions.body = body
+          }
+        }
+        return new target(nextTitle === null ? title : nextTitle, nextOptions)
+      },
+    })
+    wrapped.__freebuffZh = true
+    try {
+      window.Notification = wrapped
+    } catch (error) {}
+  }
+
   /* ---------------------------------------------------------------- 启动 */
 
   let observer = null
 
   function start() {
     if (isDisabled()) return
+    try {
+      patchNotifications()
+    } catch (error) {}
     if (document.body.getElementsByTagName('*').length < 1500) translateTree(document.body)
     else scanChunked(document.body)
 
