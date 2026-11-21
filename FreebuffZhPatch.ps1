@@ -27,7 +27,14 @@ $StateRoot = Join-Path $env:LOCALAPPDATA 'FreebuffZh'
 $ManifestPath = Join-Path $StateRoot 'manifest.json'
 $SupportedPath = Join-Path $PatchRoot 'supported-versions.json'
 
-function Write-Step($message) { Write-Host "  $message" }
+function Write-Step($message) {
+  Write-Host "  $message"
+  try {
+    if (-not (Test-Path $StateRoot)) { New-Item -ItemType Directory -Force -Path $StateRoot | Out-Null }
+    $line = '{0}  {1}' -f (Get-Date).ToString('s'), $message
+    [System.IO.File]::AppendAllText((Join-Path $StateRoot 'install.log'), $line + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+  } catch { }
+}
 function Fail($message) { Write-Host ""; Write-Host "× $message" -ForegroundColor Red; exit 1 }
 
 function Resolve-AppDir {

@@ -4,6 +4,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { JSDOM } from 'jsdom'
 
+const verbose = process.argv.includes('--verbose')
+
 const root = path.resolve(import.meta.dirname, '..')
 const args = process.argv.slice(2)
 const exportIndex = args.indexOf('--export')
@@ -37,6 +39,9 @@ const KNOWN_BRANDS = /^(Freebuff|Buffy|Claude Code|Codex|Cursor|Cline|Roo|GitHub
 const data = JSON.parse(fs.readFileSync(harvestPath, 'utf8'))
 const perTarget = new Map()
 const misses = new Map()
+const filtered = []
+console.log(`快照来源：${data.at || '未知时间'} · ${data.href || '未知页面'} · 补丁在位：${data.patch ? '是' : '否'}`)
+console.log('注意：探针驱动的会话里，功能测试本身也会产生界面串；判读「待办」时要区分测试残留与稳态流量。')
 
 for (const screen of data.screens || []) {
   if (screen.missing) continue
@@ -47,14 +52,23 @@ for (const screen of data.screens || []) {
     if (text.length < 2 || text.length > 160) continue
     if (!/[A-Za-z]{2,}/.test(text)) continue
     if (/[\u4e00-\u9fff]/.test(text)) continue
-    if (SKIP.some((re) => re.test(text))) continue
-    if (text.includes('__next_f') || text.includes('self.')) continue
-    if (KNOWN_BRANDS.test(text)) continue
+    if (SKIP.some((re) => re.test(text))) {
+      filtered.push({ text, reason: '规则过滤' })
+      continue
+    }
+    if (text.includes('__next_f') || text.includes('self.')) {
+      filtered.push({ text, reason: '框架脚本残留' })
+      continue
+    }
+    if (KNOWN_BRANDS.test(text)) {
+      filtered.push({ text, reason: '品牌/应用名' })
+      continue
+    }
     const translated = api.translate(text)
     if (translated === null) {
       open.push(text)
       misses.set(text, (misses.get(text) || 0) + 1)
-    }
+    } else filtered.push({ text, reason: '已翻译' })
   }
   perTarget.set(screen.target, open)
 }
@@ -69,7 +83,21 @@ for (const [target, open] of perTarget) {
 console.log(`\n合计待翻译 ${misses.size} 条（按出现次数）`)
 for (const [text, count] of [...misses.entries()].sort((a, b) => b[1] - a[1]).slice(0, 60)) console.log(`  ${String(count).padStart(3)}  ${text}`)
 
+const byReason = new Map()
+for (const item of filtered) byReason.set(item.reason, (byReason.get(item.reason) || 0) + 1)
+console.log('\n过滤统计（可追溯，不静默丢弃）：')
+for (const [reason, count] of [...byReason.entries()].sort((a, b) => b[1] - a[1])) console.log(`  ${String(count).padStart(4)}  ${reason}`)
+if (verbose) {
+  console.log('\n过滤明细：')
+  for (const item of filtered) console.log(`  ${item.reason.padEnd(12)} ${item.text}`)
+}
+
 if (exportPath) {
-  fs.writeFileSync(path.resolve(root, exportPath), JSON.stringify([...misses.keys()].sort(), null, 1))
-  console.log(`\n已导出到 ${exportPath}`)
+  const payload = {
+    source: { at: data.at, href: data.href, patch: data.patch },
+    misses: [...misses.keys()].sort(),
+    filtered: filtered.map((item) => item.text).sort(),
+  }
+  fs.writeFileSync(path.resolve(root, exportPath), JSON.stringify(payload, null, 1))
+  console.log(`\n已导出到 ${exportPath}（含 misses 与 filtered 两段，便于回溯）`)
 }
