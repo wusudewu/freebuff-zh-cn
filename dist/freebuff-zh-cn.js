@@ -9,7 +9,7 @@
   'use strict'
 
   const PATCH_ID = 'freebuff-zh-cn'
-  const PATCH_VERSION = '0.3.5'
+  const PATCH_VERSION = '0.3.6'
   const existing = globalThis.__FREEBUFF_ZH__
   if (existing && existing.id === PATCH_ID && existing.version === PATCH_VERSION) return
   if (existing && existing.dispose) {
@@ -391,8 +391,12 @@
     root.setAttribute('data-freebuff-zh-out', answer)
   }
 
+  let bridgeInstalled = false
+
   function installNotificationBridge() {
+    if (bridgeInstalled) return
     document.addEventListener(NOTIFY_EVENT, answerNotification, true)
+    bridgeInstalled = true
   }
 
   /* ---------------------------------------------------------------- 启动 */
@@ -435,6 +439,11 @@
   function dispose() {
     if (observer) observer.disconnect()
     observer = null
+    // 升版重注入时，旧引擎的桥要一起撤掉，否则每升一版就多一个 capture 监听。
+    if (bridgeInstalled) {
+      document.removeEventListener(NOTIFY_EVENT, answerNotification, true)
+      bridgeInstalled = false
+    }
   }
 
   globalThis.__FREEBUFF_ZH__ = {

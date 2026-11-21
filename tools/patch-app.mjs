@@ -109,6 +109,7 @@ function injectionBlock(eol) {
     "              .then((dump) => zhLog('dump ' + win.webContents.getURL() + ' ' + JSON.stringify(dump)), () => {})",
     '              .catch(() => {})',
     '          }, 10000)',
+    '          zhDumpTimer = timer',
     '        }',
     '        let zhHarvestDone = false',
     "        const zhHarvest = () => {",
@@ -473,7 +474,9 @@ function verify() {
   }
 
   let hostedMarkers = 0
-  const missing = []
+  const missingFiles = []
+  const absent = []
+  const residual = []
   if (!fs.existsSync(asarPath)) {
     report.ok = false
     report.problems.push('找不到 app.asar')
@@ -502,22 +505,32 @@ function verify() {
     for (const [file, edits] of tables) {
       const key = findKey(contents, file)
       if (!key) {
-        missing.push(file)
+        missingFiles.push(file)
         continue
       }
       const source = contents.get(key).toString('utf8')
       for (const [needle, replacement] of edits) {
-        if (countOf(source, replacement) === 0) missing.push(`${file}: ${replacement.slice(0, 40)}`)
-        else report.anchors += 1
-        if (needle !== replacement && countOf(source, needle) > 0) missing.push(`${file}: 原文残留 ${needle.slice(0, 40)}`)
+        const hasReplacement = countOf(source, replacement) > 0
+        if (hasReplacement) report.anchors += 1
+        else absent.push(`${file}: ${replacement.slice(0, 40)}`)
+        if (needle !== replacement && countOf(source, needle) > 0) residual.push(`${file}: ${needle.slice(0, 40)}`)
       }
     }
-    if (missing.length) {
+    if (missingFiles.length) {
       report.ok = false
-      report.problems.push(`原生文案缺失 ${missing.length} 处（${missing.slice(0, 3).join('；')}）`)
+      report.problems.push(`asar 里找不到 ${missingFiles.length} 个文件（${missingFiles.slice(0, 3).join('；')}）`)
+    }
+    if (absent.length) {
+      report.ok = false
+      report.problems.push(`原生文案缺失 ${absent.length} 处（${absent.slice(0, 3).join('；')}）`)
+    }
+    if (residual.length) {
+      report.ok = false
+      report.problems.push(`原文残留 ${residual.length} 处（${residual.slice(0, 3).join('；')}）`)
     }
   }
-  report.missing = missing.length
+  report.missing = absent.length
+  report.residual = residual.length
 
   const files = { shell: shellAssetPath, hosted: hostedAssetPath, main: mainAssetPath }
   const hashes = {}

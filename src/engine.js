@@ -391,8 +391,12 @@
     root.setAttribute('data-freebuff-zh-out', answer)
   }
 
+  let bridgeInstalled = false
+
   function installNotificationBridge() {
+    if (bridgeInstalled) return
     document.addEventListener(NOTIFY_EVENT, answerNotification, true)
+    bridgeInstalled = true
   }
 
   /* ---------------------------------------------------------------- 启动 */
@@ -435,6 +439,11 @@
   function dispose() {
     if (observer) observer.disconnect()
     observer = null
+    // 升版重注入时，旧引擎的桥要一起撤掉，否则每升一版就多一个 capture 监听。
+    if (bridgeInstalled) {
+      document.removeEventListener(NOTIFY_EVENT, answerNotification, true)
+      bridgeInstalled = false
+    }
   }
 
   globalThis.__FREEBUFF_ZH__ = {
