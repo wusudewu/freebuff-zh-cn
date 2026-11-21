@@ -2,6 +2,14 @@
   "$meta": "带变量的文案：{0} {1} … 是捕获位，最多 80 字符；生成正则时其余字面量逐字转义。顺序即优先级，具体的写前面。",
   "rules": [
     {
+      "from": "New {0}: start a chat",
+      "to": "新建{0}：开始对话"
+    },
+    {
+      "from": "Top-up amount: {0}",
+      "to": "充值金额：{0}"
+    },
+    {
       "from": "Auto-archive cloud chats after: {0}",
       "to": "云端对话自动归档：{0}"
     },
