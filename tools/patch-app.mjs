@@ -95,10 +95,12 @@ function injectionBlock(eol) {
     '          }',
     '          if (!zhDebug) return',
     '          let rounds = 0',
+    '          if (zhDumpTimer) clearInterval(zhDumpTimer)',
     '          const timer = setInterval(() => {',
     '            rounds += 1',
     '            if (rounds > 8 || win.isDestroyed()) {',
     '              clearInterval(timer)',
+    '              zhDumpTimer = null',
     '              return',
     '            }',
     '            const dumpCode = ' + "'(globalThis.__FREEBUFF_ZH__ && __FREEBUFF_ZH__.dump()) || null'",
@@ -128,6 +130,7 @@ function injectionBlock(eol) {
     '            }, 7000)',
     '          } catch (error) {}',
     '        }',
+    '        let zhDumpTimer = null',
     "        win.webContents.on('dom-ready', () => { zhInject(); zhHarvest() })",
     '      } catch (error) {}',
     JS_END,
@@ -399,13 +402,14 @@ function apply() {
     }
     const roundTrip = check.contents.get(hostedKey).toString('utf8')
     if (roundTrip.split(JS_START).length - 1 !== 1) throw new Error('注入块数量不为 1')
+    // 先落脚本与界面壳，再原子替换 asar：asar 是唯一让补丁生效的点，
+    // 中途被杀的树会停在「脚本已就位、asar 未打」这种可被 Status 认出的状态。
+    copyAssets(assetPath)
+    atomicWrite(shellHtmlPath, patchedHtml)
     atomicWrite(asarPath, fs.readFileSync(tempAsar))
   } finally {
     removeStale([tempAsar])
   }
-
-  copyAssets(assetPath)
-  atomicWrite(shellHtmlPath, patchedHtml)
 
   const result = {
     appVersion: readAppVersion(),
@@ -414,6 +418,7 @@ function apply() {
     originalAppAsarHash,
     patchedAppAsarHash: sha256(fs.readFileSync(asarPath)),
     assetHash: sha256(asset),
+    mainHash: fs.existsSync(mainAssetPath) ? sha256(fs.readFileSync(mainAssetPath)) : null,
     mainStringsFiles,
     backupDir,
   }
@@ -501,9 +506,10 @@ function verify() {
         continue
       }
       const source = contents.get(key).toString('utf8')
-      for (const [, replacement] of edits) {
+      for (const [needle, replacement] of edits) {
         if (countOf(source, replacement) === 0) missing.push(`${file}: ${replacement.slice(0, 40)}`)
         else report.anchors += 1
+        if (needle !== replacement && countOf(source, needle) > 0) missing.push(`${file}: 原文残留 ${needle.slice(0, 40)}`)
       }
     }
     if (missing.length) {
@@ -513,11 +519,20 @@ function verify() {
   }
   report.missing = missing.length
 
-  for (const file of [shellAssetPath, hostedAssetPath, mainAssetPath]) {
+  const files = { shell: shellAssetPath, hosted: hostedAssetPath, main: mainAssetPath }
+  const hashes = {}
+  for (const [name, file] of Object.entries(files)) {
     if (!fs.existsSync(file)) {
       report.ok = false
       report.problems.push(`缺少汉化脚本 ${file}`)
+      continue
     }
+    hashes[name] = sha256(fs.readFileSync(file))
+  }
+  report.hashes = hashes
+  if (hashes.shell && hashes.hosted && hashes.shell !== hashes.hosted) {
+    report.ok = false
+    report.problems.push('两处汉化脚本不一致（界面壳与 asar 外挂的那份）')
   }
   console.log(JSON.stringify(report, null, 2))
   if (!report.ok) process.exitCode = 1

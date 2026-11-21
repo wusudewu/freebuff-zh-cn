@@ -52,7 +52,13 @@ for (const screen of data.screens || []) {
     const text = String(value).replace(/\s+/g, ' ').trim()
     if (text.length < 2 || text.length > 160) continue
     if (!/[A-Za-z]{2,}/.test(text)) continue
-    if (/[\u4e00-\u9fff]/.test(text)) continue
+    if (/[\u4e00-\u9fff]/.test(text)) {
+      // 中英混排：词表只可能整串命中，剩下的英文靠规则。命不中就单独记账，
+      // 否则「全英文才算漏译」的口径会把这类系统性低估掉。
+      if (api.translate(text) === null && /[A-Za-z]{2,}\s+[A-Za-z]{2,}/.test(text)) mixed.push(text)
+      else filtered.push({ text, reason: '中英混排' })
+      continue
+    }
     if (SKIP.some((re) => re.test(text))) {
       filtered.push({ text, reason: '规则过滤' })
       continue
@@ -81,6 +87,8 @@ for (const [target, open] of perTarget) {
   console.log(`${String(open.length).padStart(3)}  ${label}`)
   for (const text of open.slice(0, 6)) console.log('       ' + text)
 }
+console.log(`\n中英混排里没被词表命中的 ${new Set(mixed).size} 条（只剩规则兜底或留英文）`)
+for (const text of [...new Set(mixed)].slice(0, 25)) console.log('       ' + text)
 console.log(`\n合计待翻译 ${misses.size} 条（按出现次数）`)
 for (const [text, count] of [...misses.entries()].sort((a, b) => b[1] - a[1]).slice(0, 60)) console.log(`  ${String(count).padStart(3)}  ${text}`)
 

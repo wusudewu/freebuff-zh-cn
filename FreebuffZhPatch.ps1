@@ -7,8 +7,8 @@
     · 装前备份 + 哈希校验，装后校验，还原前确认文件没被别人改过；
     · 所有写文件走「临时文件 → 读回校验 → 原子替换」；
     · 版本闸门：只对适配过的 Freebuff 版本动手。
-  -Force 只放宽两道保护闸门（版本不在适配列表、文件与安装记录不一致），
-  不会让安装变得更「彻底」；用它之前请确认 Freebuff 没有被原地更新过。
+  -Force 只放宽三道保护闸门：版本不在适配列表、文件与安装记录不一致、进程空闲检查。
+  它不会让安装变得更「彻底」；用它之前请自己确认 Freebuff 真的关干净、也没被原地更新过。
 #>
 [CmdletBinding()]
 param(
@@ -146,7 +146,11 @@ function Show-Status {
   $asarNow = Get-Sha256 $asar
   if (-not $marked -or $asarNow -ne $manifest.appAsar.patchedHash) {
     Write-Host '  安装状态   Freebuff 已更新或 app.asar 被改动，补丁已不在原位：请重新安装' -ForegroundColor Yellow
-  } elseif (-not $verify -or -not $verify.ok) {
+    Write-Host "  上次安装   $($manifest.installedAt)（备份仍可用于还原，但版本已变时不要用它覆盖）"
+    Write-Host ''
+    return
+  }
+  if (-not $verify -or -not $verify.ok) {
     $problems = @($verify.problems) | Where-Object { $_ }
     Write-Host ('  安装状态   已安装，但有个别文件与安装记录不一致' + $(if ($problems.Count -gt 0) { '：' + ($problems -join '；') } else { '' })) -ForegroundColor Yellow
   } else {
@@ -188,8 +192,8 @@ function Install-Patch {
     Fail '界面里已经打过补丁，但找不到安装记录（manifest.json）。请用 Freebuff 官方安装包重装 Freebuff（会覆盖回英文原版），再安装中文补丁。'
   }
 
-  # 不是「两处都在」就说明这棵文件树不完整（上游更新、部分还原、手改过），一律走完整重打。
-  $needsFullPatch = -not $alreadyPatched
+  # 不是「两处都在」、或自检已经报问题（缺锚点、脚本丢了、文件被手改），一律走完整重打。
+  $needsFullPatch = -not $alreadyPatched -or ($verifyNow -and -not $verifyNow.ok)
   if ($alreadyPatched -and $existing.patchVersion -ne $meta.version) { $needsFullPatch = $true }
 
   if ($needsFullPatch -and $existing -and ($shellMarked -or $asarMarked)) {
@@ -198,7 +202,7 @@ function Install-Patch {
     $shellNow = Get-Sha256 $shell
     $drifted = ($asarNow -ne $existing.appAsar.patchedHash) -or ($shellNow -ne $existing.shell.patchedHash)
     if ($drifted -and -not $Force) {
-      Fail ("app.asar/index.html 与安装记录不一致：Freebuff 可能已原地更新过。" +
+      Fail ("app.asar/index.html 与安装记录不一致：Freebuff 可能已原地更新过，或上次安装被中途打断。" +
         '为了不用旧备份覆盖新版本，已中止。请先重装 Freebuff（官方安装包），再安装中文补丁；' +
         '确认这台机器上的 Freebuff 没有被更新过，可以加 -Force 继续。')
     }
@@ -215,6 +219,7 @@ function Install-Patch {
     $existing.entries = $meta.entries
     $existing.rules = $meta.rules
     $existing.asset.hash = $refresh.hosted
+    $existing.asset | Add-Member -NotePropertyName mainHash -NotePropertyValue $refresh.main -Force
     $existing | Add-Member -NotePropertyName refreshedAt -NotePropertyValue ((Get-Date).ToString('s')) -Force
     Write-Manifest $existing
     $verify = Get-PatchVerify
@@ -260,9 +265,11 @@ function Install-Patch {
       patchedHash  = $result.patchedAppAsarHash
     }
     asset            = [ordered]@{
-      name = 'freebuff-zh-cn.js'
-      path = (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js')
-      hash = $result.assetHash
+      name     = 'freebuff-zh-cn.js'
+      path     = (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js')
+      hash     = $result.assetHash
+      mainPath = (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-main.js')
+      mainHash = $result.mainHash
     }
     entries          = $meta.entries
     rules            = $meta.rules
@@ -328,13 +335,28 @@ function Test-Patch {
   Write-Host "  原生文案锚点   $($verify.anchors) 处"
   $manifest = Read-Manifest
   if ($manifest) {
-    $asset = $manifest.asset.path
-    if (Test-Path $asset) {
-      $ok = (Get-Sha256 $asset) -eq $manifest.asset.hash
-      Write-Host ('  汉化脚本哈希   ' + $(if ($ok) { '与安装记录一致' } else { '与安装记录不一致（重跑安装即可同步）' }))
+    $dir = Resolve-AppDir
+    $scripts = @(
+      [ordered]@{ label = '汉化脚本(外挂)';   path = (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js'); hash = $manifest.asset.hash },
+      [ordered]@{ label = '汉化脚本(界面壳)'; path = (Join-Path $dir 'resources\orchestrator\ui\freebuff-zh-cn.js'); hash = $manifest.asset.hash }
+    )
+    $mainHash = $null
+    if ($manifest.asset.PSObject.Properties['mainHash']) { $mainHash = $manifest.asset.mainHash }
+    if ($mainHash) {
+      $scripts += [ordered]@{ label = '主世界脚本'; path = (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-main.js'); hash = $mainHash }
+    }
+    foreach ($script in $scripts) {
+      if (-not (Test-Path $script.path)) {
+        Write-Host "  $($script.label)   缺失"
+        $verify.ok = $false
+        $verify.problems = @($verify.problems) + "缺少 $($script.label)"
+        continue
+      }
+      $ok = (Get-Sha256 $script.path) -eq $script.hash
+      Write-Host ("  $($script.label)" + (' ' * [Math]::Max(1, 15 - $script.label.Length)) + $(if ($ok) { '与安装记录一致' } else { '与安装记录不一致（重跑安装即可同步）' }))
       if (-not $ok) {
         $verify.ok = $false
-        $verify.problems = @($verify.problems) + '汉化脚本与安装记录不一致'
+        $verify.problems = @($verify.problems) + "$($script.label)与安装记录不一致"
       }
     }
   }

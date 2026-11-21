@@ -223,7 +223,7 @@
  "Could not load account settings. Reconnect to try again.": "无法加载账号设置，请重新连接后重试。",
  "Appearance is still syncing. Please wait before editing.": "外观仍在同步，请稍后再编辑。",
  "This image is too detailed to save. Try a smaller image.": "图片细节过多，无法保存，请换一张更小的图片。",
- "Write your own post in the community the campaign names.": "在广告系列指定的社区里发一条自己的帖子。",
+ "Write your own post in the community the campaign names.": "到广告系列选定的社区里发一条帖子。",
  "That GitHub account belongs to another Freebuff account.": "该 GitHub 账号属于另一个 Freebuff 账号。",
  "Use letters, numbers, spaces, dots, dashes or underscores": "只能使用字母、数字、空格、句点、短横线或下划线",
  "Flask app on requirements.txt with SQLAlchemy migrations.": "基于 requirements.txt、带 SQLAlchemy 迁移的 Flask 应用。",

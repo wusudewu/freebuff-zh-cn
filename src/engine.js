@@ -401,9 +401,6 @@
 
   function start() {
     if (isDisabled()) return
-    try {
-      installNotificationBridge()
-    } catch (error) {}
     if (document.body.getElementsByTagName('*').length < 1500) translateTree(document.body)
     else scanChunked(document.body)
 
@@ -473,6 +470,11 @@
     if (document.readyState === 'complete') setTimeout(kick, 1200)
     else window.addEventListener('load', () => setTimeout(kick, 1200), { once: true })
   }
+
+  // 桥要在脚本一落地就挂上：主世界的 shim 可能比首屏翻译更早构造通知。
+  try {
+    if (document.documentElement) installNotificationBridge()
+  } catch (error) {}
 
   try {
     if (document.body) boot()

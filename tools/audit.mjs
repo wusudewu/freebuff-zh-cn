@@ -25,10 +25,13 @@ for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && 
     if (value.length > 2.4 * Math.max(key.length, 6) && value.length > 14) add('长度异常', `${key.length} → ${value.length}`)
     if (/[。]{2,}/.test(value)) add('重复句号', '')
     if ((value.match(/的/g) || []).length >= 3) add('的太多（直译腔）', '')
-    if (/^(请)?(进行|对.{0,6}进行)/.test(value)) add('机器味起步', '')
+    // 「进行中」是「In progress」的正常标签，不是翻译腔的「进行+X」结构。
+    if (/^(请)?(进行|对.{0,6}进行)/.test(value) && !/^进行中$/.test(value)) add('机器味起步', '')
     if (/[一-鿿]{2,}的[一-鿿]{2,}的[一-鿿]{2,}/.test(value)) add('名词堆叠', '')
     if (/^(可以|你可以|您)/.test(value)) add('称呼/语气', '')
-    if (value.length <= 10 && /的$/.test(value) && !/[。？]$/.test(value) && !/^(我的|你的|他的|她的|它的|共享给我的)/.test(value)) add('短标签悬空', '')
+    // 原文键以空格结尾说明这是拼接片段（"Connect your " + 名字），译文以「的」收尾是对的。
+    const fragment = /\s$/.test(key)
+    if (!fragment && value.length <= 10 && /的$/.test(value) && !/[。？]$/.test(value) && !/^(我的|你的|他的|她的|它的|共享给我的)/.test(value)) add('短标签悬空', '')
     if (/\.\.\./.test(value)) add('省略号写法', '')
     if (/[一-鿿]\?/.test(value)) add('半角问号', '')
     if (/[一-鿿][\"'“]\S/.test(value) && /"/.test(value)) add('半角引号', '')
