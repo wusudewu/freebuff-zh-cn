@@ -1,5 +1,17 @@
 # 更新日志
 
+## 0.1.8 · 2026-11-21
+
+第八轮（把剩下的一并翻掉）：
+
+- 应用名族：Google Drive/Docs/Sheets/Calendar/Analytics/Ads/Slides/Forms/Tasks → 谷歌云端硬盘/文档/表格/日历/分析/广告…，
+  Microsoft Teams → 微软 Teams，Meta Ads → Meta 广告，SaaS → SaaS 软件。
+- **运行期与交互反馈文案 152 条**（这批以前只在真正跑起来后才出现）：`Sending…`、`Couldn't send. Try again.`、
+  `Couldn't stop this response.`、`Files over 512 KB can't be copied`、`This file isn't text…`、权限对话框警示
+  `This dialog could not say who is asking — do not approve.`、档位说明 `Max: the most reasoning, slowest replies…` 等。
+- 词表 3,150 → **3,302 条**；术语再校一遍：`fork` 统一为派生（分叉已进质检黑名单）。
+- 剩下没翻的只剩系统托盘、Windows 系统通知、Stripe 支付页（第三方页面），以及随版本变化、用户看不到的框架内部报错。
+
 ## 0.1.7 · 2026-11-21
 
 审查意见落地（可追溯性）：

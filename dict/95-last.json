@@ -75,5 +75,17 @@
  "Take it all the way to a merged pull request": "一路做到拉取请求合并",
  "See the stack trace before your users report it": "在用户反馈前就看到堆栈信息",
  "Confirm repository checks and the permitted change scope": "确认仓库检查与允许的变更范围",
- "Listening": "正在听"
+ "Listening": "正在听",
+ "Google Drive": "谷歌云端硬盘",
+ "Google Docs": "谷歌文档",
+ "Google Sheets": "谷歌表格",
+ "Google Calendar": "谷歌日历",
+ "Google Analytics": "谷歌分析",
+ "Google Ads": "谷歌广告",
+ "Google Slides": "谷歌幻灯片",
+ "Google Forms": "谷歌表单",
+ "Google Tasks": "谷歌任务",
+ "Microsoft Teams": "微软 Teams",
+ "Meta Ads": "Meta 广告",
+ "SaaS": "SaaS 软件"
 }

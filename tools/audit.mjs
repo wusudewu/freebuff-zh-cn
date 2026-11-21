@@ -6,7 +6,7 @@ const root = path.resolve(import.meta.dirname, '..')
 const dictDir = path.join(root, 'dict')
 
 const TRADITIONAL = ['設定', '登入', '檔案', '程式', '專案', '伺服器', '網路', '預設', '檢視', '執行', '連線', '資訊', '軟體', '硬體', '使用者', '瀏覽', '儲存', '選單', '視窗', '滑鼠', '剪貼', '範本', '最佳化', '啟動', '關閉', '開啟', '上傳', '下載', '搜尋', '篩選']
-const MACHINE = ['将会', '对于', '使得', '的的', '通过…来', '被…', '进行了', '一个的']
+const MACHINE = ['将会', '对于', '使得', '的的', '通过…来', '被…', '进行了', '一个的', '分叉']
 const issues = []
 
 for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && !f.startsWith('_')).sort()) {
