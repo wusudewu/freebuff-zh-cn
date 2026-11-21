@@ -39,7 +39,7 @@
 | The last day of the month a number of months away. | 相隔若干个月，取那个月的最后一天。 | 「A 的 B 的 C」连环 |
 | Requests spend a prepaid USD balance. Start with $10 or more | 调用从预付的美元余额扣费，最低充值 $10。 | 「起步充 $10 以上」啰嗦 |
 
-（完整清单见提交记录与 `scratch/style-changes.json`，包含每条的理由。）
+（逐条清单见 `docs/style-changes.json`，由 `node tools/style-history.mjs` 从 git 历史重建：哪次提交、原值、现值。改写的理由分散在 `CHANGELOG.md` 与各次提交说明里。）
 
 ## 决定不改的例子
 

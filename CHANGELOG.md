@@ -11,6 +11,10 @@
   不会把 "Build failed – see logs" 拼成半中半英（新增一条测试断言）。
 - 质检的「半角引号」规则改成查「直引号贴汉字」两侧，弯引号 `“”` 不再被误伤，规则名与实现对齐。
 - `harvest.js` 头部去掉过时的「第四轮」字样。
+- `gen-main-strings.mjs` 对未命中的锚点不再静默跳过：统计全部未命中、报出文件与原文、**不写表**（与 build 冲突同一个原则）。
+- README 修正 `check-harvest.mjs` 的路径（在 `tests/` 下）、注入块行数描述。
+- `docs/style-changes.json` 改由 `tools/style-history.mjs` 从 git 历史重建（232 条改写，含提交号/原值/现值），
+  不再依赖 `scratch/` 下的临时文件；`scratch/` 已清空（258 MB 开发残留）。
 
 ## 0.3.6 · 2026-11-22
 

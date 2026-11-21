@@ -38,7 +38,7 @@ Freebuff\resources\
 ├─ orchestrator\ui\index.html            ← 注入点 1：加一行 <script src="/freebuff-zh-cn.js">
 ├─ orchestrator\ui\freebuff-zh-cn.js     ← 汉化脚本（本地启动页用）
 ├─ app.asar 内 electron\hosted-workspace.cjs
-│     ↑ 注入点 2：成对 marker 之间的 20 行钩子，页面 dom-ready 时把脚本注入托管窗口
+│     ↑ 注入点 2：成对 marker 之间约 50 行钩子（注入引擎 + 主世界脚本 + 巡检 + 调试日志）
 └─ freebuff-zh\freebuff-zh-cn.js         ← 汉化脚本（主界面用，同一份文件）
 ```
 
@@ -104,7 +104,7 @@ FreebuffZhPatch.ps1   安装器：Install / Restore / Status / Verify
 | `debug` | 把注入/巡检日志写进 `debug.log` | 删掉这个空文件（再删 `debug.log`） |
 | `harvest` | 打开应用后自动点开约 21 处界面，把整页可见文本写进 `harvest.json` | **一次性**：注入钩子跑完就删掉开关；`harvest.json` 需要手动删除 |
 
-`harvest.json` 含当时界面的全部可见文本（包括对话内容），属于本地临时数据，看完就删；`node tools/check-harvest.mjs` 用它算漏译差集。
+`harvest.json` 含当时界面的全部可见文本（包括对话内容），属于本地临时数据，看完就删；`node tests/check-harvest.mjs` 用它算漏译差集。
 
 ## 许可
 

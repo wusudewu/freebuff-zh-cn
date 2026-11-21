@@ -1,0 +1,1862 @@
+{
+ "generatedFrom": "git log -- dict",
+ "total": 232,
+ "changes": [
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Open Account settings",
+   "was": "打开账户设置",
+   "now": "打开账号设置"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Pinned",
+   "was": "已固定",
+   "now": "已置顶"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Campaigns",
+   "was": "广告活动",
+   "now": "广告系列"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Harness",
+   "was": "运行框架",
+   "now": "执行框架"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Start from",
+   "was": "起点",
+   "now": "起始方式"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Untitled deck",
+   "was": "未命名幻灯片",
+   "now": "无标题幻灯片"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "A hold has ended. You can still submit while spots remain.",
+   "was": "冻结已结束。名额还有剩余时仍可提交。",
+   "now": "预留名额已结束。名额还有剩余时仍可提交。"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Account standing",
+   "was": "账户状态",
+   "now": "账号状态"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Accounts",
+   "was": "账户",
+   "now": "账号"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Allowance",
+   "was": "免费额度",
+   "now": "额度"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Buy hours",
+   "was": "购买小时",
+   "now": "购买时长"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Composer",
+   "was": "输入框",
+   "now": "输入区"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Keep Powerful",
+   "was": "保留 Powerful",
+   "now": "保留“Powerful”"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "New campaign",
+   "was": "新建广告活动",
+   "now": "新建广告系列"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "No hours returned",
+   "was": "未返回小时数",
+   "now": "没有返回小时数"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Now, what are we building?",
+   "was": "现在，我们做点什么？",
+   "now": "那么，我们做点什么？"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Toggle left sidebar",
+   "was": "切换左侧边栏",
+   "now": "显示或隐藏左侧边栏"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Try again to open this page.",
+   "was": "请重新尝试打开此页面。",
+   "now": "重新打开此页面再试一次。"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Try again to open your project.",
+   "was": "请重新尝试打开你的项目。",
+   "now": "重新打开你的项目再试一次。"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Untitled dashboard",
+   "was": "未命名仪表盘",
+   "now": "无标题仪表盘"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Untitled design",
+   "was": "未命名设计",
+   "now": "无标题设计"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Untitled sheet",
+   "was": "未命名表格",
+   "now": "无标题表格"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Untitled whiteboard",
+   "was": "未命名白板",
+   "now": "无标题白板"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Where you are mentioned",
+   "was": "你被提及的地方",
+   "now": "提到你的地方"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Your hold has ended. You can still submit while spots remain.",
+   "was": "你的保留名额已结束。还有名额时仍可提交。",
+   "now": "你的预留名额已结束。名额还有剩余时仍可提交。"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Account changed",
+   "was": "账户已切换",
+   "now": "账号已切换"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Add account",
+   "was": "添加账户",
+   "now": "添加账号"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Could not dismiss.",
+   "was": "无法关闭。",
+   "now": "无法忽略。"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Desktop account changed",
+   "was": "桌面端账户已切换",
+   "now": "桌面端账号已切换"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Edited a file",
+   "was": "编辑了 1 个文件",
+   "now": "编辑了文件"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Get Freebuff on your phone",
+   "was": "在手机上使用 Freebuff",
+   "now": "在手机上获取 Freebuff"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Show more",
+   "was": "展开更多",
+   "now": "显示更多"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Smart & fast",
+   "was": "智能且快速",
+   "now": "智能又快速"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Start a project",
+   "was": "开始项目",
+   "now": "新建项目"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Unpin",
+   "was": "取消固定",
+   "now": "取消置顶"
+  },
+  {
+   "commit": "1dbe538",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Smart & Fast",
+   "was": "智能且快",
+   "now": "智能又快速"
+  },
+  {
+   "commit": "cc19ecf",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Trusted by users from",
+   "was": "深受以下地区的用户信赖",
+   "now": "位用户信赖"
+  },
+  {
+   "commit": "cc19ecf",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Trusted by developers in",
+   "was": "深受以下地区的开发者信赖",
+   "now": "位开发者信赖"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Report issue or feature",
+   "was": "报告问题或功能",
+   "now": "反馈问题或建议功能"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "A hold has ended. You can still submit while spots remain.",
+   "was": "预留名额已结束。名额还有剩余时仍可提交。",
+   "now": "预留名额已到期。只要还有名额，仍可提交。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "A midweight fleece pullover hoodie for long sessions.",
+   "was": "中厚款抓绒套头连帽衫，适合长时间使用。",
+   "now": "中厚款抓绒套头连帽衫，适合长时间穿着。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "About Auto-renew sessions",
+   "was": "关于会话自动续期",
+   "now": "关于自动续订会话"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Add the bench",
+   "was": "添加工作台",
+   "now": "添加评测台"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "At the start of a block: join it to the one above",
+   "was": "在块开头：并入上方块",
+   "now": "在块开头：并入上一块"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Buy hours",
+   "was": "购买时长",
+   "now": "购买小时数"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "By stack (bench)",
+   "was": "按技术栈（基准）",
+   "now": "按技术栈（评测台）"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Create projects, branch databases and run SQL from chat.",
+   "was": "在对话中创建项目、分支数据库并运行 SQL。",
+   "now": "在对话中创建项目、为数据库建分支并运行 SQL。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Detached HEAD",
+   "was": "分离的 HEAD",
+   "now": "游离 HEAD"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Gravity JS SDK for retrieving targeted advertisements",
+   "was": "用于获取定向广告的 Gravity JS SDK",
+   "now": "用 Gravity JS SDK 获取定向广告"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "No ad selected.",
+   "was": "未选择广告",
+   "now": "未选择广告。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "No countries found.",
+   "was": "未找到国家",
+   "now": "未找到国家。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Open the download to get started",
+   "was": "打开下载文件即可开始",
+   "now": "打开已下载的文件即可开始"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Pause the queue here until you resume it",
+   "was": "在此暂停队列，等你恢复",
+   "now": "在此暂停队列，等你手动恢复"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Please allow ads on Freebuff.",
+   "was": "请在 Freebuff 上允许广告。",
+   "now": "请允许 Freebuff 展示广告。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Retry chats",
+   "was": "重试多个对话",
+   "now": "重试全部对话"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Search 1,000+ more",
+   "was": "再搜索 1,000+ 个",
+   "now": "搜索其余 1,000+ 个"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Search all advertisers, including those without campaigns",
+   "was": "搜索全部广告主，包括没有广告系列的",
+   "now": "搜索全部广告主（含无广告系列）"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Set up the account yourself instead.",
+   "was": "改为你自己设置账号。",
+   "now": "改为自行设置账号。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Share your streak and give your friends unlimited free coding.",
+   "was": "分享你的连续天数，让朋友免费无限编程。",
+   "now": "分享你的连续天数，让朋友也能无限免费编程。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Split a paragraph, or start a new block",
+   "was": "拆分段落，或开始新块",
+   "now": "拆分段落，或另起一个新块"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "The file may be damaged or use an unsupported image format.",
+   "was": "文件可能已损坏，或使用了不支持的图片格式。",
+   "now": "文件可能已损坏，或图片格式不受支持。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Try again to open this page.",
+   "was": "重新打开此页面再试一次。",
+   "now": "重试打开此页面。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Try again to open your project.",
+   "was": "重新打开你的项目再试一次。",
+   "now": "重试打开项目。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Your hold has ended. You can still submit while spots remain.",
+   "was": "你的预留名额已结束。名额还有剩余时仍可提交。",
+   "now": "你的预留名额已到期。只要还有名额，仍可提交。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Migrate and Secure Enterprise Docs with Mintlify’s Expert Services",
+   "was": "用 Mintlify 的专家服务迁移企业文档并加固安全",
+   "now": "用 Mintlify 专家服务完成企业文档迁移与安全加固"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Add funds",
+   "was": "添加资金",
+   "now": "充值"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Another tab has that name.",
+   "was": "另一个标签页已使用该名称。",
+   "now": "另一个标签页已占用该名称。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Balanced everyday model",
+   "was": "日常均衡模型",
+   "now": "均衡的日常模型"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Compacted context",
+   "was": "已压缩上下文",
+   "now": "上下文已压缩"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Connect an account to get ",
+   "was": "连接账户以获取",
+   "now": "连接账户即可获取"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Criterion needs a title.",
+   "was": "条件需要标题。",
+   "now": "请填写条件标题。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Discard saved message",
+   "was": "丢弃已保存的消息",
+   "now": "放弃已保存的消息"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Discard unsaved settings?",
+   "was": "丢弃未保存的设置？",
+   "now": "放弃未保存的设置？"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Drag to move",
+   "was": "拖动以移动",
+   "now": "拖动即可移动"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Earn, admin only",
+   "was": "赚取，仅管理员",
+   "now": "赚取（仅管理员）"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "First version.",
+   "was": "第一个版本。",
+   "now": "首个版本。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Included with a paid plan.",
+   "was": "付费套餐已包含。",
+   "now": "已含在付费套餐中。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "No campaigns yet",
+   "was": "还没有广告活动",
+   "now": "还没有广告系列"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "No deleted tab to restore.",
+   "was": "没有可恢复的已关闭标签页。",
+   "now": "没有已关闭的标签页可恢复。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "No matches in loaded chats",
+   "was": "已加载的对话中没有匹配",
+   "now": "已加载的对话中没有匹配项"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Publish changes",
+   "was": "发布更改",
+   "now": "发布变更"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Rounds away from zero.",
+   "was": "向远离 0 的方向舍入。",
+   "now": "远离零值舍入。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Rounds down to a multiple.",
+   "was": "向下舍入到最近的倍数。",
+   "now": "向下舍入到最接近的倍数。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Rounds toward zero.",
+   "was": "向 0 的方向舍入。",
+   "now": "向零值舍入。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Rounds up to a multiple.",
+   "was": "向上舍入到最近的倍数。",
+   "now": "向上舍入到最接近的倍数。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Tap one to continue",
+   "was": "点选一项以继续",
+   "now": "点选一项即可继续"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Something on this computer or network, such as a proxy or an antivirus web shield, is intercepting Freebuff’s secure connection.",
+   "was": "这台电脑或网络上的某个东西（例如代理或杀毒软件的网页防护）正在拦截 Freebuff 的安全连接。",
+   "now": "这台电脑或网络上有什么东西（比如代理或杀毒软件的网页防护）在拦截 Freebuff 的安全连接。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "60-errors.json",
+   "key": "Choose files totaling 100 MB or less.",
+   "was": "选择的文件总大小不超过 100 MB。",
+   "now": "请选择总大小不超过 100 MB 的文件。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "60-errors.json",
+   "key": "A campaign can name at most 60 countries.",
+   "was": "一个广告系列最多指定 60 个国家。",
+   "now": "每个广告系列最多指定 60 个国家。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "60-errors.json",
+   "key": "Leave a genuine comment in your own words.",
+   "was": "用你自己的话留一条真实评论。",
+   "now": "用自己的话写一条真实评论。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "60-errors.json",
+   "key": "Feedback is unavailable. You can try again.",
+   "was": "反馈功能暂不可用，你可以稍后再试。",
+   "now": "反馈功能暂不可用，请稍后再试。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "60-errors.json",
+   "key": "Finish or stop the chat before ending its session.",
+   "was": "结束会话前，先把对话完成或停下来。",
+   "now": "结束会话前，请先完成或停止当前对话。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "60-errors.json",
+   "key": "Attach a screenshot or a file of links",
+   "was": "添加截图，或一份包含链接的文件",
+   "now": "添加截图，或添加一个存有链接的文件"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Give your friends unlimited free coding",
+   "was": "送朋友不限量的免费编程",
+   "now": "让好友畅享不限量免费编程"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Press each one: X opens with it ready, you confirm there.",
+   "was": "逐个点击：会带着内容打开 X，由你在那里确认。",
+   "now": "逐个点击：会用该内容打开 X，由你在那里确认。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "That is no longer here.",
+   "was": "它已经不在这里了。",
+   "now": "该内容已不存在。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "This deck has no slides.",
+   "was": "此幻灯片没有任何页面。",
+   "now": "此演示文稿没有幻灯片。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Unlock extra Freebuff usage.",
+   "was": "解锁更多 Freebuff 额度。",
+   "now": "解锁更多 Freebuff 用量。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Is my data used to train AI?",
+   "was": "我的数据会被用于训练 AI 吗？",
+   "now": "我的数据会被用来训练 AI 吗？"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Trying again in under a minute.",
+   "was": "不到一分钟内会重试。",
+   "now": "将在不到一分钟内重试。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Reload to get back to your work.",
+   "was": "请重新加载以回到你的工作。",
+   "now": "请重新加载以继续工作。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Include Command or Control with a key.",
+   "was": "请同时按 Command 或 Control 加一个键。",
+   "now": "快捷键需包含 Command 或 Control，再加一个按键。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Reserved for editing or system navigation.",
+   "was": "保留给编辑或系统导航。",
+   "now": "用于编辑或系统导航。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "The copy was interrupted. Try again to resume.",
+   "was": "复制中断，请重试继续。",
+   "now": "复制已中断，请重试以继续。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Your wallet hours balance is not available yet.",
+   "was": "钱包小时数余额暂不可用。",
+   "now": "钱包中的小时数余额暂不可用。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Open Freebuff Desktop to fork this shared chat.",
+   "was": "打开 Freebuff Desktop 后即可 Fork 此共享对话。",
+   "now": "打开 Freebuff Desktop 后即可派生此共享对话。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Someone changed this first. Refresh and try again.",
+   "was": "已被其他人先修改，请刷新后重试。",
+   "now": "他人已先修改，请刷新后重试。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Write your own post in the community the campaign names.",
+   "was": "在广告系列指定的社区发一条自己的帖子。",
+   "now": "在广告系列指定的社区里发一条自己的帖子。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Postgres that branches like git",
+   "was": "可以像 git 一样分支的 Postgres",
+   "now": "像 git 一样能分支的 Postgres"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Catch errors before your users do",
+   "was": "在你的用户之前发现错误",
+   "now": "在用户察觉之前捕获错误"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Wait for the message to finish connecting this chat",
+   "was": "正在连接此对话，请等待消息完成",
+   "now": "请等待消息完成后，再连接此对话。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Start a Cloud chat from the computer that has this project",
+   "was": "在拥有此项目的电脑上发起云端对话",
+   "now": "在装有此项目的电脑上发起云端对话"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "80-integrations.json",
+   "key": "Earn categories",
+   "was": "赚取分类",
+   "now": "赚取途径"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "80-integrations.json",
+   "key": "Requests spend a prepaid USD balance. Start with $10 or more.",
+   "was": "调用会从预付的美元余额中扣费，起步充 $10 以上。",
+   "now": "调用从预付的美元余额扣费，最低充值 $10。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "80-integrations.json",
+   "key": "Any OpenAI-compatible SDK works. Point it at the base URL and pass your key.",
+   "was": "任何兼容 OpenAI 的 SDK 都能用：把地址指向 base URL，再传入你的密钥即可。",
+   "now": "任何兼容 OpenAI 的 SDK 都能用：把接口地址设为 base URL，填入密钥即可。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "80-integrations.json",
+   "key": "No skills installed. Discover or create a skill to get started.",
+   "was": "还没有安装技能。去发现或新建一个技能开始使用。",
+   "now": "还没有安装技能，先发现或新建一个技能开始使用。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The value of the first true condition.",
+   "was": "第一个成立的条件对应的值。",
+   "now": "取第一个成立条件对应的值。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The value of the first case that matches.",
+   "was": "第一个匹配的条件对应的值。",
+   "now": "取第一个匹配条件对应的值。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The mean of the cells that meet a condition.",
+   "was": "符合条件的单元格的平均值。",
+   "now": "对符合条件的单元格求平均。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The largest cell that meets every condition.",
+   "was": "满足所有条件的最大值。",
+   "now": "满足全部条件的最大值。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The smallest cell that meets every condition.",
+   "was": "满足所有条件的最小值。",
+   "now": "满足全部条件的最小值。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The mean of the cells that meet every condition.",
+   "was": "满足所有条件的单元格平均值。",
+   "now": "对满足全部条件的单元格求平均。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "95-last.json",
+   "key": "The last day of the month a number of months away.",
+   "was": "相隔若干个月后那个月的最后一天。",
+   "now": "相隔若干个月，取那个月的最后一天。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Restart Freebuff Desktop to use panels for existing local chats.",
+   "was": "重启 Freebuff Desktop，即可为已有的本地对话使用面板。",
+   "now": "重启 Freebuff Desktop 后，已有的本地对话也能使用面板。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Cloud chats can’t be forked yet. Only chats that run on this computer can.",
+   "was": "云端对话暂不支持派生，只有在本机运行的对话可以。",
+   "now": "云端对话暂不支持派生，只有在本机运行的对话可以派生。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Your teammate gets every chat in this project, and the ones you start later.",
+   "was": "你的队友能看到此项目的所有对话，以及你之后新开的对话。",
+   "now": "你的队友能看到这个项目的所有对话，以及你之后新开的对话。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Done — six questions in an accordion below the plans, with the billing ones first.",
+   "was": "已完成 —— 套餐下方的手风琴里放了六个问题，账单相关的排在最前。",
+   "now": "已完成 —— 套餐下方的折叠面板里放了六个问题，账单相关的排在最前。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Invite friends, connect your accounts and take sponsored posts to unlock more hours.",
+   "was": "邀请朋友、关联账号、接赞助内容，解锁更多时长。",
+   "now": "邀请好友、关联账号、承接赞助内容，解锁更多时长。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Enter a direct HTTPS image link.",
+   "was": "请输入直接的 HTTPS 图片链接。",
+   "now": "请输入 HTTPS 直链图片地址。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Couldn’t copy. Select the command and copy it manually.",
+   "was": "无法复制，请手动选中命令复制。",
+   "now": "无法复制，请手动选中命令后复制。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "This document was blocked by the network. Try a different file.",
+   "was": "此文档被网络阻止，请换一个文件。",
+   "now": "此文档被网络拦截，请换一个文件。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Current subscriptions that you’ve had, cancelled or will cancel",
+   "was": "当前订阅：已有的、已取消的和即将取消的",
+   "now": "你当前的订阅：已有的、已取消的和即将取消的"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "That file no longer exists. Opened its nearest existing folder instead.",
+   "was": "该文件已不存在，已改为打开最近的仍存在的文件夹。",
+   "now": "该文件已不存在，已改为打开离它最近的现有文件夹。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Open local folder…",
+   "was": "正在打开本地文件夹…",
+   "now": "打开本地文件夹…"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Errors, traces and replays for the app you are building, in one place.",
+   "was": "一处查看正在开发的应用的错误、追踪和回放。",
+   "now": "集中查看正在开发的应用的错误、追踪和回放。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Your code is ready. Create an account or sign in, then add your project settings.",
+   "was": "代码已就绪。创建账户或登录，然后填写项目设置。",
+   "now": "代码已就绪。创建账号或登录，然后填写项目设置。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Connect your GitHub account in Settings → Account, then select a repository here.",
+   "was": "在设置 → 账户中连接 GitHub 账户，然后在这里选择仓库。",
+   "now": "在设置 → 账号中连接 GitHub 账号，然后在这里选择仓库。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "You can’t make that change.",
+   "was": "无法进行这项修改。",
+   "now": "无法完成这项修改。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Your account changed. Reopen Freebuff Desktop and sign in again.",
+   "was": "账户已变更，请重新打开 Freebuff Desktop 并登录。",
+   "now": "账号已变更，请重新打开 Freebuff Desktop 并登录。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "This is one of Freebuff’s own accounts. Its campaigns are not billed.",
+   "was": "这是 Freebuff 自己的账户，其推广活动不计费。",
+   "now": "这是 Freebuff 自己的账号，其广告系列不计费。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "This account is suspended. Open Account standing to see why and appeal.",
+   "was": "此账户已被停用。打开账户状态查看原因并申诉。",
+   "now": "此账号已被停用。打开账号状态查看原因并申诉。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Freebuff suggests an integration relevant to what the developer is building.",
+   "was": "Freebuff 会推荐与开发者正在构建的内容相关的集成。",
+   "now": "Freebuff 会推荐与开发者当前构建内容相关的集成。"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "You’re up to date",
+   "was": "已是最新版本。",
+   "now": "已是最新版本"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Couldn’t finish the setup",
+   "was": "无法完成设置。",
+   "now": "无法完成设置"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "You’re on the latest version",
+   "was": "已是最新版本。",
+   "now": "已是最新版本"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Mission · deciding what’s next…",
+   "was": "Mission · 正在决定下一步…",
+   "now": "任务 · 正在决定下一步…"
+  },
+  {
+   "commit": "fe6caa6",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Not serving — your balance reached zero",
+   "was": "服务已停止 — 余额为零",
+   "now": "服务已停止 —— 余额为零"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "10-chrome.json",
+   "key": "Resize explorer panel",
+   "was": "调整资源管理器宽度",
+   "now": "调整资源管理器面板宽度"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "10-chrome.json",
+   "key": "Earn free usage",
+   "was": "免费赚取时长",
+   "now": "赚取免费用量"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "10-chrome.json",
+   "key": "Daily hours",
+   "was": "每日小时",
+   "now": "每日小时数"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "10-chrome.json",
+   "key": "Send a message today to start one.",
+   "was": "今天发一条消息就能开始计时。",
+   "now": "今天发一条消息，就能开始记录连续天数。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "10-chrome.json",
+   "key": "Run location is set for this chat",
+   "was": "这个对话已设定运行位置",
+   "now": "已为此对话设定运行位置"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Look up issues, stack traces and releases without leaving the chat.",
+   "was": "不用离开对话，就能查 issue、堆栈跟踪和发布记录。",
+   "now": "不用离开对话，就能查议题、堆栈跟踪和发布记录。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Not deploying yet",
+   "was": "暂时不部署",
+   "now": "尚未开始部署"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Stays on your computer. Freebuff never reads it.",
+   "was": "只留在你的电脑上。Freebuff 不会读取。",
+   "now": "只留在你的电脑上。Freebuff 从不读取。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Could not delete that item",
+   "was": "无法删除该项目",
+   "now": "无法删除该条目"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Could not edit that item",
+   "was": "无法编辑该项目",
+   "now": "无法编辑该条目"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "25-more.json",
+   "key": "Couldn't send that item",
+   "was": "无法发送该项目",
+   "now": "无法发送该条目"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Freebuff couldn’t open your browser. Copy the sign-in link and paste it into your browser.",
+   "was": "Freebuff 打不开你的浏览器。复制登录链接，粘贴到浏览器里打开。",
+   "now": "Freebuff 无法打开你的浏览器。请复制登录链接，粘贴到浏览器中打开。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "If its provider is down, DeepSeek V4.1 Flash answers for the rest of the session.",
+   "was": "如果它的提供方不可用，本次会话余下时间由 DeepSeek V4.1 Flash 代答。",
+   "now": "如果它的提供方不可用，本次会话剩余时间由 DeepSeek V4.1 Flash 代答。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "May use data for AI training",
+   "was": "可能将数据用于 AI 训练",
+   "now": "可能使用数据训练 AI"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Novita route — evaluation only",
+   "was": "Novita 线路，仅供评估",
+   "now": "Novita 线路——仅供评估"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "On Google flex capacity. If it is down, DeepSeek V4.1 Flash answers for the rest of the session.",
+   "was": "使用 Google 弹性算力。它不可用时，本次会话余下时间由 DeepSeek V4.1 Flash 代答。",
+   "now": "使用 Google 弹性算力。它不可用时，本次会话剩余时间由 DeepSeek V4.1 Flash 代答。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Smart & Fast",
+   "was": "智能又快速",
+   "now": "智能且快速"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Strong reasoning",
+   "was": "强推理",
+   "now": "推理强劲"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "Use an imported PNG, JPEG or WebP image, a bundled wallpaper, or a gradient.",
+   "was": "使用导入的 PNG、JPEG 或 WebP 图片、内置壁纸或渐变。",
+   "now": "支持导入的 PNG、JPEG 或 WebP 图片、内置壁纸和渐变。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "30-shell.json",
+   "key": "A promotional price that goes up when the promotion ends. Open with a US connection or a paid plan. One session a day on every plan.",
+   "was": "促销价，活动结束后上调。需美国网络或付费套餐才能打开。所有套餐每天 1 次会话。",
+   "now": "促销价，活动结束后上调。需美国网络或付费套餐才能使用。所有套餐每天 1 次会话。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "50-site.json",
+   "key": "No card required",
+   "was": "无需绑卡",
+   "now": "无需银行卡"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "50-site.json",
+   "key": "One plan for desktop",
+   "was": "桌面版一个套餐",
+   "now": "桌面版只需一个套餐"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "50-site.json",
+   "key": "Page not found",
+   "was": "页面未找到",
+   "now": "页面不存在"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "Approved, but not funded yet",
+   "was": "已批准，但尚未注资",
+   "now": "已批准，但尚未充值"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "No models are available for this harness yet.",
+   "was": "当前运行环境还没有可用模型。",
+   "now": "此执行框架还没有可用模型。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "After proof approval and advertiser confirmation.",
+   "was": "证明审核通过、广告主确认后。",
+   "now": "凭证审核通过、广告主确认后。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "80-integrations.json",
+   "key": "Any OpenAI-compatible SDK works. Point it at the base URL and pass your key.",
+   "was": "任何兼容 OpenAI 的 SDK 都能用：把接口地址设为 base URL，填入密钥即可。",
+   "now": "任何兼容 OpenAI 的 SDK 都能用：把 base URL 指过来，再填入密钥即可。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "Payment card",
+   "was": "支付银行卡",
+   "now": "银行卡"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "Bought hours expire one year after purchase.",
+   "was": "购买的小时数自购买起一年后过期。",
+   "now": "购买的小时数一年后过期。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "Live in a full-access country?",
+   "was": "住在完整访问权限的国家？",
+   "now": "你所在的国家有完整访问权限吗？"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "Top-up amount: US$25 for 500 hours",
+   "was": "充值金额：US$25 换 500 小时",
+   "now": "充值金额：US$25 可购 500 小时"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "No answers yet. Freebuff asks a few quick questions while the agent works.",
+   "was": "还没有回答。智能体工作时，Freebuff 会顺带问你几个小问题。",
+   "now": "还没有回答。Freebuff 会在智能体工作时问你几个小问题。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "We couldn't confirm your region from this device. If you live in a full-access country, verify a mobile number from there below to restore full access.",
+   "was": "无法通过这台设备确认你所在的地区。如果你住在完整访问权限的国家，请在下方用当地手机号验证，以恢复完整访问。",
+   "now": "无法通过这台设备确认你所在的地区。如果你的国家有完整访问权限，请在下方用当地手机号验证，即可恢复完整访问。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Attach up to nine files, including up to eight smaller image previews.",
+   "was": "最多可附加九个文件，图片预览最多八张。",
+   "now": "最多可附加九个文件，其中最多八张是较小的图片预览。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "This feature is not available on the shared staging services.",
+   "was": "此功能在共享的暂存服务中不可用。",
+   "now": "此功能在共享的预发布服务上不可用。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Missions need a project, a Freebuff model, and a goal of at most 4,000 characters.",
+   "was": "任务需要一个项目、一个 Freebuff 模型，以及不超过 4,000 字符的目标。",
+   "now": "任务需要一个项目、一个 Freebuff 模型，目标不超过 4,000 字符。"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "The view could not be rasterized",
+   "was": "无法渲染该视图，请重试。",
+   "now": "无法将该视图栅格化"
+  },
+  {
+   "commit": "024b610",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Not serving — your balance reached zero",
+   "was": "服务已停止 —— 余额为零",
+   "now": "未投放 —— 余额为零"
+  },
+  {
+   "commit": "8003126",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Split a paragraph, or start a new block",
+   "was": "拆分段落，或另起一个新块",
+   "now": "拆分段落，或另起新块"
+  },
+  {
+   "commit": "8003126",
+   "date": "2026-11-21",
+   "file": "20-ui.json",
+   "key": "Start your first project.",
+   "was": "开始你的第一个项目。",
+   "now": "开始第一个项目。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "70-deep.json",
+   "key": "App name or slug, e.g. \"gmail\" or \"Google Calendar\".",
+   "was": "应用名称或短名，例如 \"gmail\" 或 \"Google Calendar\"。",
+   "now": "应用名称或短名，例如“gmail”或“Google Calendar”。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "90-account.json",
+   "key": "Secure your documentation with Mintlify Enterprise Professional Services for professional migration and customization services.",
+   "was": "用 Mintlify 企业专业服务完成文档迁移与定制，让文档更安全。",
+   "now": "用 Mintlify 企业专业服务完成文档迁移与定制，并加固文档安全。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Done — six questions in an accordion below the plans, with the billing ones first.",
+   "was": "已完成 —— 套餐下方的折叠面板里放了六个问题，账单相关的排在最前。",
+   "now": "已完成——套餐下方的折叠面板里放了六个问题，账单相关的排在最前。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Already downloading — check your browser's downloads.",
+   "was": "已在下载 —— 请查看浏览器的下载列表。",
+   "now": "已在下载——请查看浏览器的下载列表。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "This dialog could not say who is asking — do not approve.",
+   "was": "此对话框无法确认请求方是谁 —— 请勿批准。",
+   "now": "此对话框无法确认请求方是谁——请勿批准。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Paused for today — daily cap reached, resumes at midnight PT",
+   "was": "今日已暂停 —— 已达每日上限，太平洋时间 0 点恢复",
+   "now": "今日已暂停——已达每日上限，太平洋时间零点恢复"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "This chat can’t send this selection. Open a Freebuff chat and try again.",
+   "was": "此对话无法发送选中内容，请打开 Freebuff 对话后重试。",
+   "now": "当前对话无法发送选中内容，请打开 Freebuff 对话窗口后重试。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "CLI — Inline link",
+   "was": "CLI —— 内联链接",
+   "now": "CLI——内联链接"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Web — Command menu",
+   "was": "网页 —— 命令菜单",
+   "now": "网页——命令菜单"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Desktop — Inline link",
+   "was": "桌面 —— 内联链接",
+   "now": "桌面——内联链接"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Android — Inline link",
+   "was": "Android —— 内联链接",
+   "now": "Android——内联链接"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Desktop — Skill picker",
+   "was": "桌面 —— 技能选择器",
+   "now": "桌面——技能选择器"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Desktop — Right panel billboard",
+   "was": "桌面 —— 右侧面板广告位",
+   "now": "桌面——右侧面板广告位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Running in background · View run",
+   "was": "后台运行中 —— 查看运行",
+   "now": "后台运行中——查看运行"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Done — committed to its own branch",
+   "was": "完成 —— 已提交到独立分支",
+   "now": "完成——已提交到独立分支"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Done — the changes are in your files",
+   "was": "完成 —— 改动已写入你的文件",
+   "now": "完成——改动已写入你的文件"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Paused — resume to start serving again",
+   "was": "已暂停 —— 恢复后继续投放",
+   "now": "已暂停——恢复后继续投放"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Image not included — ask Buffy to import it",
+   "was": "图片未包含 —— 让 Buffy 帮你导入",
+   "now": "图片未包含——让 Buffy 帮你导入"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "97-runtime.json",
+   "key": "Every creative was rejected — edit them to resume",
+   "was": "所有创意素材都被拒绝 —— 修改后即可恢复投放",
+   "now": "所有创意素材都被拒绝——修改后即可恢复投放"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Formats a number or date as text, e.g. \"0.00\" or \"yyyy-mm-dd\".",
+   "was": "把数字或日期按格式转成文本，例如 \"0.00\" 或 \"yyyy-mm-dd\"。",
+   "now": "把数字或日期按格式转成文本，例如“0.00”或“yyyy-mm-dd”。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "A tiny in-cell chart of the range: \"line\" (default), \"bar\" or \"column\".",
+   "was": "在单元格内绘制区域的微型图表：\"line\"（默认）、\"bar\" 或 \"column\"。",
+   "now": "在单元格内绘制区域的微型图表：“line”（默认）、“bar”或“column”。"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Web — Spotlight",
+   "was": "网页 —— 精选位",
+   "now": "网页——精选位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "CLI — Statusline",
+   "was": "CLI —— 状态栏",
+   "now": "CLI——状态栏"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Desktop — Showcase",
+   "was": "桌面 —— 展示位",
+   "now": "桌面——展示位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Web — Intermission",
+   "was": "网页 —— 插播位",
+   "now": "网页——插播位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Desktop — Spotlight",
+   "was": "桌面 —— 精选位",
+   "now": "桌面——精选位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "CLI — Launch splash",
+   "was": "CLI —— 启动闪屏",
+   "now": "CLI——启动闪屏"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Desktop — Top banner",
+   "was": "桌面 —— 顶部横幅",
+   "now": "桌面——顶部横幅"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Desktop — Intermission",
+   "was": "桌面 —— 插播位",
+   "now": "桌面——插播位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Done — pull request opened",
+   "was": "完成 —— 已打开拉取请求",
+   "now": "完成——已打开拉取请求"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Done — pull request merged",
+   "was": "完成 —— 已合并拉取请求",
+   "now": "完成——已合并拉取请求"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "CLI — Composer (PR intent)",
+   "was": "CLI —— 输入框（PR 意图）",
+   "now": "CLI——输入框（PR 意图）"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Desktop — Sidebar billboard",
+   "was": "桌面 —— 侧边栏广告位",
+   "now": "桌面——侧边栏广告位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Desktop — New chat takeover",
+   "was": "桌面 —— 新建对话接管位",
+   "now": "桌面——新建对话接管位"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Not serving — your balance reached zero",
+   "was": "未投放 —— 余额为零",
+   "now": "未投放——余额为零"
+  },
+  {
+   "commit": "ccbf57f",
+   "date": "2026-11-21",
+   "file": "99-final.json",
+   "key": "Open a local clone of this git repo as a new project to unlock local syncing",
+   "was": "把本地克隆的 git 仓库作为新项目打开，即可使用本地同步",
+   "now": "把本地克隆的 git 仓库作为新项目打开，就能用本地同步"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "20-ui.json",
+   "key": "Test your app at a shareable link",
+   "was": "用可分享的链接测试你的应用",
+   "now": "在分享链接上试用你的应用"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "20-ui.json",
+   "key": "The trace stops here: the run has more events than a trace reads.",
+   "was": "追踪到此为止：本次运行的事件数超出追踪能读取的范围。",
+   "now": "追踪到此为止：这次运行的事件太多，追踪读不完。"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "30-shell.json",
+   "key": "The selected custom theme is missing from your theme collection.",
+   "was": "选中的自定义主题不在你的主题列表里。",
+   "now": "这个自定义主题已不在主题库里。"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "70-deep.json",
+   "key": "Write your own post in the community the campaign names.",
+   "was": "在广告系列指定的社区里发一条自己的帖子。",
+   "now": "到广告系列选定的社区里发一条帖子。"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "97-runtime.json",
+   "key": "Your teammate gets every chat in this project, and the ones you start later.",
+   "was": "你的队友能看到这个项目的所有对话，以及你之后新开的对话。",
+   "now": "队友能看到这个项目里的每段对话，还有你以后新开的。"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "97-runtime.json",
+   "key": "Current subscriptions that you’ve had, cancelled or will cancel",
+   "was": "你当前的订阅：已有的、已取消的和即将取消的",
+   "now": "目前的订阅：已有、已取消和即将取消的"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "97-runtime.json",
+   "key": "Your name and email aren’t attached to answers sent to",
+   "was": "发送的回答不会附带你的姓名和邮箱",
+   "now": "回答发出时不会带上你的姓名和邮箱"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "99-final.json",
+   "key": "Errors, traces and replays for the app you are building, in one place.",
+   "was": "集中查看正在开发的应用的错误、追踪和回放。",
+   "now": "正在开发的应用，它的错误、追踪和回放都在这里。"
+  },
+  {
+   "commit": "c5253d0",
+   "date": "2026-11-22",
+   "file": "99-final.json",
+   "key": "Describe the issue or feature you’d like to see.",
+   "was": "描述你遇到的问题或想要的功能。",
+   "now": "说说遇到了什么问题，或者想要什么功能。"
+  }
+ ]
+}

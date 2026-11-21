@@ -88,9 +88,13 @@ const MAP = {
 }
 
 const out = {}
+const misses = []
 for (const [file, pairs] of Object.entries(MAP)) {
   const key = [...contents.keys()].find((name) => name.toLowerCase() === file.toLowerCase())
-  if (!key) continue
+  if (!key) {
+    misses.push(`${file}: asar 里没有这个文件`)
+    continue
+  }
   const source = contents.get(key).toString('utf8')
   const edits = []
   for (const [english, chinese] of Object.entries(pairs)) {
@@ -99,12 +103,18 @@ for (const [file, pairs] of Object.entries(MAP)) {
     const needle = fragment ? text : "'" + text + "'"
     const count = source.split(needle).length - 1
     if (count === 0) {
-      console.log('未命中，跳过:', file, english)
+      // 上游改了这句文案：静默跳过会让这张表悄悄缩水，必须在生成时就报出来。
+      misses.push(`${file}: ${english}`)
       continue
     }
     edits.push([needle, fragment ? chinese : "'" + chinese + "'", count])
   }
   if (edits.length) out[file] = edits
+}
+
+if (misses.length) {
+  for (const miss of misses) console.error('未命中:', miss)
+  throw new Error(`主进程字符串表有 ${misses.length} 条锚点没命中：请按新版 Freebuff 调整 MAP，本次未写表`)
 }
 
 const dest = path.join(import.meta.dirname, '..', 'dist', 'main-strings.json')
