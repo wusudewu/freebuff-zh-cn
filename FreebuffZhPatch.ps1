@@ -3,10 +3,12 @@
   Freebuff 简体中文界面补丁 · 安装器
   四个动作：Install / Restore / Status / Verify
   设计约束（来自 Capy 中文补丁的工程经验）：
-    · 只加两处成对 marker，不重排、不删除别人的内容；
+    · 只加两处成对 marker + 几张原生文案表，不重排、不删除别人的内容；
     · 装前备份 + 哈希校验，装后校验，还原前确认文件没被别人改过；
     · 所有写文件走「临时文件 → 读回校验 → 原子替换」；
     · 版本闸门：只对适配过的 Freebuff 版本动手。
+  -Force 只放宽两道保护闸门（版本不在适配列表、文件与安装记录不一致），
+  不会让安装变得更「彻底」；用它之前请确认 Freebuff 没有被原地更新过。
 #>
 [CmdletBinding()]
 param(
@@ -55,9 +57,11 @@ function Get-Sha256($path) {
 }
 
 function Assert-AppIdle {
-  $running = Get-Process -Name 'Freebuff' -ErrorAction SilentlyContinue
-  if ($running -and -not $Force) {
-    Fail 'Freebuff 正在运行。请先完全退出 Freebuff（含托盘图标），再重试。'
+  # 不只认 Freebuff：更新器（Freebuff Update / freebuff-desktop 等）也会占着 app.asar。
+  $running = @(Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.ProcessName -like '*freebuff*' })
+  if ($running.Count -gt 0 -and -not $Force) {
+    $names = ($running | ForEach-Object { $_.ProcessName } | Sort-Object -Unique) -join '、'
+    Fail "检测到 Freebuff 相关进程还在运行：$names。请完全退出 Freebuff（含托盘图标与更新器），再重试。"
   }
 }
 
@@ -94,11 +98,23 @@ function Read-AppVersion {
   try { return (($raw -join "`n") | ConvertFrom-Json).appVersion } catch { return $null }
 }
 
+function Get-PatchVerify {
+  # 自检在「没装/文件被改动」时会以非零码退出，这是正常结论，不能把 Status 一起 exit 掉。
+  $node = Resolve-Node
+  $raw = & $node $PatchAppPath 'verify' '--app-dir' (Resolve-AppDir) '--asset' $AssetPath 2>&1
+  $text = ($raw -join "`n")
+  $start = $text.IndexOf('{')
+  if ($start -lt 0) { return $null }
+  try { return ($text.Substring($start) | ConvertFrom-Json) } catch { return $null }
+}
+
 # ---------------------------------------------------------------- Status
 
 function Show-Status {
   $dir = Resolve-AppDir
   $manifest = Read-Manifest
+  $asar = Join-Path $dir 'resources\app.asar'
+  $shell = Join-Path $dir 'resources\orchestrator\ui\index.html'
   Write-Host ''
   Write-Host 'Freebuff 中文补丁 · 状态' -ForegroundColor Cyan
   Write-Host "  应用目录   $dir"
@@ -106,23 +122,35 @@ function Show-Status {
     $meta = Get-Content -LiteralPath $MetaPath -Raw -Encoding UTF8 | ConvertFrom-Json
     Write-Host "  补丁版本   $($meta.version)（词表 $($meta.entries) 条，规则 $($meta.rules) 条）"
   }
-  $verify = $null
-  try { $verify = (Invoke-Patcher 'verify' @()) | ConvertFrom-Json } catch { }
-  if ($verify) { Write-Host "  应用版本   $($verify.appVersion)" }
-  if (-not $manifest) {
-    Write-Host '  安装状态   未安装' -ForegroundColor Yellow
+
+  if (-not (Test-Path $asar)) {
+    Write-Host '  安装状态   找不到 app.asar（Freebuff 可能没装在这个目录）' -ForegroundColor Yellow
     Write-Host ''
     return
   }
-  $installed = $verify -and $verify.ok
-  if ($installed) { Write-Host '  安装状态   已安装' -ForegroundColor Green }
-  else { Write-Host '  安装状态   已安装但文件被改动（可能 Freebuff 更新了，请重新安装）' -ForegroundColor Yellow }
-  $asar = Join-Path $dir 'resources\app.asar'
-  if (Test-Path $asar) {
-    $now = Get-Sha256 $asar
-    if ($now -ne $manifest.appAsar.patchedHash) {
-      Write-Host '  注意       app.asar 与安装时不一致：Freebuff 可能已更新，请重跑安装' -ForegroundColor Yellow
+
+  $verify = Get-PatchVerify
+  if ($verify) { Write-Host "  应用版本   $($verify.appVersion)" }
+  $marked = (Test-Path $shell) -and ((Get-Content -LiteralPath $shell -Raw -Encoding UTF8).Contains('<!-- freebuff-zh:start -->'))
+
+  if (-not $manifest) {
+    if ($marked) {
+      Write-Host '  安装状态   界面里有补丁痕迹，但缺少安装记录：请用 Freebuff 官方安装包重装，再安装补丁' -ForegroundColor Yellow
+    } else {
+      Write-Host '  安装状态   未安装' -ForegroundColor Yellow
     }
+    Write-Host ''
+    return
+  }
+
+  $asarNow = Get-Sha256 $asar
+  if (-not $marked -or $asarNow -ne $manifest.appAsar.patchedHash) {
+    Write-Host '  安装状态   Freebuff 已更新或 app.asar 被改动，补丁已不在原位：请重新安装' -ForegroundColor Yellow
+  } elseif (-not $verify -or -not $verify.ok) {
+    $problems = @($verify.problems) | Where-Object { $_ }
+    Write-Host ('  安装状态   已安装，但有个别文件与安装记录不一致' + $(if ($problems.Count -gt 0) { '：' + ($problems -join '；') } else { '' })) -ForegroundColor Yellow
+  } else {
+    Write-Host '  安装状态   已安装' -ForegroundColor Green
   }
   Write-Host "  安装时间   $($manifest.installedAt)"
   Write-Host "  备份目录   $($manifest.backupDir)"
@@ -150,36 +178,51 @@ function Install-Patch {
   Write-Step "应用版本 $appVersion，补丁版本 $($meta.version)"
 
   $existing = Read-Manifest
-  $shellText = Get-Content -LiteralPath $shell -Raw -Encoding UTF8
-  $alreadyPatched = $shellText.Contains('<!-- freebuff-zh:start -->')
+  $verifyNow = Get-PatchVerify
+  $shellMarked = [bool]($verifyNow -and $verifyNow.shellMarkers -eq 1)
+  $asarMarked = [bool]($verifyNow -and $verifyNow.hostedMarkers -eq 1)
+  $alreadyPatched = $shellMarked -and $asarMarked
 
-  # 补丁版本变了（例如新增了原生菜单/对话框的替换）就必须重打 asar，只刷新词表是不够的。
-  $needsFullPatch = $alreadyPatched -and (-not $existing -or $existing.patchVersion -ne $meta.version -or $Force)
-  if ($alreadyPatched -and $needsFullPatch) {
-    Write-Step "补丁版本变化（$($existing.patchVersion) → $($meta.version)），先还原再重打"
-    $raw = Invoke-Patcher 'restore' @('--backup', $existing.backupDir)
-    if (-not $existing) { Fail '缺少安装记录，无法安全重打；请用官方安装包重装 Freebuff。' }
+  # 界面里有 marker、却没有安装记录：既不能安全重打（没有原始备份），也没法刷新（不知道补丁版本）。
+  if (-not $existing -and ($shellMarked -or $asarMarked)) {
+    Fail '界面里已经打过补丁，但找不到安装记录（manifest.json）。请用 Freebuff 官方安装包重装 Freebuff（会覆盖回英文原版），再安装中文补丁。'
+  }
+
+  # 不是「两处都在」就说明这棵文件树不完整（上游更新、部分还原、手改过），一律走完整重打。
+  $needsFullPatch = -not $alreadyPatched
+  if ($alreadyPatched -and $existing.patchVersion -ne $meta.version) { $needsFullPatch = $true }
+
+  if ($needsFullPatch -and $existing -and ($shellMarked -or $asarMarked)) {
+    # 先确认当前文件还是「我们上次装出来的那份」，否则用旧备份还原会把 Freebuff 降级回上一版。
+    $asarNow = Get-Sha256 $asar
+    $shellNow = Get-Sha256 $shell
+    $drifted = ($asarNow -ne $existing.appAsar.patchedHash) -or ($shellNow -ne $existing.shell.patchedHash)
+    if ($drifted -and -not $Force) {
+      Fail ("app.asar/index.html 与安装记录不一致：Freebuff 可能已原地更新过。" +
+        '为了不用旧备份覆盖新版本，已中止。请先重装 Freebuff（官方安装包），再安装中文补丁；' +
+        '确认这台机器上的 Freebuff 没有被更新过，可以加 -Force 继续。')
+    }
+    if ($drifted) { Write-Step '文件与安装记录不一致，按 -Force 用备份覆盖（风险自担）' }
+    Write-Step "先还原再重打（补丁版本 $($existing.patchVersion) → $($meta.version)）"
+    $null = Invoke-Patcher 'restore' @('--backup', $existing.backupDir)
     $alreadyPatched = $false
   }
 
   if ($alreadyPatched) {
-    Write-Step '检测到已安装，只更新词表' 
-    Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $dir 'resources\orchestrator\ui\freebuff-zh-cn.js') -Force
-    Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js') -Force
-    Copy-Item -LiteralPath $AssetPath -Destination (Join-Path $StateRoot 'freebuff-zh-cn.js') -Force -ErrorAction SilentlyContinue
-    if ($existing) {
-      $existing.patchVersion = $meta.version
-      $existing.entries = $meta.entries
-      $existing.rules = $meta.rules
-      $existing.asset.hash = (Get-Sha256 (Join-Path $dir 'resources\freebuff-zh\freebuff-zh-cn.js'))
-      $existing | Add-Member -NotePropertyName refreshedAt -NotePropertyValue ((Get-Date).ToString('s')) -Force
-      Write-Manifest $existing
-    } else {
-      Write-Step '缺少安装记录，无法同步状态；请先运行「恢复英文.cmd」，再重新安装'
-    }
-    $verify = (Invoke-Patcher 'verify' @()) | ConvertFrom-Json
-    if (-not $verify.ok) { Fail ('安装校验未通过：' + ($verify.problems -join '；')) }
-    Write-Step '词表已更新，重新打开 Freebuff 生效'
+    Write-Step '检测到已安装，只更新词表与脚本'
+    $refresh = (Invoke-Patcher 'refresh' @('--asset', $AssetPath)) | ConvertFrom-Json
+    $existing.patchVersion = $meta.version
+    $existing.entries = $meta.entries
+    $existing.rules = $meta.rules
+    $existing.asset.hash = $refresh.hosted
+    $existing | Add-Member -NotePropertyName refreshedAt -NotePropertyValue ((Get-Date).ToString('s')) -Force
+    Write-Manifest $existing
+    $verify = Get-PatchVerify
+    if (-not $verify -or -not $verify.ok) { Fail ('安装校验未通过：' + ($(if ($verify) { $verify.problems -join '；' } else { '自检没有返回结果' }))) }
+    Write-Host ''
+    Write-Host '✓ 词表已更新' -ForegroundColor Green
+    Write-Host '  重新打开 Freebuff 生效。'
+    Write-Host ''
     return
   }
 
@@ -226,8 +269,8 @@ function Install-Patch {
   }
   Write-Manifest $manifest
 
-  $verify = (Invoke-Patcher 'verify' @()) | ConvertFrom-Json
-  if (-not $verify.ok) { Fail ('安装校验未通过：' + ($verify.problems -join '；')) }
+  $verify = Get-PatchVerify
+  if (-not $verify -or -not $verify.ok) { Fail ('安装校验未通过：' + ($(if ($verify) { $verify.problems -join '；' } else { '自检没有返回结果' }))) }
 
   Write-Host ''
   Write-Host '✓ 安装完成' -ForegroundColor Green
@@ -245,7 +288,9 @@ function Restore-Patch {
   Assert-AppIdle
 
   $asar = Join-Path $dir 'resources\app.asar'
+  $shell = Join-Path $dir 'resources\orchestrator\ui\index.html'
   if (-not (Test-Path $asar)) { Fail "找不到 app.asar：$asar" }
+  if (-not (Test-Path (Join-Path $manifest.backupDir 'app.asar'))) { Fail "找不到备份：$($manifest.backupDir)。请用 Freebuff 官方安装包重装。" }
   $current = Get-Sha256 $asar
   if ($current -ne $manifest.appAsar.patchedHash -and -not $Force) {
     Fail 'app.asar 与安装时记录的补丁版本不一致：Freebuff 可能已更新或文件被改动。请重装 Freebuff，或加 -Force 强制用备份还原。'
@@ -257,7 +302,7 @@ function Restore-Patch {
   if ($result.restoredAppAsarHash -ne $manifest.appAsar.originalHash) {
     Fail '还原后的 app.asar 哈希与安装前不一致，已中止。请用 Freebuff 官方安装包重装。'
   }
-  if ($result.restoredIndexHash -ne $manifest.shell.originalHash) {
+  if ((Test-Path $shell) -and $result.restoredIndexHash -ne $manifest.shell.originalHash) {
     Fail '还原后的 index.html 哈希与安装前不一致，已中止。请用 Freebuff 官方安装包重装。'
   }
 
@@ -273,12 +318,14 @@ function Restore-Patch {
 # ---------------------------------------------------------------- Verify
 
 function Test-Patch {
-  $verify = (Invoke-Patcher 'verify' @()) | ConvertFrom-Json
+  $verify = Get-PatchVerify
+  if (-not $verify) { Fail '自检没有返回结果：请确认 Node.js 可用、Freebuff 装在默认目录。' }
   Write-Host ''
   Write-Host 'Freebuff 中文补丁 · 自检' -ForegroundColor Cyan
   Write-Host "  应用版本       $($verify.appVersion)"
   Write-Host "  界面入口标记   $($verify.shellMarkers)"
   Write-Host "  app.asar 标记  $($verify.hostedMarkers)"
+  Write-Host "  原生文案锚点   $($verify.anchors) 处"
   $manifest = Read-Manifest
   if ($manifest) {
     $asset = $manifest.asset.path

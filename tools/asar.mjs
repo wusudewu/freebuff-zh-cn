@@ -2,6 +2,7 @@
 // Format: [uint32 4][uint32 headerPickleSize][uint32 payloadSize][uint32 jsonSize][json][files...]
 import fs from 'node:fs'
 import path from 'node:path'
+import crypto from 'node:crypto'
 
 const ALIGN = 4
 
@@ -30,22 +31,52 @@ export function listEntries(header) {
   return walk(header, '', [])
 }
 
-function sortKeys(files) {
-  // asar keeps insertion order; ours is deterministic already, but sort for stability
-  const sorted = {}
-  for (const key of Object.keys(files).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))) sorted[key] = files[key]
-  return files
+// Electron 把 unpacked 文件的真实内容放在 app.asar.unpacked/，asar 里的 offset/size 只是占位：
+// 按 offset 读出来的是垃圾字节。整体 integrity（macOS 的 asar 完整性校验）也是另一套格式。
+// 两种都超出本工具的能力，宁可拒绝，也不写出坏包。
+export function assertRepackable(header) {
+  if (header.integrity) throw new Error('asar 带整体 integrity 字段（Electron 的 asar 完整性校验），本工具不支持重打包')
+  for (const { rel, entry } of listEntries(header)) {
+    if (entry.unpacked) throw new Error(`asar 含 unpacked 条目（${rel}），本工具不支持重打包`)
+  }
 }
 
-export function writeAsar(file, header, contents) {
-  // contents: Map<rel, Buffer>
-  const files = header.files
+// 每个条目的 integrity = { algorithm, hash(整文件), blockSize, blocks[](按块) }，全部小写十六进制。
+export function computeIntegrity(data, template) {
+  const algorithm = String((template && template.algorithm) || 'sha256').toLowerCase()
+  const blockSize = Number((template && template.blockSize) || 4194304)
+  const hash = crypto.createHash(algorithm).update(data).digest('hex')
+  const blocks = []
+  for (let offset = 0; offset < data.length; offset += blockSize) {
+    blocks.push(crypto.createHash(algorithm).update(data.subarray(offset, offset + blockSize)).digest('hex'))
+  }
+  return { ...template, algorithm: template && template.algorithm ? template.algorithm : 'SHA256', hash, blocks }
+}
+
+export function checkIntegrity(entry, data) {
+  const it = entry.integrity
+  if (!it) return true
+  const next = computeIntegrity(data, it)
+  if (next.hash !== it.hash) return false
+  if (next.blocks.length !== (it.blocks || []).length) return false
+  return next.blocks.every((block, index) => block === it.blocks[index])
+}
+
+// contents: Map<rel, Buffer>
+// options.original: Map<rel, Buffer> —— 原包里没被改动的文件保持原 integrity 字段不动，未改动的包可逐字节复原。
+export function writeAsar(file, header, contents, options = {}) {
+  assertRepackable(header)
+  const original = options.original || null
   const entries = listEntries(header)
   let offset = 0
   const chunks = []
   for (const { rel, entry } of entries) {
     const data = contents.get(rel)
     if (!data) throw new Error(`缺少文件内容: ${rel}`)
+    if (entry.integrity && original) {
+      const before = original.get(rel)
+      if (!before || !before.equals(data)) entry.integrity = computeIntegrity(data, entry.integrity)
+    }
     entry.size = data.length
     entry.offset = String(offset)
     offset += data.length
@@ -70,6 +101,7 @@ export function writeAsar(file, header, contents) {
 
 export function unpackTo(file, dir) {
   const { buf, header, baseOffset } = readAsar(file)
+  assertRepackable(header)
   for (const { rel, entry } of listEntries(header)) {
     const dest = path.join(dir, rel)
     fs.mkdirSync(path.dirname(dest), { recursive: true })

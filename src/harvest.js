@@ -1,5 +1,7 @@
 // 界面巡检探针（第四轮）：打开新建对话、输入区菜单、标签菜单、模板详情、集成详情、技能、广告向导等界面。
-// 只在 %LOCALAPPDATA%\FreebuffZh\harvest 存在时由注入钩子调用。
+// 只在 %LOCALAPPDATA%\FreebuffZh\harvest 这个「开关文件」存在时由注入钩子调用；写完 harvest.json 后
+// 注入钩子会把这个开关删掉，所以它天然是**一次性**的：跑完就失效，重新 touch 才会再跑一次。
+// 快照会包含当时界面的全部可见文本（包括当前对话内容），用完请删掉 %LOCALAPPDATA%\FreebuffZh\harvest.json。
 // 它只点开界面并取消：不发送消息、不创建项目、不保存、不购买、不退出登录。
 ;(() => {
   'use strict'

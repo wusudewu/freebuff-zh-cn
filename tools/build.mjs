@@ -4,6 +4,7 @@ import path from 'node:path'
 
 const root = path.resolve(import.meta.dirname, '..')
 const dictDir = path.join(root, 'dict')
+const distDir = path.join(root, 'dist')
 const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'))
 
 const CJK = /[\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff]/
@@ -47,24 +48,35 @@ const dict = {}
 for (const key of [...merged.keys()].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))) dict[key] = merged.get(key)
 
 const template = fs.readFileSync(path.join(root, 'src', 'engine.js'), 'utf8')
+// 替换值一律走函数形式：字符串形式的 replacement 会把译文里的 $&、$`、$'、$1 当捕获组引用吃掉。
 const out = template
-  .replaceAll('__PATCH_VERSION__', pkg.version)
-  .replace('__DICT__', JSON.stringify(dict))
-  .replace('__RULES__', JSON.stringify(rules))
+  .replaceAll('__PATCH_VERSION__', () => pkg.version)
+  .replace('__DICT__', () => JSON.stringify(dict))
+  .replace('__RULES__', () => JSON.stringify(rules))
 
 if (out.includes('__DICT__') || out.includes('__RULES__') || out.includes('__PATCH_VERSION__')) {
   throw new Error('模板占位符没有被全部替换')
 }
 
-fs.mkdirSync(path.join(root, 'dist'), { recursive: true })
-fs.writeFileSync(path.join(root, 'dist', 'freebuff-zh-cn.js'), out)
-fs.copyFileSync(path.join(root, 'src', 'harvest.js'), path.join(root, 'dist', 'harvest.js'))
+fs.mkdirSync(distDir, { recursive: true })
+const engineOut = path.join(distDir, 'freebuff-zh-cn.js')
+fs.writeFileSync(engineOut, out)
+fs.copyFileSync(path.join(root, 'src', 'harvest.js'), path.join(distDir, 'harvest.js'))
+fs.copyFileSync(path.join(root, 'src', 'main-world.js'), path.join(distDir, 'freebuff-zh-main.js'))
 fs.writeFileSync(
-  path.join(root, 'dist', 'patch-meta.json'),
+  path.join(distDir, 'patch-meta.json'),
   JSON.stringify({ version: pkg.version, entries: Object.keys(dict).length, rules: rules.length, builtAt: new Date().toISOString() }, null, 2),
 )
 
+// 版本号三处（package.json / patch-meta.json / 产物内嵌）必须一致，否则装的是别的版本。
+const embedded = fs.readFileSync(engineOut, 'utf8').match(/const PATCH_VERSION = '([^']*)'/)
+const meta = JSON.parse(fs.readFileSync(path.join(distDir, 'patch-meta.json'), 'utf8'))
+const versions = { package: pkg.version, meta: meta.version, engine: embedded ? embedded[1] : null }
+if (versions.meta !== versions.package || versions.engine !== versions.package) {
+  throw new Error(`版本号不一致: ${JSON.stringify(versions)}`)
+}
+
 console.log(`词表 ${Object.keys(dict).length} 条（源 ${sources} 条，冲突 ${conflicts.length}），规则 ${rules.length} 条`)
-console.log(`输出 dist/freebuff-zh-cn.js ${(out.length / 1024).toFixed(1)} KB`)
+console.log(`输出 dist/freebuff-zh-cn.js ${(out.length / 1024).toFixed(1)} KB，版本 ${versions.engine}（三处一致）`)
 for (const conflict of conflicts.slice(0, 20)) console.error('CONFLICT', conflict.file, JSON.stringify(conflict.en), '=>', conflict.was, '|', conflict.now)
 if (conflicts.length) process.exitCode = 1

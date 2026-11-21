@@ -1,5 +1,25 @@
 # 更新日志
 
+## 0.3.4 · 2026-11-22
+
+代码审查整改（14 条），重点是把「看起来做了」换成「真的做了」：
+
+- **安装器不再可能把 Freebuff 降级**：重打前比对当前 `app.asar`/`index.html` 与安装记录的哈希，
+  不一致就拒绝（Freebuff 原地更新过的情况），`-Force` 才越过；`if (-not $existing)` 的死代码删掉，
+  缺少安装记录时在动手前就失败，不会再出现「带空备份路径去 restore」。
+- **通知翻译真的生效**：原来在隔离世界包 `window.Notification` 是无效的（世界隔离），
+  改成主世界 shim（`freebuff-zh-main.js`）+ DOM 属性同步桥接；测试从「无 Notification 时恒真」
+  换成伪造构造函数、断言标题与正文真的被翻译。
+- **asar 重打包不再留隐患**：逐文件回读比对、重算每条 `integrity`、拒绝 `unpacked`/整体 integrity 的包；
+  原子写并清理 `.zh-new`/`.zh-tmp` 残片。
+- **锚点缺失不再静默跳过**：菜单/对话框/主进程文案表里的文件在 asar 里找不到时直接失败；
+  改过的 `.cjs` 全部过 `vm.Script`；`Verify` 现在也检查这些原生文案是否真的替换成功。
+- **harvest 开关改成一次性**：写完 `harvest.json` 自动删除开关；README 讲清 `debug`/`harvest` 怎么关、
+  快照含会话内容。
+- 其它：删掉死代码 `sortKeys()`、失效的 `skipCache`；`npm run glossary` 指向不存在的文件已删；
+  build 尾部自检 package/meta/产物三处版本号一致；`check-harvest` 单独统计中英混排未命中的条目；
+  `.replace()` 改函数形式，避免译文里的 `$&` 被当成捕获组。
+
 ## 0.3.3 · 2026-11-21
 
 第十三轮（读者视角 + 排版一致性）：

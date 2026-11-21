@@ -1,13 +1,14 @@
-// 安装器的文件手术层：只做两处注入，全部带成对 marker、哈希与锚点断言。
+// 安装器的文件手术层：两处注入 + 几张原生文案表，全部带成对 marker、锚点断言、语法门与哈希。
 // 用法（由 FreebuffZhPatch.ps1 调用）：
 //   node tools/patch-app.mjs apply   --app-dir <dir> --asset <js> --backup <dir>
 //   node tools/patch-app.mjs restore --app-dir <dir> --backup <dir>
+//   node tools/patch-app.mjs refresh --app-dir <dir> --asset <js>
 //   node tools/patch-app.mjs verify  --app-dir <dir>
 import fs from 'node:fs'
 import path from 'node:path'
 import crypto from 'node:crypto'
 import vm from 'node:vm'
-import { loadContents, writeAsar } from './asar.mjs'
+import { loadContents, writeAsar, listEntries, assertRepackable, checkIntegrity } from './asar.mjs'
 
 const HTML_START = '<!-- freebuff-zh:start -->'
 const HTML_END = '<!-- freebuff-zh:end -->'
@@ -18,6 +19,8 @@ const HOSTED_MODULE = 'electron/hosted-workspace.cjs'
 const SHELL_HTML = 'orchestrator/ui/index.html'
 const SHELL_ASSET = 'orchestrator/ui/freebuff-zh-cn.js'
 const HOSTED_ASSET = 'freebuff-zh/freebuff-zh-cn.js'
+const MAIN_ASSET = 'freebuff-zh/freebuff-zh-main.js'
+const HARVEST_ASSET = 'freebuff-zh/harvest.js'
 
 const sha256 = (buffer) => crypto.createHash('sha256').update(buffer).digest('hex')
 
@@ -35,7 +38,7 @@ const args = parseArgs(process.argv.slice(2))
 const command = args._[0]
 const appDir = args['app-dir']
 if (!command || !appDir) {
-  console.error('用法: patch-app.mjs <apply|restore|verify> --app-dir <目录> [--asset <js>] [--backup <目录>]')
+  console.error('用法: patch-app.mjs <apply|restore|refresh|verify> --app-dir <目录> [--asset <js>] [--backup <目录>]')
   process.exit(2)
 }
 
@@ -44,6 +47,8 @@ const asarPath = path.join(resourcesDir, 'app.asar')
 const shellHtmlPath = path.join(resourcesDir, ...SHELL_HTML.split('/'))
 const shellAssetPath = path.join(resourcesDir, ...SHELL_ASSET.split('/'))
 const hostedAssetPath = path.join(resourcesDir, ...HOSTED_ASSET.split('/'))
+const mainAssetPath = path.join(resourcesDir, ...MAIN_ASSET.split('/'))
+const harvestAssetPath = path.join(resourcesDir, ...HARVEST_ASSET.split('/'))
 
 function eolOf(text) {
   return text.includes('\r\n') ? '\r\n' : '\n'
@@ -57,6 +62,7 @@ function injectionBlock(eol) {
     "        const zhPath = require('node:path')",
     "        const zhDir = zhPath.join(process.resourcesPath, 'freebuff-zh')",
     "        const zhAsset = zhPath.join(zhDir, 'freebuff-zh-cn.js')",
+    "        const zhMainAsset = zhPath.join(zhDir, 'freebuff-zh-main.js')",
     "        const zhStateDir = zhPath.join(process.env.LOCALAPPDATA || '', 'FreebuffZh')",
     "        const zhDebugPath = zhPath.join(zhStateDir, 'debug')",
     "        const zhDebug = zhFs.existsSync(zhDebugPath) || zhFs.existsSync(zhPath.join(zhDir, 'debug'))",
@@ -78,6 +84,15 @@ function injectionBlock(eol) {
     '          } catch (error) {',
     "            zhLog('inject threw: ' + (error && error.message))",
     '          }',
+    '          try {',
+    "            const zhMainSource = zhFs.readFileSync(zhMainAsset, 'utf8')",
+    '            win.webContents.executeJavaScript(zhMainSource, true).then(',
+    "              () => zhLog('main shim ready'),",
+    "              (error) => zhLog('main shim failed: ' + (error && error.message)),",
+    '            )',
+    '          } catch (error) {',
+    "            zhLog('main shim threw: ' + (error && error.message))",
+    '          }',
     '          if (!zhDebug) return',
     '          let rounds = 0',
     '          const timer = setInterval(() => {',
@@ -93,14 +108,21 @@ function injectionBlock(eol) {
     '              .catch(() => {})',
     '          }, 10000)',
     '        }',
+    '        let zhHarvestDone = false',
     "        const zhHarvest = () => {",
+    '          if (zhHarvestDone) return',
     "          if (!zhFs.existsSync(zhPath.join(zhStateDir, 'harvest'))) return",
-    "          try {",
+    '          zhHarvestDone = true',
+    '          try {',
     "            const zhCode = zhFs.readFileSync(zhPath.join(zhDir, 'harvest.js'), 'utf8')",
-    "            setTimeout(() => {",
-    "              if (win.isDestroyed()) return",
+    '            setTimeout(() => {',
+    '              if (win.isDestroyed()) return',
     '              win.webContents.executeJavaScriptInIsolatedWorld(1001, [{ code: zhCode }]).then(',
-    "                (result) => zhFs.writeFileSync(zhPath.join(zhStateDir, 'harvest.json'), JSON.stringify(result, null, 2)),",
+    "                (result) => {",
+    "                  zhFs.writeFileSync(zhPath.join(zhStateDir, 'harvest.json'), JSON.stringify(result, null, 2))",
+    "                  try { zhFs.rmSync(zhPath.join(zhStateDir, 'harvest'), { force: true }) } catch (error) {}",
+    "                  zhLog('harvest written, marker removed')",
+    '                },',
     "                (error) => zhLog('harvest failed: ' + (error && error.message)),",
     '              ).catch(() => {})',
     '            }, 7000)',
@@ -243,6 +265,32 @@ function applyEdits(source, edits, file) {
   return out
 }
 
+function checkSyntax(source, name) {
+  if (!name.endsWith('.cjs') && !name.endsWith('.js') && !name.endsWith('.mjs')) return
+  try {
+    new vm.Script(source, { filename: name })
+  } catch (error) {
+    throw new Error(`${name} 语法错误: ${error.message}`)
+  }
+}
+
+function findKey(contents, name) {
+  return [...contents.keys()].find((key) => key.toLowerCase() === name.toLowerCase())
+}
+
+// 上游改结构时宁可失败，也不能安安静静少翻一部分。
+function requireKey(contents, name) {
+  const key = findKey(contents, name)
+  if (!key) throw new Error(`app.asar 中找不到 ${name}（Freebuff 可能改了文件结构，需要更新补丁）`)
+  return key
+}
+
+function editInPlace(contents, key, edits, label) {
+  const next = applyEdits(contents.get(key).toString('utf8'), edits, label)
+  checkSyntax(next, label)
+  contents.set(key, Buffer.from(next, 'utf8'))
+}
+
 function patchShellHtml(source) {
   const stripped = stripMarked(source, HTML_START, HTML_END)
   const eol = eolOf(stripped)
@@ -255,11 +303,36 @@ function patchShellHtml(source) {
 
 function atomicWrite(file, data) {
   const temp = file + '.zh-tmp'
-  fs.writeFileSync(temp, data)
-  const written = fs.readFileSync(temp)
   const expected = Buffer.isBuffer(data) ? data : Buffer.from(data)
-  if (!written.equals(expected)) throw new Error(`写入校验失败: ${file}`)
-  fs.renameSync(temp, file)
+  try {
+    fs.writeFileSync(temp, expected)
+    const written = fs.readFileSync(temp)
+    if (!written.equals(expected)) throw new Error(`写入校验失败: ${file}`)
+    fs.renameSync(temp, file)
+  } finally {
+    if (fs.existsSync(temp)) fs.rmSync(temp, { force: true })
+  }
+}
+
+function removeStale(dirs) {
+  for (const file of dirs) {
+    if (fs.existsSync(file)) fs.rmSync(file, { force: true })
+  }
+}
+
+function copyAssets(assetPath) {
+  const asset = fs.readFileSync(assetPath)
+  const assetDir = path.dirname(assetPath)
+  fs.mkdirSync(path.dirname(shellAssetPath), { recursive: true })
+  fs.mkdirSync(path.dirname(hostedAssetPath), { recursive: true })
+  atomicWrite(shellAssetPath, asset)
+  atomicWrite(hostedAssetPath, asset)
+  const mainShim = path.join(assetDir, 'freebuff-zh-main.js')
+  if (!fs.existsSync(mainShim)) throw new Error(`找不到主世界脚本: ${mainShim}（先运行 npm run build）`)
+  atomicWrite(mainAssetPath, fs.readFileSync(mainShim))
+  const harvest = path.join(assetDir, 'harvest.js')
+  if (fs.existsSync(harvest)) atomicWrite(harvestAssetPath, fs.readFileSync(harvest))
+  return asset
 }
 
 function apply() {
@@ -268,15 +341,18 @@ function apply() {
   if (!assetPath || !backupDir) throw new Error('apply 需要 --asset 与 --backup')
   if (!fs.existsSync(asarPath)) throw new Error(`找不到 app.asar: ${asarPath}`)
   if (!fs.existsSync(shellHtmlPath)) throw new Error(`找不到界面入口: ${shellHtmlPath}`)
+  removeStale([asarPath + '.zh-new', asarPath + '.zh-tmp', shellHtmlPath + '.zh-tmp'])
 
   const asset = fs.readFileSync(assetPath)
   const shellHtml = fs.readFileSync(shellHtmlPath, 'utf8')
   if (shellHtml.includes(HTML_START)) throw new Error('界面入口已有补丁标记，请先执行还原')
 
   const { header, contents } = loadContents(asarPath)
-  const hostedIndex = [...contents.keys()].find((key) => key.toLowerCase() === HOSTED_MODULE.toLowerCase())
-  if (!hostedIndex) throw new Error(`app.asar 中找不到 ${HOSTED_MODULE}`)
-  const hostedSource = contents.get(hostedIndex).toString('utf8')
+  assertRepackable(header)
+  const originalContents = new Map(contents)
+
+  const hostedKey = requireKey(contents, HOSTED_MODULE)
+  const hostedSource = contents.get(hostedKey).toString('utf8')
   if (hostedSource.includes(JS_START)) throw new Error('app.asar 已有补丁标记，请先执行还原')
 
   fs.mkdirSync(backupDir, { recursive: true })
@@ -288,57 +364,48 @@ function apply() {
 
   const patchedHtml = patchShellHtml(shellHtml)
   const patchedHosted = patchHostedModule(hostedSource)
+  checkSyntax(patchedHosted, HOSTED_MODULE)
+  contents.set(hostedKey, Buffer.from(patchedHosted, 'utf8'))
 
-  const menuKey = [...contents.keys()].find((key) => key.toLowerCase() === 'electron/app-menu.cjs')
-  const zoomKey = [...contents.keys()].find((key) => key.toLowerCase() === 'electron/zoom-menu.cjs')
-  if (menuKey) contents.set(menuKey, Buffer.from(applyEdits(contents.get(menuKey).toString('utf8'), MENU_EDITS, 'app-menu.cjs'), 'utf8'))
-  if (zoomKey) contents.set(zoomKey, Buffer.from(applyEdits(contents.get(zoomKey).toString('utf8'), ZOOM_EDITS, 'zoom-menu.cjs'), 'utf8'))
-  for (const [source, name] of [
-    [patchedHosted, HOSTED_MODULE],
-    [menuKey ? contents.get(menuKey).toString('utf8') : '', 'electron/app-menu.cjs'],
-    [zoomKey ? contents.get(zoomKey).toString('utf8') : '', 'electron/zoom-menu.cjs'],
-  ]) {
-    if (!source) continue
-    try {
-      new vm.Script(source, { filename: name })
-    } catch (error) {
-      throw new Error(`注入后的 ${name} 语法错误: ${error.message}`)
-    }
-  }
-  contents.set(hostedIndex, Buffer.from(patchedHosted, 'utf8'))
+  editInPlace(contents, requireKey(contents, 'electron/app-menu.cjs'), MENU_EDITS, 'electron/app-menu.cjs')
+  editInPlace(contents, requireKey(contents, 'electron/zoom-menu.cjs'), ZOOM_EDITS, 'electron/zoom-menu.cjs')
 
   for (const [file, edits] of Object.entries(DIALOG_EDITS)) {
-    const key = [...contents.keys()].find((name) => name.toLowerCase() === file.toLowerCase())
-    if (!key) continue
-    contents.set(key, Buffer.from(applyEdits(contents.get(key).toString('utf8'), edits, file), 'utf8'))
+    editInPlace(contents, requireKey(contents, file), edits, file)
   }
 
   // 主进程字符串表（由 tools/gen-main-strings.mjs 生成）：同样是锚点断言替换。
   const mainStringsPath = path.join(path.dirname(assetPath), 'main-strings.json')
+  let mainStringsFiles = 0
   if (fs.existsSync(mainStringsPath)) {
     const table = JSON.parse(fs.readFileSync(mainStringsPath, 'utf8'))
     for (const [file, edits] of Object.entries(table)) {
-      const key = [...contents.keys()].find((name) => name.toLowerCase() === file.toLowerCase())
-      if (!key) continue
-      contents.set(key, Buffer.from(applyEdits(contents.get(key).toString('utf8'), edits, file), 'utf8'))
+      editInPlace(contents, requireKey(contents, file), edits, file)
+      mainStringsFiles += 1
     }
   }
 
   const tempAsar = asarPath + '.zh-new'
-  writeAsar(tempAsar, header, contents)
+  try {
+    writeAsar(tempAsar, header, contents, { original: originalContents })
+    const check = loadContents(tempAsar)
+    for (const [rel, expected] of contents) {
+      const actual = check.contents.get(rel)
+      if (!actual || !actual.equals(expected)) throw new Error(`重新打包后 ${rel} 内容不一致`)
+    }
+    if (check.contents.size !== contents.size) throw new Error('重新打包后文件数量不一致')
+    for (const { rel, entry } of listEntries(check.header)) {
+      if (!checkIntegrity(entry, check.contents.get(rel))) throw new Error(`重新打包后 ${rel} 的 integrity 与内容不符`)
+    }
+    const roundTrip = check.contents.get(hostedKey).toString('utf8')
+    if (roundTrip.split(JS_START).length - 1 !== 1) throw new Error('注入块数量不为 1')
+    atomicWrite(asarPath, fs.readFileSync(tempAsar))
+  } finally {
+    removeStale([tempAsar])
+  }
 
-  const check = loadContents(tempAsar)
-  const roundTrip = check.contents.get(hostedIndex).toString('utf8')
-  if (roundTrip !== contents.get(hostedIndex).toString('utf8')) throw new Error('重新打包后读取的模块内容不一致')
-  if (roundTrip.split(JS_START).length - 1 !== 1) throw new Error('注入块数量不为 1')
-
+  copyAssets(assetPath)
   atomicWrite(shellHtmlPath, patchedHtml)
-  fs.copyFileSync(assetPath, shellAssetPath)
-  fs.mkdirSync(path.dirname(hostedAssetPath), { recursive: true })
-  fs.copyFileSync(assetPath, hostedAssetPath)
-  const harvestPath = path.join(path.dirname(assetPath), 'harvest.js')
-  if (fs.existsSync(harvestPath)) fs.copyFileSync(harvestPath, path.join(path.dirname(hostedAssetPath), 'harvest.js'))
-  fs.renameSync(tempAsar, asarPath)
 
   const result = {
     appVersion: readAppVersion(),
@@ -347,9 +414,30 @@ function apply() {
     originalAppAsarHash,
     patchedAppAsarHash: sha256(fs.readFileSync(asarPath)),
     assetHash: sha256(asset),
+    mainStringsFiles,
     backupDir,
   }
   console.log(JSON.stringify(result, null, 2))
+}
+
+// 只刷新脚本、不动 asar 的路径：词表改了但补丁版本没变时走这里。
+function refresh() {
+  const assetPath = args.asset
+  if (!assetPath) throw new Error('refresh 需要 --asset')
+  if (!fs.existsSync(assetPath)) throw new Error(`找不到汉化脚本: ${assetPath}`)
+  const asset = copyAssets(assetPath)
+  console.log(
+    JSON.stringify(
+      {
+        assetHash: sha256(asset),
+        shell: sha256(fs.readFileSync(shellAssetPath)),
+        hosted: sha256(fs.readFileSync(hostedAssetPath)),
+        main: sha256(fs.readFileSync(mainAssetPath)),
+      },
+      null,
+      2,
+    ),
+  )
 }
 
 function restore() {
@@ -360,33 +448,72 @@ function restore() {
   if (!fs.existsSync(backupAsar) || !fs.existsSync(backupHtml)) throw new Error(`备份不完整: ${backupDir}`)
   atomicWrite(asarPath, fs.readFileSync(backupAsar))
   atomicWrite(shellHtmlPath, fs.readFileSync(backupHtml))
-  for (const file of [shellAssetPath, hostedAssetPath]) {
+  for (const file of [shellAssetPath, hostedAssetPath, mainAssetPath, harvestAssetPath]) {
     if (fs.existsSync(file)) fs.unlinkSync(file)
   }
   console.log(JSON.stringify({ restoredIndexHash: sha256(fs.readFileSync(shellHtmlPath)), restoredAppAsarHash: sha256(fs.readFileSync(asarPath)) }, null, 2))
 }
 
+function countOf(text, needle) {
+  return text.split(needle).length - 1
+}
+
 function verify() {
-  const report = { ok: true, problems: [], appVersion: readAppVersion() }
+  const report = { ok: true, problems: [], appVersion: readAppVersion(), anchors: 0 }
   const shellHtml = fs.existsSync(shellHtmlPath) ? fs.readFileSync(shellHtmlPath, 'utf8') : ''
-  const markerCount = shellHtml.split(HTML_START).length - 1
-  report.shellMarkers = markerCount
-  if (markerCount !== 1) {
+  report.shellMarkers = countOf(shellHtml, HTML_START)
+  if (report.shellMarkers !== 1) {
     report.ok = false
-    report.problems.push(`界面入口标记数量 ${markerCount}`)
+    report.problems.push(`界面入口标记数量 ${report.shellMarkers}`)
   }
+
   let hostedMarkers = 0
-  if (fs.existsSync(asarPath)) {
-    const { contents } = loadContents(asarPath)
-    const key = [...contents.keys()].find((name) => name.toLowerCase() === HOSTED_MODULE.toLowerCase())
-    if (key) hostedMarkers = contents.get(key).toString('utf8').split(JS_START).length - 1
-  }
-  report.hostedMarkers = hostedMarkers
-  if (hostedMarkers !== 1) {
+  const missing = []
+  if (!fs.existsSync(asarPath)) {
     report.ok = false
-    report.problems.push(`app.asar 注入标记数量 ${hostedMarkers}`)
+    report.problems.push('找不到 app.asar')
+  } else {
+    const { contents } = loadContents(asarPath)
+    const hostedKey = findKey(contents, HOSTED_MODULE)
+    if (hostedKey) hostedMarkers = countOf(contents.get(hostedKey).toString('utf8'), JS_START)
+    report.hostedMarkers = hostedMarkers
+    if (hostedMarkers !== 1) {
+      report.ok = false
+      report.problems.push(`app.asar 注入标记数量 ${hostedMarkers}`)
+    }
+
+    // 原生菜单/对话框/主进程文案：检查替换后的中文文案是否真的在文件里。
+    const tables = [
+      ['electron/app-menu.cjs', MENU_EDITS],
+      ['electron/zoom-menu.cjs', ZOOM_EDITS],
+      ...Object.entries(DIALOG_EDITS),
+    ]
+    const mainStringsPath = args.asset
+      ? path.join(path.dirname(args.asset), 'main-strings.json')
+      : path.join(import.meta.dirname, '..', 'dist', 'main-strings.json')
+    if (fs.existsSync(mainStringsPath)) {
+      for (const [file, edits] of Object.entries(JSON.parse(fs.readFileSync(mainStringsPath, 'utf8')))) tables.push([file, edits])
+    }
+    for (const [file, edits] of tables) {
+      const key = findKey(contents, file)
+      if (!key) {
+        missing.push(file)
+        continue
+      }
+      const source = contents.get(key).toString('utf8')
+      for (const [, replacement] of edits) {
+        if (countOf(source, replacement) === 0) missing.push(`${file}: ${replacement.slice(0, 40)}`)
+        else report.anchors += 1
+      }
+    }
+    if (missing.length) {
+      report.ok = false
+      report.problems.push(`原生文案缺失 ${missing.length} 处（${missing.slice(0, 3).join('；')}）`)
+    }
   }
-  for (const file of [shellAssetPath, hostedAssetPath]) {
+  report.missing = missing.length
+
+  for (const file of [shellAssetPath, hostedAssetPath, mainAssetPath]) {
     if (!fs.existsSync(file)) {
       report.ok = false
       report.problems.push(`缺少汉化脚本 ${file}`)
@@ -409,6 +536,7 @@ try {
   if (command === 'version') console.log(JSON.stringify({ appVersion: readAppVersion() }, null, 2))
   else if (command === 'apply') apply()
   else if (command === 'restore') restore()
+  else if (command === 'refresh') refresh()
   else if (command === 'verify') verify()
   else throw new Error(`未知命令: ${command}`)
 } catch (error) {

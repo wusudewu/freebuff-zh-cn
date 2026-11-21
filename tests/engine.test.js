@@ -4,6 +4,7 @@ const path = require('path')
 const { JSDOM } = require('jsdom')
 
 const script = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-cn.js'), 'utf8')
+const mainShim = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-main.js'), 'utf8')
 
 const html = `<!DOCTYPE html><html><head><title>Freebuff: The free coding agent</title></head><body>
 <nav aria-label="App navigation">
@@ -55,6 +56,18 @@ const { window } = dom
 const host = window.document.getElementById('host')
 const shadow = host.attachShadow({ mode: 'open' })
 shadow.innerHTML = '<span>New project</span>'
+
+// jsdom 没有 Notification：自己造一个把构造参数记下来的假的，用来验证「通知真的被翻译」。
+const notified = []
+class FakeNotification {
+  constructor(title, options) {
+    notified.push({ title, options })
+  }
+}
+Object.defineProperty(FakeNotification, 'permission', { get: () => 'granted' })
+FakeNotification.requestPermission = () => Promise.resolve('granted')
+window.Notification = FakeNotification
+
 window.eval(script)
 
 setTimeout(() => {
@@ -64,6 +77,13 @@ setTimeout(() => {
   const input = doc.getElementById('search')
   const textarea = doc.querySelector('textarea')
   const nav = doc.querySelector('nav')
+
+  // 主世界的 shim 与引擎走同一套桥接：先装 shim，再构造两条通知。
+  window.eval(mainShim)
+  new window.Notification('New chat', { body: 'Copied' })
+  new window.Notification('Build finished', { body: 'zzz no dict hit' })
+  const first = notified[0] || {}
+  const second = notified[1] || {}
 
   const checks = [
     ['nav 首页', /首页/.test(nav.textContent)],
@@ -99,8 +119,11 @@ setTimeout(() => {
     ['shadow DOM', shadow.textContent === '新建项目'],
     ['nav 无英文残留', !/Home|Sites|Projects|Settings/.test(nav.textContent)],
     ['调试口可用', typeof window.__FREEBUFF_ZH__.stats === 'function' && window.__FREEBUFF_ZH__.stats().applied > 10],
-    ['系统通知被包装', typeof window.Notification === 'function' ? Boolean(window.Notification.__freebuffZh) : true],
-    ['通知标题可翻译', typeof window.__FREEBUFF_ZH__.translate === 'function' ? window.__FREEBUFF_ZH__.translate('New chat') === '新建对话' : false],
+    ['通知被主世界 shim 包装', typeof window.Notification === 'function' && window.Notification.__freebuffZh === true],
+    ['通知只包装一次', notified.length === 2],
+    ['通知标题翻译', first.title === '新建对话'],
+    ['通知正文翻译', Boolean(first.options) && first.options.body === '已复制'],
+    ['未命中的通知正文原样', Boolean(second.options) && second.options.body === 'zzz no dict hit'],
   ]
 
   let failed = 0

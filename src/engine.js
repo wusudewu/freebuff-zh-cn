@@ -213,16 +213,12 @@
   /* ---------------------------------------------------------------- DOM */
 
   let working = false
-  const skipCache = new WeakSet()
 
+  // 不缓存判定结果：元素可能被 React 挪出不翻译的子树（例如把消息从 <pre> 里搬到正文），
+  // 缓存住「曾在这个子树里」会让它永远不翻。closest() 本身足够快。
   function skipped(element) {
     if (!element) return false
-    if (skipCache.has(element)) return true
-    if (element.closest && element.closest(SKIP_SELECTOR)) {
-      skipCache.add(element)
-      return true
-    }
-    return false
+    return Boolean(element.closest && element.closest(SKIP_SELECTOR))
   }
 
   function translateTextNode(node) {
@@ -376,30 +372,27 @@
 
   /* ---------------------------------------------------------------- 系统通知 */
 
-  // 网页通知的标题与正文不走 DOM，词表够不到；这里包一层构造函数，
-  // 用同一张词表翻译 title/body，让 Windows 通知条也保持中文。
-  function patchNotifications() {
-    const Native = window.Notification
-    if (!Native || Native.__freebuffZh) return
-    const wrapped = new Proxy(Native, {
-      construct(target, args) {
-        const [title, options] = args
-        const nextTitle = typeof title === 'string' ? translateValue(title) : null
-        let nextOptions = options
-        if (options && typeof options === 'object') {
-          nextOptions = { ...options }
-          if (typeof options.body === 'string') {
-            const body = translateValue(options.body)
-            if (body !== null) nextOptions.body = body
-          }
-        }
-        return new target(nextTitle === null ? title : nextTitle, nextOptions)
-      },
-    })
-    wrapped.__freebuffZh = true
-    try {
-      window.Notification = wrapped
-    } catch (error) {}
+  // 通知的 title/body 不走 DOM，页面又是在主世界构造 Notification，隔离世界改 window 无效。
+  // 主世界的 shim（resources/freebuff-zh-main.js）通过同步事件把文本递过来，这里作答。
+  const NOTIFY_EVENT = 'freebuff-zh:translate'
+
+  function answerNotification() {
+    const root = document.documentElement
+    if (!root) return
+    const raw = root.getAttribute('data-freebuff-zh-in')
+    if (raw === null) return
+    let answer = raw
+    const direct = translateValue(raw)
+    if (direct !== null) answer = direct
+    else {
+      const titled = translateTitle(raw)
+      if (titled !== null) answer = titled
+    }
+    root.setAttribute('data-freebuff-zh-out', answer)
+  }
+
+  function installNotificationBridge() {
+    document.addEventListener(NOTIFY_EVENT, answerNotification, true)
   }
 
   /* ---------------------------------------------------------------- 启动 */
@@ -409,7 +402,7 @@
   function start() {
     if (isDisabled()) return
     try {
-      patchNotifications()
+      installNotificationBridge()
     } catch (error) {}
     if (document.body.getElementsByTagName('*').length < 1500) translateTree(document.body)
     else scanChunked(document.body)
@@ -448,6 +441,12 @@
   }
 
   globalThis.__FREEBUFF_ZH__ = {
+    bridge: (text) => {
+      const direct = translateValue(String(text))
+      if (direct !== null) return direct
+      const titled = translateTitle(String(text))
+      return titled !== null ? titled : String(text)
+    },
     id: PATCH_ID,
     version: PATCH_VERSION,
     entries: exact.size,

@@ -39,6 +39,7 @@ const KNOWN_BRANDS = /^(Freebuff|Buffy|Claude Code|Codex|Cursor|Cline|Roo|GitHub
 const data = JSON.parse(fs.readFileSync(harvestPath, 'utf8'))
 const perTarget = new Map()
 const misses = new Map()
+const mixed = []
 const filtered = []
 console.log(`快照来源：${data.at || '未知时间'} · ${data.href || '未知页面'} · 补丁在位：${data.patch ? '是' : '否'}`)
 console.log('注意：探针驱动的会话里，功能测试本身也会产生界面串；判读「待办」时要区分测试残留与稳态流量。')
@@ -96,6 +97,7 @@ if (exportPath) {
   const payload = {
     source: { at: data.at, href: data.href, patch: data.patch },
     misses: [...misses.keys()].sort(),
+    mixed: [...new Set(mixed)].sort(),
     filtered: filtered.map((item) => item.text).sort(),
   }
   fs.writeFileSync(path.resolve(root, exportPath), JSON.stringify(payload, null, 1))
