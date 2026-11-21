@@ -381,13 +381,10 @@
     if (!root) return
     const raw = root.getAttribute('data-freebuff-zh-in')
     if (raw === null) return
-    let answer = raw
-    const direct = translateValue(raw)
-    if (direct !== null) answer = direct
-    else {
-      const titled = translateTitle(raw)
-      if (titled !== null) answer = titled
-    }
+    // 标题可以按分隔符拆段翻（"X — Y" 是标题的常见写法）；正文不拆，
+    // 一句没命中就原样返回，避免把 "Build failed – see logs" 拼成半中半英。
+    const kind = root.getAttribute('data-freebuff-zh-kind')
+    const answer = translateFor(kind === 'body' ? 'body' : 'title', raw)
     root.setAttribute('data-freebuff-zh-out', answer)
   }
 
@@ -446,13 +443,17 @@
     }
   }
 
+  function translateFor(kind, text) {
+    const raw = String(text)
+    const direct = translateValue(raw)
+    if (direct !== null) return direct
+    if (kind === 'body') return raw
+    const titled = translateTitle(raw)
+    return titled !== null ? titled : raw
+  }
+
   globalThis.__FREEBUFF_ZH__ = {
-    bridge: (text) => {
-      const direct = translateValue(String(text))
-      if (direct !== null) return direct
-      const titled = translateTitle(String(text))
-      return titled !== null ? titled : String(text)
-    },
+    bridge: (text, kind) => translateFor(kind === 'body' ? 'body' : 'title', text),
     id: PATCH_ID,
     version: PATCH_VERSION,
     entries: exact.size,

@@ -58,6 +58,14 @@ if (out.includes('__DICT__') || out.includes('__RULES__') || out.includes('__PAT
   throw new Error('模板占位符没有被全部替换')
 }
 
+// 冲突意味着同一句英文有两个译法、先到先得静默丢一个：这种词表不该被安装。
+if (conflicts.length) {
+  for (const conflict of conflicts) {
+    console.error('CONFLICT', conflict.file, JSON.stringify(conflict.en), '=>', conflict.was, '|', conflict.now)
+  }
+  throw new Error(`词表冲突 ${conflicts.length} 条：请先消歧，构建未落盘`)
+}
+
 fs.mkdirSync(distDir, { recursive: true })
 const engineOut = path.join(distDir, 'freebuff-zh-cn.js')
 fs.writeFileSync(engineOut, out)
@@ -78,5 +86,3 @@ if (versions.meta !== versions.package || versions.engine !== versions.package) 
 
 console.log(`词表 ${Object.keys(dict).length} 条（源 ${sources} 条，冲突 ${conflicts.length}），规则 ${rules.length} 条`)
 console.log(`输出 dist/freebuff-zh-cn.js ${(out.length / 1024).toFixed(1)} KB，版本 ${versions.engine}（三处一致）`)
-for (const conflict of conflicts.slice(0, 20)) console.error('CONFLICT', conflict.file, JSON.stringify(conflict.en), '=>', conflict.was, '|', conflict.now)
-if (conflicts.length) process.exitCode = 1

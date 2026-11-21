@@ -79,9 +79,12 @@ function Write-Manifest($manifest) {
 }
 
 function Get-SupportedVersions {
-  if (-not (Test-Path $SupportedPath)) { return @() }
+  # 这份清单丢了就等于「所有版本都适配」，那是静默放行——宁可停下来。
+  if (-not (Test-Path $SupportedPath)) { Fail "补丁包不完整：缺少 $SupportedPath（适配版本清单）" }
   $data = Get-Content -LiteralPath $SupportedPath -Raw -Encoding UTF8 | ConvertFrom-Json
-  return @($data.versions)
+  $versions = @($data.versions)
+  if ($versions.Count -eq 0) { Fail "适配版本清单是空的：$SupportedPath" }
+  return $versions
 }
 
 function Invoke-Patcher([string]$command, [string[]]$extra) {
@@ -175,6 +178,9 @@ function Install-Patch {
 
   $meta = Get-Content -LiteralPath $MetaPath -Raw -Encoding UTF8 | ConvertFrom-Json
   $appVersion = Read-AppVersion
+  if (-not $appVersion) {
+    Fail "读不到 Freebuff 版本号（$asar 里的 package.json 没读到）：安装目录可能不完整，或 app.asar 被改过。请重装 Freebuff，或用 -AppDir 指定正确的目录。"
+  }
   $supported = Get-SupportedVersions
   if ($supported.Count -gt 0 -and $supported -notcontains $appVersion -and -not $Force) {
     Fail "当前 Freebuff 版本 $appVersion 不在适配列表（$($supported -join ' / ')）里。装上新版 Freebuff 后请先更新本补丁；确要继续可加 -Force。"
