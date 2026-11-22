@@ -35,6 +35,7 @@ function parseArgs(argv) {
 }
 
 const args = parseArgs(process.argv.slice(2))
+const jsonOut = args['json-out']
 const command = args._[0]
 const appDir = args['app-dir']
 if (!command || !appDir) {
@@ -551,6 +552,8 @@ function verify() {
     report.problems.push('两处汉化脚本不一致（界面壳与 asar 外挂的那份）')
   }
   console.log(JSON.stringify(report, null, 2))
+  // 安装器用 --json-out 读结果：绕开 PowerShell 对原生 stderr/stdout 的编码与引号问题。
+  if (jsonOut) fs.writeFileSync(jsonOut, JSON.stringify(report, null, 2), 'utf8')
   if (!report.ok) process.exitCode = 1
 }
 

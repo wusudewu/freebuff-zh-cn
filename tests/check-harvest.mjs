@@ -36,7 +36,7 @@ const SKIP = [
 ]
 // 手工品牌白名单：新品牌/新产品名出现在界面时，在这里补一条（否则会被当成漏译报出来）。
 // 它只影响「待翻译清单」的可读性，不影响引擎行为。
-const KNOWN_BRANDS = /^(Freebuff|Buffy|Claude Code|Codex|Cursor|Cline|Roo|GitHub|Discord|MCP|Exa|Archil|Respan|Surge|Specific|CodeRabbit|Infisical|Supabase|AWS|Linear|Notion|Vercel|Neon|Render|Railway|Fly|Unsplash|Calibri|Inter|Consolas|GLM|Gmail|Slack|Drive|Notion|Stripe|Square|Zoom|Box|Canva|Asana|ClickUp|Airtable|Outlook|Teams|Dropbox|OneDrive|SharePoint|HubSpot|Salesforce|Attio|Pipedrive|Zendesk|Intercom|QuickBooks|Brex|Gumroad|Mixpanel|Amplitude|Tavily|Firecrawl|ElevenLabs|OpenAI|Perplexity|PostHog|Sentry|GitHub|Google|Meta|Facebook|Instagram|LinkedIn|YouTube|Reddit|X)$/
+const KNOWN_BRANDS = /^(Freebuff|Buffy|Claude Code|Codex|Cursor|Cline|Roo|GitHub|Discord|MCP|Exa|Archil|Respan|Surge|Specific|CodeRabbit|Infisical|Supabase|AWS|Linear|Notion|Vercel|Neon|Render|Railway|Fly|Unsplash|Calibri|Inter|Consolas|GLM|Gmail|Slack|Drive|Stripe|Square|Zoom|Box|Canva|Asana|ClickUp|Airtable|Outlook|Teams|Dropbox|OneDrive|SharePoint|HubSpot|Salesforce|Attio|Pipedrive|Zendesk|Intercom|QuickBooks|Brex|Gumroad|Mixpanel|Amplitude|Tavily|Firecrawl|ElevenLabs|OpenAI|Perplexity|PostHog|Sentry|Google|Meta|Facebook|Instagram|LinkedIn|YouTube|Reddit|X)$/
 
 const data = JSON.parse(fs.readFileSync(harvestPath, 'utf8'))
 const perTarget = new Map()

@@ -23,6 +23,10 @@
   （PS 5.1 里 `2>$file` + `ErrorActionPreference='Stop'` 会把 stderr 变成 NativeCommandError）。
 - 浏览器层测试改系统分配端口（不再固定 8794/8795），并前置检查界面目录，缺了直接说清用 `FREEBUFF_DIR`。
 - README 覆盖表拆成 7 条路由各一行；`check-harvest.mjs` 的品牌白名单加了维护说明。
+- **修掉一个只在「路径带空格」时才炸的回归**：上一版 `Get-PatchVerify` 用 `Start-Process -ArgumentList` 传数组，
+  PS 5.1 不会给含空格的参数加引号（会把 `...b` 当模块名）。改成 `verify --json-out <file>` 落文件 + call operator 调用，
+  实测把整包放到 `%LOCALAPPDATA%\Tempb zh patch test\` 跑 Status 与 Install 均正常（此前那种路径下自检恒失败）。
+- 顺带修掉编码隐患：自检结果按 UTF-8 读，不再受控制台代码页影响；品牌白名单里的重复项（GitHub、Notion）去重。
 
 ## 0.3.7 · 2026-11-22
 

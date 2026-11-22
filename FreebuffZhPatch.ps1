@@ -108,29 +108,20 @@ function Read-AppVersion {
 
 function Get-PatchVerify {
   # 自检在「没装/文件被改动」时会以非零码退出，这是正常结论，不能把 Status 一起 exit 掉。
-  # 用 Start-Process 分别收 stdout / stderr：PS 5.1 里 `2>$file` 配合 $ErrorActionPreference='Stop'
-  # 会把 node 的 stderr 变成 NativeCommandError，反而丢掉我们要的结论。
+  # 结果走 --json-out 落成文件：既不用处理 PS 5.1 对原生 stderr 的 NativeCommandError，
+  # 也不受路径里空格的影响（call operator 会正确加引号，Start-Process 的 -ArgumentList 不会）。
   $node = Resolve-Node
-  $outFile = [System.IO.Path]::GetTempFileName()
-  $errFile = [System.IO.Path]::GetTempFileName()
+  $jsonFile = Join-Path ([System.IO.Path]::GetTempPath()) ('fbzh-verify-' + [guid]::NewGuid().ToString('N') + '.json')
   try {
-    $arguments = @($PatchAppPath, 'verify', '--app-dir', (Resolve-AppDir), '--asset', $AssetPath)
-    $null = Start-Process -FilePath $node -ArgumentList $arguments -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outFile -RedirectStandardError $errFile
-    $text = ''
-    if (Test-Path $outFile) { $text = (Get-Content -LiteralPath $outFile -Raw -ErrorAction SilentlyContinue) }
-    $text = "$text".Trim()
-    if (-not $text) {
-      $err = ''
-      if (Test-Path $errFile) { $err = (Get-Content -LiteralPath $errFile -Raw -ErrorAction SilentlyContinue) }
-      if ($err) {
-        $head = (($err.Trim() -split "`n") | Select-Object -First 3) -join ' / '
-        Write-Host "  自检没能返回结果（node 输出：$head）" -ForegroundColor Yellow
-      }
-      return $null
+    $output = & $node $PatchAppPath 'verify' '--app-dir' (Resolve-AppDir) '--asset' $AssetPath '--json-out' $jsonFile 2>&1
+    if (Test-Path $jsonFile) {
+      try { return (Get-Content -LiteralPath $jsonFile -Raw -Encoding UTF8 | ConvertFrom-Json) } catch { return $null }
     }
-    try { return ($text | ConvertFrom-Json) } catch { return $null }
+    $head = (@($output) | Select-Object -First 3) -join ' / '
+    if ($head) { Write-Host "  自检没能返回结果（node 输出：$head）" -ForegroundColor Yellow }
+    return $null
   } finally {
-    Remove-Item -LiteralPath $outFile, $errFile -Force -ErrorAction SilentlyContinue
+    if (Test-Path $jsonFile) { Remove-Item -LiteralPath $jsonFile -Force -ErrorAction SilentlyContinue }
   }
 }
 
