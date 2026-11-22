@@ -70,6 +70,28 @@ function Assert-AppIdle {
   }
 }
 
+function Clear-OldBackups([string]$KeepDir, [int]$KeepCount) {
+  # 每份备份都含一个 app.asar（本机 ~30 MB），不清理会越积越多。
+  # 只保留最近几份 + 安装记录指向的那份，其余按目录名里的时间戳从旧到新删。
+  try {
+    $backupRoot = Join-Path $StateRoot 'backup'
+    if (-not (Test-Path $backupRoot)) { return }
+    $all = @(Get-ChildItem -LiteralPath $backupRoot -Directory | Sort-Object Name -Descending)
+    $keep = @($KeepDir)
+    $kept = 0
+    $removed = 0
+    foreach ($dir in $all) {
+      if ($dir.FullName -eq $KeepDir) { continue }
+      if ($kept -lt $KeepCount) { $kept += 1; continue }
+      try {
+        Remove-Item -LiteralPath $dir.FullName -Recurse -Force -ErrorAction Stop
+        $removed += 1
+      } catch { }
+    }
+    if ($removed -gt 0) { Write-Step "清理旧备份 $removed 份（保留最近 $KeepCount 份）" }
+  } catch { }
+}
+
 function Read-Manifest {
   if (-not (Test-Path $ManifestPath)) { return $null }
   try { return Get-Content -LiteralPath $ManifestPath -Raw -Encoding UTF8 | ConvertFrom-Json } catch { return $null }
@@ -331,6 +353,8 @@ function Install-Patch {
 
   $verify = Get-PatchVerify
   if (-not $verify -or -not $verify.ok) { Fail ('安装校验未通过：' + ($(if ($verify) { $verify.problems -join '；' } else { '自检没有返回结果' }))) }
+
+  Clear-OldBackups -KeepDir $backupDir -KeepCount 3
 
   Write-Host ''
   Write-Host '✓ 安装完成' -ForegroundColor Green

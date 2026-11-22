@@ -84,7 +84,7 @@ npm run build            # dict/*.json → dist/freebuff-zh-cn.js（有冲突直
 node tools/audit.mjs     # 地区用词、标点、机器味、长度检查
 cd tests && npm install
 
-npm test                 # 离线五件套：引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，几秒钟）
+npm test                 # 离线七件：构建 / 安装器错误路径 / 引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，几十秒）
 npm run test:browser      # 真实 Chrome：本地页 + freebuff.com，和基线比 JS 异常数
 npm run test:inspect      # 真实 Chrome 的巡检工具：routes（漏译清单）/ shot（截图）/ control（对照）
 npm run test:all          # 上面全部（需要本机装了 Chrome）
@@ -93,7 +93,9 @@ npm run test:all          # 上面全部（需要本机装了 Chrome）
 目录结构：
 
 ```
-dict/            词表批次（00-core / 10-chrome / 15-nouns / 20-ui / 30-shell / _rules.json）
+dict/            词表批次 18 个：00-core / 05-datetime / 10-chrome / 15-nouns / 20-ui / 25-more / 30-shell / 40-common /
+                 50-site / 60-errors / 70-deep / 80-integrations / 85-countries / 90-account / 95-last /
+                 97-runtime / 99-final，外加 _rules.json（带变量规则）
 src/engine.js    引擎模板（构建时注入词表与规则）
 tools/           build / audit / patch-app（注入与还原）/ asar 读写 / gen-main-strings / style-history / coverage
 tests/           jsdom 引擎测试 + Chrome 集成测试

@@ -6,6 +6,11 @@ const root = path.resolve(import.meta.dirname, '..')
 const dictDir = path.join(root, 'dict')
 
 const TRADITIONAL = ['設定', '登入', '檔案', '程式', '專案', '伺服器', '網路', '預設', '檢視', '執行', '連線', '資訊', '軟體', '硬體', '使用者', '瀏覽', '儲存', '選單', '視窗', '滑鼠', '剪貼', '範本', '最佳化', '啟動', '關閉', '開啟', '上傳', '下載', '搜尋', '篩選']
+// 术语口径（与 docs/style-guide.md 对齐）：禁用词 → 正确说法。
+// 只在「原文本身是这个词」时才判，避免把「账户余额」这类产品文案误报。
+const BANNED_TERMS = [
+  { banned: '账户', correct: '账号', english: /account/i, except: /balance|billing|credit|invoice|余额|账单/i },
+]
 const MACHINE = ['将会', '对于', '使得', '的的', '通过…来', '被…', '进行了', '一个的', '分叉']
 const issues = []
 
@@ -27,6 +32,9 @@ for (const file of fs.readdirSync(dictDir).filter((f) => f.endsWith('.json') && 
     if ((value.match(/的/g) || []).length >= 3) add('的太多（直译腔）', '')
     // 「进行中」是「In progress」的正常标签，不是翻译腔的「进行+X」结构。
     if (/^(请)?(进行|对.{0,6}进行)/.test(value) && !/^进行中$/.test(value)) add('机器味起步', '')
+    for (const term of BANNED_TERMS) {
+      if (value.includes(term.banned) && term.english.test(key) && !term.except.test(key)) add('术语不符', `${term.banned} → ${term.correct}`)
+    }
     if (/[一-鿿]{2,}的[一-鿿]{2,}的[一-鿿]{2,}/.test(value)) add('名词堆叠', '')
     if (/^(可以|你可以|您)/.test(value)) add('称呼/语气', '')
     // 原文键以空格结尾说明这是拼接片段（"Connect your " + 名字），译文以「的」收尾是对的。

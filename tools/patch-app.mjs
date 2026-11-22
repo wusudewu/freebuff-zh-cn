@@ -569,6 +569,20 @@ function verify() {
     hashes[name] = sha256(fs.readFileSync(file))
   }
   report.hashes = hashes
+  // 与「当前 dist 构建」比对：只看部署哈希 vs 安装记录，装的是旧构建也会报通过。
+  if (args.asset && fs.existsSync(args.asset)) {
+    const built = sha256(fs.readFileSync(args.asset))
+    report.buildHash = built
+    if (hashes.shell && hashes.shell !== built) {
+      report.ok = false
+      report.problems.push('已安装的汉化脚本不是当前构建（dist 更新过？重跑安装即可同步）')
+    }
+    const builtMain = path.join(path.dirname(args.asset), 'freebuff-zh-main.js')
+    if (hashes.main && fs.existsSync(builtMain) && hashes.main !== sha256(fs.readFileSync(builtMain))) {
+      report.ok = false
+      report.problems.push('已安装的主世界脚本不是当前构建（重跑安装即可同步）')
+    }
+  }
   if (hashes.shell && hashes.hosted && hashes.shell !== hashes.hosted) {
     report.ok = false
     report.problems.push('两处汉化脚本不一致（界面壳与 asar 外挂的那份）')

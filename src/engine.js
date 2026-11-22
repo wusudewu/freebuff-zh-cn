@@ -35,6 +35,9 @@
     'data-tooltip',
     'data-placeholder',
     'alt',
+    // INPUT[type=button/submit/reset] 的 value 会被改写；observer 也要跟着看这个属性，
+    // 否则后续再被 JS 改回英文时不会重翻。（仅属性观察，不参与 translateAttributes 的通用循环。）
+    'value',
   ]
   const SKIP_TAGS = new Set(['SCRIPT', 'STYLE', 'CODE', 'PRE', 'TEXTAREA', 'KBD', 'SAMP', 'SVG', 'CANVAS', 'MATH', 'TEMPLATE'])
   const SKIP_SELECTOR =
