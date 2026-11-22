@@ -32,7 +32,8 @@
 | fork | 派生 | 不要用"分叉" |
 | item | 条目 | 不要译成"项目"（会和 project 撞车） |
 | harness | 执行框架 | |
-| staging | 预发布 | 不要用"暂存" |
+| staging（环境） | 预发布 | 指部署环境时用「预发布」，不要用「暂存」 |
+| stage / staged（Git） | 暂存 / 已暂存 | Git 操作语境例外：`Stage`→暂存、`Unstage`→取消暂存、`Staged`→已暂存 |
 | funded | 充值 | 不要用"注资" |
 
 ## 二、语气

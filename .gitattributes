@@ -1,0 +1,6 @@
+# 统一行尾：源码与产物一律 LF，避免 autocrlf 克隆上「内容相同、字节不同」导致哈希误报。
+* text=auto eol=lf
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.asar binary

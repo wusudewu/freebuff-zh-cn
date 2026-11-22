@@ -570,15 +570,21 @@ function verify() {
   }
   report.hashes = hashes
   // 与「当前 dist 构建」比对：只看部署哈希 vs 安装记录，装的是旧构建也会报通过。
+  // 比较时忽略行尾差异：core.autocrlf=true 的克隆会把产物变成 CRLF，字节不同但内容相同。
+  const contentHash = (buffer) => {
+    const text = buffer.toString('utf8')
+    const lf = text.split(String.fromCharCode(13) + String.fromCharCode(10)).join(String.fromCharCode(10))
+    return sha256(Buffer.from(lf, 'utf8'))
+  }
   if (args.asset && fs.existsSync(args.asset)) {
-    const built = sha256(fs.readFileSync(args.asset))
+    const built = contentHash(fs.readFileSync(args.asset))
     report.buildHash = built
-    if (hashes.shell && hashes.shell !== built) {
+    if (hashes.shell && fs.existsSync(shellAssetPath) && contentHash(fs.readFileSync(shellAssetPath)) !== built) {
       report.ok = false
       report.problems.push('已安装的汉化脚本不是当前构建（dist 更新过？重跑安装即可同步）')
     }
     const builtMain = path.join(path.dirname(args.asset), 'freebuff-zh-main.js')
-    if (hashes.main && fs.existsSync(builtMain) && hashes.main !== sha256(fs.readFileSync(builtMain))) {
+    if (hashes.main && fs.existsSync(builtMain) && fs.existsSync(mainAssetPath) && contentHash(fs.readFileSync(mainAssetPath)) !== contentHash(fs.readFileSync(builtMain))) {
       report.ok = false
       report.problems.push('已安装的主世界脚本不是当前构建（重跑安装即可同步）')
     }

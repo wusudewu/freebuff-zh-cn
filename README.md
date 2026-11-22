@@ -84,7 +84,7 @@ npm run build            # dict/*.json → dist/freebuff-zh-cn.js（有冲突直
 node tools/audit.mjs     # 地区用词、标点、机器味、长度检查
 cd tests && npm install
 
-npm test                 # 离线七件：构建 / 安装器错误路径 / 引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，几十秒）
+npm test                 # 离线八件：构建 / 安装器错误路径 / asar 手术往返 / 引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，约一分钟）
 npm run test:browser      # 真实 Chrome：本地页 + freebuff.com，和基线比 JS 异常数
 npm run test:inspect      # 真实 Chrome 的巡检工具：routes（漏译清单）/ shot（截图）/ control（对照）
 npm run test:all          # 上面全部（需要本机装了 Chrome）

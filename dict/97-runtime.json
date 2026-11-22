@@ -17,7 +17,7 @@
  "Couldn’t connect. Copy the link instead, or try again.": "无法连接，请改为复制链接，或重试。",
  "This image could not be opened. Try a PNG, JPEG, or WebP file.": "无法打开此图片，请改用 PNG、JPEG 或 WebP 文件。",
  "A screenshot of your comment under the post, with your handle.": "你在帖子下评论的截图，要能看到你的账号名。",
- "Let Freebuff work with your email, calendar, docs and team chat.": "让 Freebuff 接入你的邮件、日历、文档和团队聊天。",
+ "Let Freebuff work with your email, calendar, docs and team chat.": "让 Freebuff 接入你的邮件、日历、文档和团队对话。",
  "Rate limits, caches and queues that scale to zero between requests.": "速率限制、缓存和队列，空闲时缩容到零。",
  "Drop-in auth, user profiles and organizations for React and Next.js.": "开箱即用的登录、用户资料和组织管理，适用于 React 和 Next.js。",
  "Attach up to nine files, including up to eight smaller image previews.": "最多可附加九个文件，其中最多八张是较小的图片预览。",
