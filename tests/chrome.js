@@ -13,6 +13,11 @@ const CANDIDATES = [
 ]
 
 function resolveChrome() {
+  // 明确指定了就按指定的来：指错时报错，别静默换成别的浏览器去测。
+  if (process.env.CHROME_PATH && !fs.existsSync(process.env.CHROME_PATH)) {
+    console.error(`CHROME_PATH 指向的文件不存在: ${process.env.CHROME_PATH}`)
+    process.exit(2)
+  }
   for (const candidate of CANDIDATES) {
     if (candidate && fs.existsSync(candidate)) return candidate
   }

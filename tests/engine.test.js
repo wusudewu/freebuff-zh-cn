@@ -103,7 +103,18 @@ setTimeout(async () => {
   await new Promise((resolve) => setTimeout(resolve, 400))
   const afterOn = offSpan.textContent
 
+  // 幂等守卫：连续启用两次不该出现第二个 observer（否则同一个新节点会被翻两次、applied +2）。
+  api.setEnabled(true)
+  api.setEnabled(true)
+  const beforeDouble = api.stats().applied
+  const onceNode = doc.createElement('span')
+  onceNode.textContent = 'Settings'
+  doc.body.appendChild(onceNode)
+  await new Promise((resolve) => setTimeout(resolve, 400))
+  const doubleDelta = api.stats().applied - beforeDouble
+
   const checks = [
+    ['重复启用不会变成双 observer', doubleDelta === 1],
     ['运行期关掉后不再翻译', whileOff === 'New chat'],
     ['重新打开后恢复翻译', afterOn === '新建对话'],
     ['nav 首页', /首页/.test(nav.textContent)],

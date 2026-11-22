@@ -25,6 +25,7 @@ Chrome 不在默认路径时用 `CHROME_PATH` 指定：`CHROME_PATH="D:/Chrome/c
 | `routes.test.js` | 多路由漏译巡检，输出每个路由的命中/未命中；`--export out.json` 导出待翻清单 | Chrome + 外网 |
 | `shot.test.js` | 把补丁后的界面渲染成 PNG，供人工核对版式与文案 | Chrome + 外网 |
 | `control.test.js` | 对照跑：带补丁与不带补丁各一遍，收集 `pageerror` / console error，确认补丁不引入报错 | Chrome + 外网 |
+| `chrome.js` | 找 Chrome：`CHROME_PATH` → Windows/macOS/Linux 常见安装位置；指错直接报错，四个浏览器测试共用 | — |
 | `check-harvest.mjs` | 把 `harvest.json` 里抓到的每条界面文本丢给 `translate()`，列出还没命中的 | Node |
 
 浏览器那三个脚本读的是 `dist/freebuff-zh-cn.js`，**改完 `src/` 要先 `npm run build`** 再跑，否则测的是旧产物。

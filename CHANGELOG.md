@@ -14,6 +14,10 @@
 - `tests/README.md` 从「只讲一个文件」补成完整清单：离线五件套 / 浏览器层 / 巡检工具 / 词表工具各自验什么。
 - 补译 39 条：商店页（官方周边、商品分类、配送与退换 FAQ、国家名单）、首页下载按钮（Mac/Windows/Linux 各架构）、
   主题名（深色/沙丘/潮汐/花簇/轨道）。`/store` 未命中 35 → 23，官网首页未命中 75 → 45（同一页已翻 162 条）。
+- `start()` 加 observer 守卫：`setEnabled(true)` 与延迟 kick 不会各建一个 MutationObserver（附回归断言）。
+- 新增 `tests/chrome.js`：`CHROME_PATH` → 常见安装路径依次解析，四个浏览器测试共用；指错了会明确报错。
+- `install.log` 超过 512 KB 滚成 `install.log.1`（只留一代）。
+- README：删掉游离表行、补「`textarea` 整体跳过（含 placeholder）」的例外说明与 `load` 4 秒上限。
 
 ## 0.3.7 · 2026-11-22
 
