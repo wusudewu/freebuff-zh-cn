@@ -21,6 +21,11 @@
 - `gen-main-strings.mjs` 必须显式传原始 asar，并拒绝已打补丁的包（默认读安装目录 = 必踩坑）。
 - 删除死代码 `tools/collector.mjs`（没有任何信标发送端）；`supported-versions.json` 去掉重复的历史条目 `0.0.204.0`；
   `MetaPath` 缺失时给「先运行 npm run build」而不是一堆堆栈；README 的 tools 清单与 `check-harvest.mjs` 用法行同步修正。
+- **测试入口补齐**：`npm test` 只跑离线五件套；新增 `test:browser`、`test:inspect`、`test:all`，
+  `routes / shot / control` 不再是无主的孤儿；README 写明哪一组需要本机 Chrome。
+- `engine.test.js` 的「通知只包装一次」改成真断言包装幂等（重复执行 shim 不换对象），通知条数另立一条断言。
+- `查看状态.cmd` 只调一次 Status（结论里已含自检）；Status 对 `patch-meta.json` 缺失也给友好提示，
+  并在末尾输出中文「自检结论：通过 / 未通过：…」。
 
 ## 0.3.6 · 2026-11-22
 
