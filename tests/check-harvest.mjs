@@ -1,5 +1,5 @@
 // 巡检差集：把 harvest.json 里抓到的每条界面文本丢给补丁的 translate()，列出还没被翻译的。
-// 用法：node tools/check-harvest.mjs [--export out.json]
+// 用法：node tests/check-harvest.mjs [--export out.json] [--verbose]
 import fs from 'node:fs'
 import path from 'node:path'
 import { JSDOM } from 'jsdom'

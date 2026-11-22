@@ -4,11 +4,19 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { loadContents } from './asar.mjs'
 
-// 默认读安装目录；装好后要重新生成请传原始备份：node tools/gen-main-strings.mjs <原始 app.asar>
-const asarPath =
-  process.argv[2] ||
-  path.join(process.env.LOCALAPPDATA || '', 'Programs', '@codebufffreebuff-desktop', 'resources', 'app.asar')
+// 必须显式给出 asar，而且必须是**未打补丁的原始包**——安装目录里那份已经汉化，对着它跑会全部未命中。
+// 用法：node tools/gen-main-strings.mjs <原始 app.asar>
+const asarPath = process.argv[2]
+if (!asarPath) {
+  console.error('用法: node tools/gen-main-strings.mjs <原始 app.asar>')
+  console.error('原始包在 %LOCALAPPDATA%\\FreebuffZh\\backup\\<版本-时间>\\app.asar')
+  process.exit(2)
+}
 const { contents } = loadContents(asarPath)
+if (contents.get('electron/hosted-workspace.cjs')?.toString('utf8').includes('/* freebuff-zh:start */')) {
+  console.error('这个 asar 已经打过补丁（里面有 freebuff-zh 标记），请改用原始备份包生成')
+  process.exit(2)
+}
 
 const MAP = {
   'electron/browser-native.cjs': {

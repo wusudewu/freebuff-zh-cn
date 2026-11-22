@@ -15,6 +15,12 @@
 - README 修正 `check-harvest.mjs` 的路径（在 `tests/` 下）、注入块行数描述。
 - `docs/style-changes.json` 改由 `tools/style-history.mjs` 从 git 历史重建（232 条改写，含提交号/原值/现值），
   不再依赖 `scratch/` 下的临时文件；`scratch/` 已清空（258 MB 开发残留）。
+- **三个入口 `.cmd` 改成纯 ASCII**：cmd.exe 按 ANSI 解析批处理，UTF-8 中文提示在代码页 936 下必然乱码
+  （`chcp 65001` 只影响之后的输出，救不了同一行已被解码的字节）；中文提示统一由 `.ps1` 输出。
+- `dist\patch-meta.json` 去掉没人消费的 `builtAt`，构建产物从此只随内容变化（不再每次构建产生纯时间戳 diff）。
+- `gen-main-strings.mjs` 必须显式传原始 asar，并拒绝已打补丁的包（默认读安装目录 = 必踩坑）。
+- 删除死代码 `tools/collector.mjs`（没有任何信标发送端）；`supported-versions.json` 去掉重复的历史条目 `0.0.204.0`；
+  `MetaPath` 缺失时给「先运行 npm run build」而不是一堆堆栈；README 的 tools 清单与 `check-harvest.mjs` 用法行同步修正。
 
 ## 0.3.6 · 2026-11-22
 

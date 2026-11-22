@@ -82,7 +82,7 @@ cd tests && node integration.test.js       # 真实 Chrome：本地页 + freebuf
 ```
 dict/            词表批次（00-core / 10-chrome / 15-nouns / 20-ui / 30-shell / _rules.json）
 src/engine.js    引擎模板（构建时注入词表与规则）
-tools/           build / audit / asar 读写 / patch-app（注入与还原）/ collector（本机调试信标）
+tools/           build / audit / patch-app（注入与还原）/ asar 读写 / gen-main-strings / style-history / coverage / fix-dict
 tests/           jsdom 引擎测试 + Chrome 集成测试
 dist/            构建产物（安装器只认这里）
 FreebuffZhPatch.ps1   安装器：Install / Restore / Status / Verify

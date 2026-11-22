@@ -173,6 +173,7 @@ function Install-Patch {
   if (-not (Test-Path $asar)) { Fail "找不到 app.asar：$asar" }
   if (-not (Test-Path $shell)) { Fail "找不到界面入口：$shell" }
   if (-not (Test-Path $AssetPath)) { Fail "找不到汉化脚本：$AssetPath（先运行 npm run build）" }
+  if (-not (Test-Path $MetaPath)) { Fail "找不到构建信息：$MetaPath（先运行 npm run build）" }
 
   Assert-AppIdle
 

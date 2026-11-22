@@ -73,7 +73,7 @@ fs.copyFileSync(path.join(root, 'src', 'harvest.js'), path.join(distDir, 'harves
 fs.copyFileSync(path.join(root, 'src', 'main-world.js'), path.join(distDir, 'freebuff-zh-main.js'))
 fs.writeFileSync(
   path.join(distDir, 'patch-meta.json'),
-  JSON.stringify({ version: pkg.version, entries: Object.keys(dict).length, rules: rules.length, builtAt: new Date().toISOString() }, null, 2),
+  JSON.stringify({ version: pkg.version, entries: Object.keys(dict).length, rules: rules.length }, null, 2) + String.fromCharCode(10),
 )
 
 // 版本号三处（package.json / patch-meta.json / 产物内嵌）必须一致，否则装的是别的版本。
