@@ -156,8 +156,14 @@ function Show-Status {
   }
 
   $verify = Get-PatchVerify
-  if ($verify -and $verify.appVersion) { Write-Host "  应用版本   $($verify.appVersion)" }
-  elseif (-not $verify) { Write-Host '  应用版本   读不出来（app.asar 可能损坏）' -ForegroundColor Yellow }
+  if ($verify -and $verify.appVersion) {
+    Write-Host "  应用版本   $($verify.appVersion)"
+  } elseif ($verify) {
+    # 自检跑起来了但读不到版本号：asar 里的 package.json 没解析出来（通常就是 asar 损坏）。
+    Write-Host '  应用版本   读不出来（app.asar 里的 package.json 没读到，可能已损坏）' -ForegroundColor Yellow
+  } else {
+    Write-Host '  应用版本   未知（自检没能运行）' -ForegroundColor Yellow
+  }
   $marked = (Test-Path $shell) -and ((Get-Content -LiteralPath $shell -Raw -Encoding UTF8).Contains('<!-- freebuff-zh:start -->'))
 
   if (-not $manifest) {

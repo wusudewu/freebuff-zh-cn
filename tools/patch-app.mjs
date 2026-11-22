@@ -28,15 +28,23 @@ function parseArgs(argv) {
   const out = { _: [] }
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i]
-    if (arg.startsWith('--')) out[arg.slice(2)] = argv[i + 1]
-    else out._.push(arg)
+    if (arg.startsWith('--')) {
+      const eq = arg.indexOf('=')
+      if (eq > 2) {
+        out[arg.slice(2, eq)] = arg.slice(eq + 1)
+      } else {
+        const next = argv[i + 1]
+        // 末位缺值 / 下一个又是选项时记成 true，交给调用处给用法错误，而不是 writeFileSync(undefined)。
+        out[arg.slice(2)] = next === undefined || String(next).startsWith('--') ? true : next
+      }
+    } else out._.push(arg)
   }
   return out
 }
 
 const args = parseArgs(process.argv.slice(2))
 const jsonOut = args['json-out']
-if (args['json-out'] !== undefined && (!jsonOut || String(jsonOut).startsWith('--'))) {
+if (args['json-out'] !== undefined && (typeof jsonOut !== 'string' || jsonOut.length === 0 || jsonOut === 'true')) {
   console.error('--json-out 需要一个文件路径')
   process.exit(2)
 }

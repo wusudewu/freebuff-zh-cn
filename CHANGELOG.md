@@ -32,6 +32,11 @@
   三处只在调用期间把 EAP 降为 `Continue`，失败仍按退出码处理。
 - `patch-app verify` 把「asar 读不出来」当成结论而不是异常（`app.asar 读不出来（…），请重装 Freebuff`），
   `Status` 据此区分「已损坏」与「被更新/改动」，并打出具体原因。`--json-out` 缺值也给了用法错误。
+- `Show-Status` 的版本行判断修对了：此前 elsif 分支在「自检跑起来但读不到版本号」的主场景下打不出来，
+  现在分三态（正常 / asar 里的 package.json 读不到 / 自检没运行）。
+- 新增 `tests/installer.test.js`（进 `npm test`）：损坏的 asar 让 verify 给结论而非抛异常、`--json-out` 缺值报用法错误、
+  `Status` 不抛 NativeCommandError 且指出「已损坏」——错误路径终于有测试网。
+- `parseArgs` 支持 `--k=v`，`--json-out` 缺值/空值统一走用法错误。
 
 ## 0.3.7 · 2026-11-22
 
