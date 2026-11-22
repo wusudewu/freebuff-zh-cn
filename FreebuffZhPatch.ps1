@@ -109,11 +109,12 @@ function Read-AppVersion {
 function Get-PatchVerify {
   # 自检在「没装/文件被改动」时会以非零码退出，这是正常结论，不能把 Status 一起 exit 掉。
   $node = Resolve-Node
-  $raw = & $node $PatchAppPath 'verify' '--app-dir' (Resolve-AppDir) '--asset' $AssetPath 2>&1
-  $text = ($raw -join "`n")
-  $start = $text.IndexOf('{')
-  if ($start -lt 0) { return $null }
-  try { return ($text.Substring($start) | ConvertFrom-Json) } catch { return $null }
+  # 只取 stdout：verify 的 JSON 是唯一的 stdout 输出，报错走 stderr。
+  # 不要把两路合流再按第一个“{”截断——node 若先打出带 { 的错误文本就会截歪。
+  $raw = & $node $PatchAppPath 'verify' '--app-dir' (Resolve-AppDir) '--asset' $AssetPath 2>$null
+  $text = ($raw -join "`n").Trim()
+  if (-not $text) { return $null }
+  try { return ($text | ConvertFrom-Json) } catch { return $null }
 }
 
 # ---------------------------------------------------------------- Status
