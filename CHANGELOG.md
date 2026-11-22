@@ -12,6 +12,9 @@
 - **自检能发现「装的是旧构建」**：`verify` 现在除了比对安装记录，还比对当前 `dist` 产物哈希——
   dist 更新过却忘了重跑安装时，会明确报「已安装的汉化脚本不是当前构建（重跑安装即可同步）」。
 - `INPUT[value]` 的改写会进 observer 的观察列表，后续被 JS 改回英文时也能重翻。
+- **真实 asar 的手术路径有回归测试了**：新增 `tests/patcher.test.js`（进 `npm test`），拿备份里的原始包在临时目录跑
+  apply → verify → restore，断言 marker 成对、原生文案锚点全部替换、还原后 `app.asar` 与 `index.html` 逐字节回到原样。
+- `translateTree` 根元素的属性也遵守跳过规则（此前子树内会跳过、根元素自己却照翻，边界不一致）。
 - README：dict 批次写成实际的 18 个；`npm test` 说明从「五件套」改成实际七件。
 
 ## 0.3.8 · 2026-11-22

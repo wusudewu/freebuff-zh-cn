@@ -16,6 +16,7 @@ Chrome 不在默认路径时用 `CHROME_PATH` 指定：`CHROME_PATH="D:/Chrome/c
 
 | 文件 | 测什么 | 需要 |
 | --- | --- | --- |
+| `patcher.test.js` | 真实 asar 上跑 apply → verify → restore：marker 成对、原生文案锚点全替换、还原后逐字节回到原样（用备份里的原始包做样本，没有就 SKIP） | Node |
 | `installer.test.js` | 安装器错误路径：asar 损坏时 verify 给结论而非抛异常、`--json-out` 缺值报用法错误、Step/Status 不抛 NativeCommandError | Node + PowerShell |
 | `build.test.js` | 构建的失败路径：词表冲突必须非零退出且不写产物；无冲突时产物版本与 package 一致 | Node |
 | `engine.test.js` | 用 jsdom 把补丁真跑一遍：该变中文的变了、不该动的（代码块、输入框、用户内容）没动 | Node |

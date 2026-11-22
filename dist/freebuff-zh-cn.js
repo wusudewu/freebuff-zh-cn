@@ -280,7 +280,9 @@
       return
     }
     if (root.nodeType !== Node.ELEMENT_NODE && root.nodeType !== Node.DOCUMENT_FRAGMENT_NODE) return
-    if (root.nodeType === Node.ELEMENT_NODE) translateAttributes(root)
+    // 根元素自己的属性也要守同一条规矩：子树里的元素会被 TreeWalker 拒掉，
+    // 根元素若正好落在跳过区（例如一次改动落在 <pre> 上），属性也不该动。
+    if (root.nodeType === Node.ELEMENT_NODE && !SKIP_TAGS.has(root.tagName) && !skipped(root)) translateAttributes(root)
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         if (node.nodeType === Node.ELEMENT_NODE) {
