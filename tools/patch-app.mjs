@@ -36,6 +36,10 @@ function parseArgs(argv) {
 
 const args = parseArgs(process.argv.slice(2))
 const jsonOut = args['json-out']
+if (args['json-out'] !== undefined && (!jsonOut || String(jsonOut).startsWith('--'))) {
+  console.error('--json-out 需要一个文件路径')
+  process.exit(2)
+}
 const command = args._[0]
 const appDir = args['app-dir']
 if (!command || !appDir) {
@@ -478,11 +482,21 @@ function verify() {
   const missingFiles = []
   const absent = []
   const residual = []
+  let contents = null
   if (!fs.existsSync(asarPath)) {
     report.ok = false
     report.problems.push('找不到 app.asar')
   } else {
-    const { contents } = loadContents(asarPath)
+    try {
+      contents = loadContents(asarPath).contents
+    } catch (error) {
+      // asar 损坏/被截断时给结论，不要抛出去——安装器那边会把异常当成自检失败。
+      report.ok = false
+      report.problems.push(`app.asar 读不出来（${error.message}），请重装 Freebuff`)
+      contents = null
+    }
+  }
+  if (contents) {
     const hostedKey = findKey(contents, HOSTED_MODULE)
     if (hostedKey) hostedMarkers = countOf(contents.get(hostedKey).toString('utf8'), JS_START)
     report.hostedMarkers = hostedMarkers

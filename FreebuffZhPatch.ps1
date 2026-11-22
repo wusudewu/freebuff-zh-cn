@@ -95,13 +95,18 @@ function Get-SupportedVersions {
 function Invoke-Patcher([string]$command, [string[]]$extra) {
   $node = Resolve-Node
   $arguments = @($PatchAppPath, $command, '--app-dir', (Resolve-AppDir)) + $extra
+  # $ErrorActionPreference='Stop' 下，node 往 stderr 写一行就会变成终止性 NativeCommandError，
+  # 连「离开码非零」都判断不到。这里只在调用期间降成 Continue，失败仍由下面的退出码判断处理。
+  $ErrorActionPreference = 'Continue'
   $output = & $node @arguments 2>&1
-  if ($LASTEXITCODE -ne 0) { Fail ($output -join "`n") }
+  $code = $LASTEXITCODE
+  if ($code -ne 0) { Fail ($output -join "`n") }
   return ($output -join "`n")
 }
 
 function Read-AppVersion {
   $node = Resolve-Node
+  $ErrorActionPreference = 'Continue'
   $raw = & $node $PatchAppPath 'version' '--app-dir' (Resolve-AppDir) 2>&1
   try { return (($raw -join "`n") | ConvertFrom-Json).appVersion } catch { return $null }
 }
@@ -112,6 +117,8 @@ function Get-PatchVerify {
   # 也不受路径里空格的影响（call operator 会正确加引号，Start-Process 的 -ArgumentList 不会）。
   $node = Resolve-Node
   $jsonFile = Join-Path ([System.IO.Path]::GetTempPath()) ('fbzh-verify-' + [guid]::NewGuid().ToString('N') + '.json')
+  # 同上：node 只要往 stderr 写东西（哪怕是「asar 读不出来」这种正常结论），Stop 就会把它变成异常。
+  $ErrorActionPreference = 'Continue'
   try {
     $output = & $node $PatchAppPath 'verify' '--app-dir' (Resolve-AppDir) '--asset' $AssetPath '--json-out' $jsonFile 2>&1
     if (Test-Path $jsonFile) {
@@ -149,7 +156,8 @@ function Show-Status {
   }
 
   $verify = Get-PatchVerify
-  if ($verify) { Write-Host "  应用版本   $($verify.appVersion)" }
+  if ($verify -and $verify.appVersion) { Write-Host "  应用版本   $($verify.appVersion)" }
+  elseif (-not $verify) { Write-Host '  应用版本   读不出来（app.asar 可能损坏）' -ForegroundColor Yellow }
   $marked = (Test-Path $shell) -and ((Get-Content -LiteralPath $shell -Raw -Encoding UTF8).Contains('<!-- freebuff-zh:start -->'))
 
   if (-not $manifest) {
@@ -164,7 +172,13 @@ function Show-Status {
 
   $asarNow = Get-Sha256 $asar
   if (-not $marked -or $asarNow -ne $manifest.appAsar.patchedHash) {
-    Write-Host '  安装状态   Freebuff 已更新或 app.asar 被改动，补丁已不在原位：请重新安装' -ForegroundColor Yellow
+    $driftProblems = @($verify.problems) | Where-Object { $_ }
+    if (($driftProblems -join '；') -match '读不出来') {
+      Write-Host '  安装状态   app.asar 已损坏，补丁无从校验：请用 Freebuff 官方安装包重装，再装中文补丁' -ForegroundColor Red
+    } else {
+      Write-Host '  安装状态   Freebuff 已更新或 app.asar 被改动，补丁已不在原位：请重新安装' -ForegroundColor Yellow
+    }
+    if ($driftProblems.Count -gt 0) { Write-Host ('  具体问题   ' + ($driftProblems -join '；')) -ForegroundColor Red }
     Write-Host "  上次安装   $($manifest.installedAt)（备份仍可用于还原，但版本已变时不要用它覆盖）"
     Write-Host ''
     return

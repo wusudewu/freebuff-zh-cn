@@ -27,6 +27,11 @@
   PS 5.1 不会给含空格的参数加引号（会把 `...b` 当模块名）。改成 `verify --json-out <file>` 落文件 + call operator 调用，
   实测把整包放到 `%LOCALAPPDATA%\Tempb zh patch test\` 跑 Status 与 Install 均正常（此前那种路径下自检恒失败）。
 - 顺带修掉编码隐患：自检结果按 UTF-8 读，不再受控制台代码页影响；品牌白名单里的重复项（GitHub、Notion）去重。
+- **原生调用不再因 stderr 抛异常**：`$ErrorActionPreference='Stop'` 下 node 往 stderr 写一行就会变成终止性
+  `NativeCommandError`（app.asar 损坏时 `Status` 直接红字崩）。`Get-PatchVerify` / `Invoke-Patcher` / `Read-AppVersion`
+  三处只在调用期间把 EAP 降为 `Continue`，失败仍按退出码处理。
+- `patch-app verify` 把「asar 读不出来」当成结论而不是异常（`app.asar 读不出来（…），请重装 Freebuff`），
+  `Status` 据此区分「已损坏」与「被更新/改动」，并打出具体原因。`--json-out` 缺值也给了用法错误。
 
 ## 0.3.7 · 2026-11-22
 
