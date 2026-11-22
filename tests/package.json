@@ -8,7 +8,9 @@
     "test": "node engine.test.js && node structure.test.js && node adversarial.test.js && node chunk.test.js && node perf.test.js",
     "test:engine": "node engine.test.js && node structure.test.js && node adversarial.test.js",
     "test:perf": "node chunk.test.js && node perf.test.js",
-    "test:browser": "node integration.test.js"
+    "test:browser": "node integration.test.js",
+    "test:inspect": "node routes.test.js && node shot.test.js && node control.test.js",
+    "test:all": "npm test && npm run test:browser && npm run test:inspect"
   },
   "dependencies": {
     "jsdom": "^31.0.1",

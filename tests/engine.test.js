@@ -78,8 +78,12 @@ setTimeout(() => {
   const textarea = doc.querySelector('textarea')
   const nav = doc.querySelector('nav')
 
-  // 主世界的 shim 与引擎走同一套桥接：先装 shim，再构造两条通知。
+  // 主世界的 shim 与引擎走同一套桥接：先装 shim，再构造通知。
   window.eval(mainShim)
+  const firstWrap = window.Notification
+  window.eval(mainShim)
+  const repeatedShim = window.Notification
+  if (firstWrap !== repeatedShim) throw new Error('shim 重复执行时换了包装对象')
   new window.Notification('New chat', { body: 'Copied' })
   new window.Notification('Build finished', { body: 'zzz no dict hit' })
   new window.Notification('Settings – Appearance', { body: 'Build failed – see logs' })
@@ -122,7 +126,9 @@ setTimeout(() => {
     ['nav 无英文残留', !/Home|Sites|Projects|Settings/.test(nav.textContent)],
     ['调试口可用', typeof window.__FREEBUFF_ZH__.stats === 'function' && window.__FREEBUFF_ZH__.stats().applied > 10],
     ['通知被主世界 shim 包装', typeof window.Notification === 'function' && window.Notification.__freebuffZh === true],
-    ['通知只包装一次', notified.length === 3],
+    // 真正的「只包装一次」：重复执行 shim 不会换掉同一个包装对象。
+    ['通知只包装一次', repeatedShim === window.Notification && window.__freebuffZhMain === true],
+    ['通知用例条数', notified.length === 3],
     ['通知标题翻译', first.title === '新建对话'],
     ['通知正文翻译', Boolean(first.options) && first.options.body === '已复制'],
     ['未命中的通知正文原样', Boolean(second.options) && second.options.body === 'zzz no dict hit'],

@@ -7,6 +7,9 @@
   "scripts": {
     "build": "node tools/build.mjs",
     "audit": "node tools/audit.mjs",
-    "test": "cd tests && npm test"
+    "test": "cd tests && npm test",
+    "test:browser": "cd tests && npm run test:browser",
+    "test:inspect": "cd tests && npm run test:inspect",
+    "test:all": "cd tests && npm run test:all"
   }
 }

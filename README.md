@@ -71,10 +71,14 @@ Freebuff\resources\
 ## 开发
 
 ```
-npm run build      # dict/*.json → dist/freebuff-zh-cn.js（含冲突检测）
-node tools/audit.mjs   # 地区用词、标点、机器味、长度检查
-cd tests && npm install && npm test        # 引擎/结构/对抗/分片/性能
-cd tests && node integration.test.js       # 真实 Chrome：本地页 + freebuff.com，和基线比错误数
+npm run build            # dict/*.json → dist/freebuff-zh-cn.js（有冲突直接失败、不落盘）
+node tools/audit.mjs     # 地区用词、标点、机器味、长度检查
+cd tests && npm install
+
+npm test                 # 离线五件套：引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，几秒钟）
+npm run test:browser      # 真实 Chrome：本地页 + freebuff.com，和基线比 JS 异常数
+npm run test:inspect      # 真实 Chrome 的巡检工具：routes（漏译清单）/ shot（截图）/ control（对照）
+npm run test:all          # 上面全部（需要本机装了 Chrome）
 ```
 
 目录结构：

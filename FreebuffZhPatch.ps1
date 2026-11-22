@@ -121,9 +121,11 @@ function Show-Status {
   Write-Host ''
   Write-Host 'Freebuff 中文补丁 · 状态' -ForegroundColor Cyan
   Write-Host "  应用目录   $dir"
-  if (Test-Path $AssetPath) {
+  if ((Test-Path $AssetPath) -and (Test-Path $MetaPath)) {
     $meta = Get-Content -LiteralPath $MetaPath -Raw -Encoding UTF8 | ConvertFrom-Json
     Write-Host "  补丁版本   $($meta.version)（词表 $($meta.entries) 条，规则 $($meta.rules) 条）"
+  } else {
+    Write-Host '  补丁版本   未知（dist 里缺构建产物，先运行 npm run build）' -ForegroundColor Yellow
   }
 
   if (-not (Test-Path $asar)) {
@@ -161,6 +163,16 @@ function Show-Status {
   }
   Write-Host "  安装时间   $($manifest.installedAt)"
   Write-Host "  备份目录   $($manifest.backupDir)"
+  if ($verify) {
+    if ($verify.ok) {
+      Write-Host '  自检结论   通过（界面标记、原生文案锚点、三份脚本哈希都一致）' -ForegroundColor Green
+    } else {
+      $problems = @($verify.problems) | Where-Object { $_ }
+      Write-Host ('  自检结论   未通过：' + ($problems -join '；') + '——重跑「安装.cmd」通常就能修好') -ForegroundColor Red
+    }
+  } else {
+    Write-Host '  自检结论   未能运行自检（检查 Node.js 与安装目录）' -ForegroundColor Yellow
+  }
   Write-Host ''
 }
 
