@@ -13,7 +13,6 @@ const puppeteer = require('puppeteer-core')
 const APP_DIR = process.env.FREEBUFF_DIR || path.join(process.env.LOCALAPPDATA || '', 'Programs', '@codebufffreebuff-desktop')
 const UI_DIR = path.join(APP_DIR, 'resources', 'orchestrator', 'ui')
 const CHROME = require('./chrome').resolveChrome()
-const PORT = 8794
 const script = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-cn.js'), 'utf8')
 
 const MIME = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.json': 'application/json; charset=utf-8' }
@@ -39,7 +38,8 @@ function startServer(root) {
     res.writeHead(200, { 'Content-Type': MIME[path.extname(target)] || 'application/octet-stream' })
     fs.createReadStream(target).pipe(res)
   })
-  return new Promise((resolve) => server.listen(PORT, '127.0.0.1', () => resolve(server)))
+  // 端口交给系统分配：固定端口在崩溃残留或被占用时只会抛 EADDRINUSE，看不出原因。
+  return new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server)))
 }
 
 function collect(page) {
@@ -67,7 +67,14 @@ async function run(browser, url, { inject, wait }) {
 }
 
 async function main() {
+  // 前置检查：界面目录不存在时后面的断言会以「注入没生效」的样子失败，看不出真实原因。
+  if (!fs.existsSync(path.join(UI_DIR, 'index.html'))) {
+    console.error(`找不到界面目录: ${UI_DIR}`)
+    console.error('Freebuff 没装在默认路径时，用 FREEBUFF_DIR 指向应用目录。')
+    process.exit(2)
+  }
   const server = await startServer(UI_DIR)
+  const PORT = server.address().port
   const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox', '--disable-gpu', '--disable-dev-shm-usage'] })
   const results = []
   try {

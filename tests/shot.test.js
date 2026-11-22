@@ -9,7 +9,6 @@ const APP_DIR = process.env.FREEBUFF_DIR || path.join(process.env.LOCALAPPDATA |
 const UI_DIR = path.join(APP_DIR, 'resources', 'orchestrator', 'ui')
 const CHROME = require('./chrome').resolveChrome()
 const OUT = path.join(__dirname, '..', 'scratch', 'shots')
-const PORT = 8795
 const MIME = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.json': 'application/json' }
 
 const server = http.createServer((req, res) => {
@@ -25,8 +24,14 @@ const server = http.createServer((req, res) => {
 })
 
 ;(async () => {
+  if (!fs.existsSync(path.join(UI_DIR, 'index.html'))) {
+    console.error(`找不到界面目录: ${UI_DIR}`)
+    console.error('Freebuff 没装在默认路径时，用 FREEBUFF_DIR 指向应用目录。')
+    process.exit(2)
+  }
   fs.mkdirSync(OUT, { recursive: true })
-  await new Promise((r) => server.listen(PORT, '127.0.0.1', r))
+  await new Promise((r) => server.listen(0, '127.0.0.1', r))
+  const PORT = server.address().port
   const browser = await puppeteer.launch({ executablePath: CHROME, headless: 'new', args: ['--no-sandbox', '--disable-gpu'] })
   const page = await browser.newPage()
   await page.setViewport({ width: 1280, height: 860, deviceScaleFactor: 1 })

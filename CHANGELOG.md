@@ -18,6 +18,11 @@
 - 新增 `tests/chrome.js`：`CHROME_PATH` → 常见安装路径依次解析，四个浏览器测试共用；指错了会明确报错。
 - `install.log` 超过 512 KB 滚成 `install.log.1`（只留一代）。
 - README：删掉游离表行、补「`textarea` 整体跳过（含 placeholder）」的例外说明与 `load` 4 秒上限。
+- 新增 `tests/build.test.js`（进 `npm test`）：冲突必须非零退出且不落盘；无冲突时产物版本与 package 一致。
+- `Get-PatchVerify` 改 `Start-Process` 分别收 stdout/stderr：各收各的，node 自己挂掉时把 stderr 摘要打出来
+  （PS 5.1 里 `2>$file` + `ErrorActionPreference='Stop'` 会把 stderr 变成 NativeCommandError）。
+- 浏览器层测试改系统分配端口（不再固定 8794/8795），并前置检查界面目录，缺了直接说清用 `FREEBUFF_DIR`。
+- README 覆盖表拆成 7 条路由各一行；`check-harvest.mjs` 的品牌白名单加了维护说明。
 
 ## 0.3.7 · 2026-11-22
 

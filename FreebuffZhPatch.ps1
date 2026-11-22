@@ -108,13 +108,30 @@ function Read-AppVersion {
 
 function Get-PatchVerify {
   # 自检在「没装/文件被改动」时会以非零码退出，这是正常结论，不能把 Status 一起 exit 掉。
+  # 用 Start-Process 分别收 stdout / stderr：PS 5.1 里 `2>$file` 配合 $ErrorActionPreference='Stop'
+  # 会把 node 的 stderr 变成 NativeCommandError，反而丢掉我们要的结论。
   $node = Resolve-Node
-  # 只取 stdout：verify 的 JSON 是唯一的 stdout 输出，报错走 stderr。
-  # 不要把两路合流再按第一个“{”截断——node 若先打出带 { 的错误文本就会截歪。
-  $raw = & $node $PatchAppPath 'verify' '--app-dir' (Resolve-AppDir) '--asset' $AssetPath 2>$null
-  $text = ($raw -join "`n").Trim()
-  if (-not $text) { return $null }
-  try { return ($text | ConvertFrom-Json) } catch { return $null }
+  $outFile = [System.IO.Path]::GetTempFileName()
+  $errFile = [System.IO.Path]::GetTempFileName()
+  try {
+    $arguments = @($PatchAppPath, 'verify', '--app-dir', (Resolve-AppDir), '--asset', $AssetPath)
+    $null = Start-Process -FilePath $node -ArgumentList $arguments -NoNewWindow -Wait -PassThru -RedirectStandardOutput $outFile -RedirectStandardError $errFile
+    $text = ''
+    if (Test-Path $outFile) { $text = (Get-Content -LiteralPath $outFile -Raw -ErrorAction SilentlyContinue) }
+    $text = "$text".Trim()
+    if (-not $text) {
+      $err = ''
+      if (Test-Path $errFile) { $err = (Get-Content -LiteralPath $errFile -Raw -ErrorAction SilentlyContinue) }
+      if ($err) {
+        $head = (($err.Trim() -split "`n") | Select-Object -First 3) -join ' / '
+        Write-Host "  自检没能返回结果（node 输出：$head）" -ForegroundColor Yellow
+      }
+      return $null
+    }
+    try { return ($text | ConvertFrom-Json) } catch { return $null }
+  } finally {
+    Remove-Item -LiteralPath $outFile, $errFile -Force -ErrorAction SilentlyContinue
+  }
 }
 
 # ---------------------------------------------------------------- Status
