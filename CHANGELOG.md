@@ -37,6 +37,8 @@
 - 新增 `tests/installer.test.js`（进 `npm test`）：损坏的 asar 让 verify 给结论而非抛异常、`--json-out` 缺值报用法错误、
   `Status` 不抛 NativeCommandError 且指出「已损坏」——错误路径终于有测试网。
 - `parseArgs` 支持 `--k=v`，`--json-out` 缺值/空值统一走用法错误。
+- `tests/installer.test.js` 的等号断言改成有区分力的写法：`--json-out=val` 必须**真的写出 `val` 文件**（旧代码把键名当成
+  `json-out=val`、根本不落盘），不再只查退出码那种新旧都通过的软断言。
 
 ## 0.3.7 · 2026-11-22
 

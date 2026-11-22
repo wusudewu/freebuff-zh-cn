@@ -35,8 +35,13 @@ check('verify 仍写出 JSON 结论', report !== null)
 check('verify 结论说明 asar 读不出来', Boolean(report && (report.problems || []).some((p) => p.includes('读不出来'))), report && JSON.stringify(report.problems))
 
 // 2) 等号形式的参数也要按用法错误处理
+// 等号形式必须被当成「路径」而不是「键名」：新代码会真的写出 val 文件，旧代码不会。
+const eqFile = path.join(tmp, 'val')
+if (fs.existsSync(eqFile)) fs.rmSync(eqFile, { force: true })
 const eq = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out=val'], { encoding: 'utf8', cwd: tmp })
-check('--json-out=val 被当成普通值（不误判为缺值）', eq.status === 0 || eq.status === 1, `status=${eq.status}`)
+let eqReport = null
+try { eqReport = JSON.parse(fs.readFileSync(eqFile, 'utf8')) } catch (error) { eqReport = null }
+check('--json-out=val 按路径处理并写出结果', eqReport !== null && typeof eqReport.ok === 'boolean', `status=${eq.status} 文件存在=${fs.existsSync(eqFile)}`)
 const missing = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out'], { encoding: 'utf8', cwd: tmp })
 check('--json-out 缺值给出用法错误', missing.status === 2 && /需要一个文件路径/.test(missing.stderr || ''), `status=${missing.status}`)
 
