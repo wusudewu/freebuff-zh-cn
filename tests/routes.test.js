@@ -6,7 +6,9 @@ const puppeteer = require('puppeteer-core')
 
 const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe'
 const script = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-cn.js'), 'utf8')
-const ROUTES = ['/', '/app', '/chat', '/pricing', '/store', '/cli', '/models', '/desktop']
+// /models 已下线（HTTP 404，测到的是「页面不存在」），从列表里去掉；
+// /store 是正常的 SPA 页面（200），引擎能装上，别因为某次跑出 0 就当它失效。
+const ROUTES = ['/', '/app', '/chat', '/pricing', '/store', '/cli', '/desktop']
 const exportIndex = process.argv.indexOf('--export')
 const exportPath = exportIndex > 0 ? process.argv[exportIndex + 1] : null
 
@@ -19,7 +21,9 @@ const exportPath = exportIndex > 0 ? process.argv[exportIndex + 1] : null
     await page.evaluateOnNewDocument(script)
     try {
       await page.goto('https://freebuff.com' + route, { waitUntil: 'domcontentloaded', timeout: 45000 })
-      await new Promise((r) => setTimeout(r, 6000))
+      // 不靠固定 sleep：等引擎真的开始翻（首屏 load 可能很晚），再给 1.5 秒收尾。
+      await page.waitForFunction(() => window.__FREEBUFF_ZH__ && window.__FREEBUFF_ZH__.stats().applied > 0, { timeout: 25000 }).catch(() => {})
+      await new Promise((r) => setTimeout(r, 1500))
       const state = await page.evaluate(() => {
         const api = window.__FREEBUFF_ZH__
         const text = document.body.innerText || ''
@@ -27,7 +31,8 @@ const exportPath = exportIndex > 0 ? process.argv[exportIndex + 1] : null
         return { stats: api ? api.stats() : null, chinese: /[\u4e00-\u9fff]/.test(text), words: words.slice(0, 400), length: text.length }
       })
       perRoute[route] = state
-      console.log(`${route.padEnd(10)} 已翻译 ${String(state.stats?.applied ?? 0).padStart(4)}  未命中 ${String(state.stats?.misses ?? 0).padStart(4)}  中文 ${state.chinese ? '有' : '无'}  文本 ${state.length}`)
+      const patchState = state.stats ? '在' : '未装'
+      console.log(`${route.padEnd(10)} 补丁${patchState}  已翻译 ${String(state.stats?.applied ?? 0).padStart(4)}  未命中 ${String(state.stats?.misses ?? 0).padStart(4)}  中文 ${state.chinese ? '有' : '无'}  文本 ${state.length}`)
     } catch (error) {
       console.log(`${route.padEnd(10)} 失败：${error.message.slice(0, 80)}`)
       perRoute[route] = { error: error.message, stats: null }

@@ -70,7 +70,7 @@ window.Notification = FakeNotification
 
 window.eval(script)
 
-setTimeout(() => {
+setTimeout(async () => {
   const doc = window.document
   const text = (sel) => doc.querySelector(sel)?.textContent
   const all = doc.body.textContent.replace(/\s+/g, ' ').trim()
@@ -91,7 +91,21 @@ setTimeout(() => {
   const second = notified[1] || {}
   const third = notified[2] || {}
 
+  // 运行期开关：关掉后新加的英文不再翻，打开后重新扫回来。
+  const api = window.__FREEBUFF_ZH__
+  const offSpan = doc.createElement('span')
+  offSpan.textContent = 'New chat'
+  doc.body.appendChild(offSpan)
+  api.setEnabled(false)
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  const whileOff = offSpan.textContent
+  api.setEnabled(true)
+  await new Promise((resolve) => setTimeout(resolve, 400))
+  const afterOn = offSpan.textContent
+
   const checks = [
+    ['运行期关掉后不再翻译', whileOff === 'New chat'],
+    ['重新打开后恢复翻译', afterOn === '新建对话'],
     ['nav 首页', /首页/.test(nav.textContent)],
     ['nav 站点', /站点/.test(nav.textContent)],
     ['nav 项目', /项目/.test(nav.textContent)],

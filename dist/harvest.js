@@ -8,27 +8,28 @@
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
   const STEPS = [
-    { name: '新建对话', find: ['新建对话', 'New chat'], open: true },
+    // keepOpen：点开后不关，后续步骤就在这个新界面上继续；其余步骤点开、快照、再关掉。
+    { name: '新建对话', find: ['新建对话', 'New chat'], keepOpen: true },
     { name: '输入区', find: ['输入编程任务', 'Ask Freebuff', '发送消息'], snapshotOnly: true },
-    { name: '模型选择器', find: ['模型', '选择模型', 'Model'], close: true },
-    { name: '运行位置', find: ['运行位置', '本地', 'Run location'], close: true },
-    { name: '添加文件菜单', find: ['添加文件', '添加附件', 'Attach'], close: true },
-    { name: '语音输入', find: ['开始语音输入', '语音输入', 'Start dictation'], close: true },
-    { name: '对话标签菜单', find: ['对话选项', 'Chat options', '标签页选项'], close: true },
-    { name: '模板卡详情', find: ['模板', 'Template'], close: true },
-    { name: '集成卡详情', find: ['集成', 'Integrations'], close: true },
-    { name: '技能-新建', find: ['技能', 'Skills'], close: true },
-    { name: '广告向导', find: ['广告', 'Ad options'], close: true },
-    { name: '帮助菜单', find: ['帮助', 'Help'], close: true },
-    { name: '通知', find: ['通知', 'Notifications'], close: true },
-    { name: '账号菜单', find: ['账号', 'Account'], close: true },
-    { name: '键盘快捷键', find: ['键盘快捷键', '快捷键', 'Keyboard shortcuts'], close: true },
-    { name: '检查更新', find: ['检查更新', 'Check for updates'], close: true },
-    { name: '关于', find: ['关于', 'About'], close: true },
-    { name: '文件面板-新建文件', find: ['新建文件', 'New file'], close: true },
-    { name: '终端面板-新建终端', find: ['新建终端', 'New terminal'], close: true },
-    { name: '变更面板', find: ['变更', 'Changes'], close: false },
-    { name: '产物面板-新建', find: ['新建产物', 'New artifact'], close: true },
+    { name: '模型选择器', find: ['模型', '选择模型', 'Model'] },
+    { name: '运行位置', find: ['运行位置', '本地', 'Run location'] },
+    { name: '添加文件菜单', find: ['添加文件', '添加附件', 'Attach'] },
+    { name: '语音输入', find: ['开始语音输入', '语音输入', 'Start dictation'] },
+    { name: '对话标签菜单', find: ['对话选项', 'Chat options', '标签页选项'] },
+    { name: '模板卡详情', find: ['模板', 'Template'] },
+    { name: '集成卡详情', find: ['集成', 'Integrations'] },
+    { name: '技能-新建', find: ['技能', 'Skills'] },
+    { name: '广告向导', find: ['广告', 'Ad options'] },
+    { name: '帮助菜单', find: ['帮助', 'Help'] },
+    { name: '通知', find: ['通知', 'Notifications'] },
+    { name: '账号菜单', find: ['账号', 'Account'] },
+    { name: '键盘快捷键', find: ['键盘快捷键', '快捷键', 'Keyboard shortcuts'] },
+    { name: '检查更新', find: ['检查更新', 'Check for updates'] },
+    { name: '关于', find: ['关于', 'About'] },
+    { name: '文件面板-新建文件', find: ['新建文件', 'New file'] },
+    { name: '终端面板-新建终端', find: ['新建终端', 'New terminal'] },
+    { name: '变更面板', find: ['变更', 'Changes'] },
+    { name: '产物面板-新建', find: ['新建产物', 'New artifact'] },
   ]
 
   const label = (element) => {
@@ -101,6 +102,11 @@
     screens.push({ target: '__initial__', ...snapshot() })
     for (const step of STEPS) {
       const node = find(step.find)
+      if (step.snapshotOnly) {
+        // 只快照、不点开：这类目标本身就是常驻区域（输入区），点开反而会遮住别的界面。
+        screens.push({ target: step.name, ...snapshot() })
+        continue
+      }
       if (!node) {
         screens.push({ target: step.name, missing: true })
         continue
@@ -114,7 +120,7 @@
       }
       await sleep(1500)
       screens.push({ target: step.name, label: label(node), ...snapshot() })
-      if (step.close) await closeLayer()
+      if (!step.keepOpen) await closeLayer()
     }
     await closeLayer()
     return { href: location.href, at: new Date().toISOString(), patch: Boolean(globalThis.__FREEBUFF_ZH__), screens }

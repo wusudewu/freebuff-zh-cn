@@ -58,7 +58,14 @@ Freebuff\resources\
 | 设置（通用/账号/外观/用量/账单/赚取/模型提供商/开发者 API/项目设置/技能/产物） | 剩余 0 条界面文案 | 只剩主题名、模型名、价格 |
 | 集成与 MCP 面板 | 剩余 0 条界面文案 | 只剩应用名 |
 | 模型选择器、文件/终端/变更/产物面板、模板库、邀请、账号菜单 | 剩余 0 条界面文案 | 只剩主题名、模型名、价格 |
-| 官网首页、定价、CLI 页（只在登出或跳转系统浏览器时可见） | 96 / 85、26 / 54、67 / 69 | 商品名、营销长句、示例提示词 |
+| 商店页（周边商品、FAQ） | 90 / 23 | 商品名与品牌名 |
+| 官网首页 / 桌面版落地页 | 162 / 45 | 营销长句、演示对话、品牌名 |
+| 定价页 | 46 / 44 | 营销长句、方案名 |
+| CLI 页 | 101 / 40 | 示例代码、营销长句 |
+| 应用内 `/app`、`/chat`（登出或跳浏览器时可见） | 92 / 9、8 / 5 | 品牌名 |
+
+> 这些数字来自 `tests/routes.test.js`，跑法见 `tests/README.md`；未命中里绝大多数是品牌、商品名、示例代码，属于有意保留英文的部分。
+| 商店页（/store） | 60 / 35 | 商品名、计价与营销长句 |
 
 ## 已知情况
 
@@ -86,10 +93,20 @@ npm run test:all          # 上面全部（需要本机装了 Chrome）
 ```
 dict/            词表批次（00-core / 10-chrome / 15-nouns / 20-ui / 30-shell / _rules.json）
 src/engine.js    引擎模板（构建时注入词表与规则）
-tools/           build / audit / patch-app（注入与还原）/ asar 读写 / gen-main-strings / style-history / coverage / fix-dict
+tools/           build / audit / patch-app（注入与还原）/ asar 读写 / gen-main-strings / style-history / coverage
 tests/           jsdom 引擎测试 + Chrome 集成测试
 dist/            构建产物（安装器只认这里）
 FreebuffZhPatch.ps1   安装器：Install / Restore / Status / Verify
+```
+
+页面里的调试口（浏览器控制台可用）：
+
+```js
+__FREEBUFF_ZH__.stats()      // { applied, misses, entries }
+__FREEBUFF_ZH__.dump()       // 已翻译条数 + 未命中的英文清单
+__FREEBUFF_ZH__.translate('New chat')   // 单条试译，返回中文或 null
+__FREEBUFF_ZH__.setEnabled(false)       // 立刻停翻（断开 observer、清空队列）；true 重新扫一遍
+__FREEBUFF_ZH__.dispose()               // 卸载观察器与通知桥（升版重注入时自动用到）
 ```
 
 安装器的几条底线（沿用 Capy 中文补丁的经验）：

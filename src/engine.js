@@ -399,9 +399,10 @@
   /* ---------------------------------------------------------------- 启动 */
 
   let observer = null
+  let enabled = !isDisabled()
 
   function start() {
-    if (isDisabled()) return
+    if (!enabled) return
     if (document.body.getElementsByTagName('*').length < 1500) translateTree(document.body)
     else scanChunked(document.body)
 
@@ -453,21 +454,30 @@
   }
 
   globalThis.__FREEBUFF_ZH__ = {
-    bridge: (text, kind) => translateFor(kind === 'body' ? 'body' : 'title', text),
     id: PATCH_ID,
     version: PATCH_VERSION,
     entries: exact.size,
     rules: compiled.length,
     stats: () => ({ applied, misses: misses.size, entries: exact.size }),
     dump: () => ({ applied, misses: [...misses.keys()] }),
-    rescan: () => translateTree(document.body),
     translate: (value) => translateValue(value),
     dispose,
+    // 运行期开关：关掉立刻停（断开 observer、清空待翻队列），打开则重新扫一遍并接上 observer。
     setEnabled(on) {
+      enabled = Boolean(on)
       try {
-        if (on) window.localStorage.removeItem(DISABLE_KEY)
+        if (enabled) window.localStorage.removeItem(DISABLE_KEY)
         else window.localStorage.setItem(DISABLE_KEY, '1')
       } catch (error) {}
+      if (!enabled) {
+        if (observer) observer.disconnect()
+        observer = null
+        pending = []
+        pendingSet = new Set()
+        return false
+      }
+      if (!observer) start()
+      return true
     },
   }
 
@@ -477,8 +487,20 @@
       if (window.requestIdleCallback) window.requestIdleCallback(() => start(), { timeout: 2000 })
       else setTimeout(start, 250)
     }
-    if (document.readyState === 'complete') setTimeout(kick, 1200)
-    else window.addEventListener('load', () => setTimeout(kick, 1200), { once: true })
+    if (document.readyState === 'complete') {
+      setTimeout(kick, 1200)
+      return
+    }
+    let scheduled = false
+    const go = () => {
+      if (scheduled) return
+      scheduled = true
+      setTimeout(kick, 1200)
+    }
+    window.addEventListener('load', go, { once: true })
+    // load 会被图片、统计脚本拖到十几秒（商店页实测 9 秒还没触发）；给一个 4 秒上限，
+    // 到点就开跑：水合在 DOMContentLoaded 后基本已完成，多等这几秒只是防抖。
+    setTimeout(go, 4000)
   }
 
   // 桥要在脚本一落地就挂上：主世界的 shim 可能比首屏翻译更早构造通知。
