@@ -2,7 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const puppeteer = require('puppeteer-core')
 
-const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+const CHROME = require('./chrome').resolveChrome()
 const withPatch = process.argv[2] === 'patch'
 const script = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-cn.js'), 'utf8')
 

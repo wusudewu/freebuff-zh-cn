@@ -46,8 +46,9 @@ Freebuff\resources\
 
 - 词表是「英文原文 → 中文」的白名单，只做精确匹配 + 少量带变量规则（`Collapse {0}`、`{0} minutes ago`、`Daily hours: {0} of {1} remaining` 等）；
 - **只改文本节点的 `nodeValue` 和少数属性**（`placeholder`、`aria-label`、`title`、`alt` 等），绝不新增、移动、删除节点——改结构会让 React 抛 `removeChild` 异常并白屏；
+- 属性翻译有个例外：**`textarea` 整体跳过**（那是用户输入区，占位符也保持英文），所以 `<input>` 的 placeholder 会翻、`<textarea>` 的不会；
 - `code / pre / textarea / contenteditable / .cm-editor / .xterm` 与 `[data-freebuff-zh-skip]` 子树一律跳过；
-- 首屏在 `load` 之后再等 1.2 秒才开始翻译，避开 Next.js 的水合（hydration）对比，否则 React 会报 `#418` 文本不匹配；
+- 首屏在 `load` 之后再等 1.2 秒才开始翻译，避开 Next.js 的水合（hydration）对比，否则 React 会报 `#418` 文本不匹配；`load` 被图片/统计脚本拖住时，最多等 4 秒就开跑；
 - 之后由 `MutationObserver` 跟随 React 的增量渲染继续翻译。
 
 ## 实测覆盖
@@ -65,7 +66,6 @@ Freebuff\resources\
 | 应用内 `/app`、`/chat`（登出或跳浏览器时可见） | 92 / 9、8 / 5 | 品牌名 |
 
 > 这些数字来自 `tests/routes.test.js`，跑法见 `tests/README.md`；未命中里绝大多数是品牌、商品名、示例代码，属于有意保留英文的部分。
-| 商店页（/store） | 60 / 35 | 商品名、计价与营销长句 |
 
 ## 已知情况
 

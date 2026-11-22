@@ -156,7 +156,6 @@
     if (core.length === 0) return null
 
     let out = mixed ? undefined : exact.get(core)
-    if (out !== undefined && mixed) out = undefined
     if (out === undefined && !mixed) out = collapsed.get(core.replace(SPACE, ' ').trim())
     if (out === undefined) {
       const last = core.slice(-1)
@@ -402,7 +401,7 @@
   let enabled = !isDisabled()
 
   function start() {
-    if (!enabled) return
+    if (!enabled || observer) return
     if (document.body.getElementsByTagName('*').length < 1500) translateTree(document.body)
     else scanChunked(document.body)
 

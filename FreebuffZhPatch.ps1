@@ -34,7 +34,12 @@ function Write-Step($message) {
   try {
     if (-not (Test-Path $StateRoot)) { New-Item -ItemType Directory -Force -Path $StateRoot | Out-Null }
     $line = '{0}  {1}' -f (Get-Date).ToString('s'), $message
-    [System.IO.File]::AppendAllText((Join-Path $StateRoot 'install.log'), $line + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
+    $logPath = Join-Path $StateRoot 'install.log'
+    # 只留一代历史：超过 512 KB 就滚成 install.log.1，长期用不会无限长大。
+    if ((Test-Path $logPath) -and ((Get-Item -LiteralPath $logPath).Length -gt 512KB)) {
+      Move-Item -LiteralPath $logPath -Destination "$logPath.1" -Force
+    }
+    [System.IO.File]::AppendAllText($logPath, $line + [Environment]::NewLine, (New-Object System.Text.UTF8Encoding($false)))
   } catch { }
 }
 function Fail($message) { Write-Host ""; Write-Host "× $message" -ForegroundColor Red; exit 1 }

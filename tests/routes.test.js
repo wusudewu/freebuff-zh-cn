@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 const puppeteer = require('puppeteer-core')
 
-const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+const CHROME = require('./chrome').resolveChrome()
 const script = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-cn.js'), 'utf8')
 // /models 已下线（HTTP 404，测到的是「页面不存在」），从列表里去掉；
 // /store 是正常的 SPA 页面（200），引擎能装上，别因为某次跑出 0 就当它失效。

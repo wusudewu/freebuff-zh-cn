@@ -12,7 +12,7 @@ const puppeteer = require('puppeteer-core')
 
 const APP_DIR = process.env.FREEBUFF_DIR || path.join(process.env.LOCALAPPDATA || '', 'Programs', '@codebufffreebuff-desktop')
 const UI_DIR = path.join(APP_DIR, 'resources', 'orchestrator', 'ui')
-const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+const CHROME = require('./chrome').resolveChrome()
 const PORT = 8794
 const script = fs.readFileSync(path.join(__dirname, '..', 'dist', 'freebuff-zh-cn.js'), 'utf8')
 

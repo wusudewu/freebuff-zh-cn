@@ -7,7 +7,7 @@ const puppeteer = require('puppeteer-core')
 
 const APP_DIR = process.env.FREEBUFF_DIR || path.join(process.env.LOCALAPPDATA || '', 'Programs', '@codebufffreebuff-desktop')
 const UI_DIR = path.join(APP_DIR, 'resources', 'orchestrator', 'ui')
-const CHROME = process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe'
+const CHROME = require('./chrome').resolveChrome()
 const OUT = path.join(__dirname, '..', 'scratch', 'shots')
 const PORT = 8795
 const MIME = { '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.woff2': 'font/woff2', '.json': 'application/json' }
