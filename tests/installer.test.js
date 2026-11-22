@@ -27,7 +27,7 @@ const appDir = makeBrokenApp()
 
 // 1) verify 对损坏的 asar 要给出结论（JSON + 非零退出），而不是抛异常
 const jsonFile = path.join(tmp, 'verify.json')
-const verify = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--asset', path.join(root, 'dist', 'freebuff-zh-cn.js'), '--json-out', jsonFile], { encoding: 'utf8' })
+const verify = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--asset', path.join(root, 'dist', 'freebuff-zh-cn.js'), '--json-out', jsonFile], { encoding: 'utf8', cwd: tmp })
 let report = null
 try { report = JSON.parse(fs.readFileSync(jsonFile, 'utf8')) } catch (error) { report = null }
 check('verify 对损坏 asar 非零退出', verify.status !== 0, `status=${verify.status}`)
@@ -35,9 +35,9 @@ check('verify 仍写出 JSON 结论', report !== null)
 check('verify 结论说明 asar 读不出来', Boolean(report && (report.problems || []).some((p) => p.includes('读不出来'))), report && JSON.stringify(report.problems))
 
 // 2) 等号形式的参数也要按用法错误处理
-const eq = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out=val'], { encoding: 'utf8' })
+const eq = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out=val'], { encoding: 'utf8', cwd: tmp })
 check('--json-out=val 被当成普通值（不误判为缺值）', eq.status === 0 || eq.status === 1, `status=${eq.status}`)
-const missing = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out'], { encoding: 'utf8' })
+const missing = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out'], { encoding: 'utf8', cwd: tmp })
 check('--json-out 缺值给出用法错误', missing.status === 2 && /需要一个文件路径/.test(missing.stderr || ''), `status=${missing.status}`)
 
 // 3) PowerShell 侧：对损坏 asar 跑 Status，必须是正常结论而不是 NativeCommandError
