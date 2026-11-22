@@ -117,6 +117,7 @@
   }
 
   const compiled = []
+  const badRules = []
   for (const rule of RULES) {
     const source = rule[0]
     const target = rule[1]
@@ -124,7 +125,11 @@
     for (const ch of source) pattern += ch === '\u0000' ? '(.{1,80}?)' : ch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     try {
       compiled.push([new RegExp('^' + pattern + '$', 'i'), target])
-    } catch (error) {}
+    } catch (error) {
+      // 写坏的规则会被静默跳过、永远不生效：留一条警告，并让 stats() 报出数量。
+      badRules.push(source)
+      if (window.console && console.warn) console.warn('Freebuff 中文补丁：规则无法编译', source, error && error.message)
+    }
   }
 
   function fill(template, groups) {
@@ -462,7 +467,8 @@
     version: PATCH_VERSION,
     entries: exact.size,
     rules: compiled.length,
-    stats: () => ({ applied, misses: misses.size, entries: exact.size }),
+    badRules: badRules.length,
+    stats: () => ({ applied, misses: misses.size, entries: exact.size, rules: compiled.length, badRules: badRules.length }),
     dump: () => ({ applied, misses: [...misses.keys()] }),
     translate: (value) => translateValue(value),
     dispose,
