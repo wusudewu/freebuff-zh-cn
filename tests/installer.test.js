@@ -41,7 +41,13 @@ if (fs.existsSync(eqFile)) fs.rmSync(eqFile, { force: true })
 const eq = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out=val'], { encoding: 'utf8', cwd: tmp })
 let eqReport = null
 try { eqReport = JSON.parse(fs.readFileSync(eqFile, 'utf8')) } catch (error) { eqReport = null }
-check('--json-out=val 按路径处理并写出结果', eqReport !== null && typeof eqReport.ok === 'boolean', `status=${eq.status} 文件存在=${fs.existsSync(eqFile)}`)
+check(
+  '--json-out=val 按路径处理并写出 verify 报告',
+  eqReport !== null && typeof eqReport.ok === 'boolean' && Array.isArray(eqReport.problems),
+  `status=${eq.status} 文件存在=${fs.existsSync(eqFile)}`,
+)
+const empty = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out='], { encoding: 'utf8', cwd: tmp })
+check('--json-out= 空值给出用法错误', empty.status === 2 && /需要一个文件路径/.test(empty.stderr || ''), `status=${empty.status}`)
 const missing = spawnSync(process.execPath, [patchApp, 'verify', '--app-dir', appDir, '--json-out'], { encoding: 'utf8', cwd: tmp })
 check('--json-out 缺值给出用法错误', missing.status === 2 && /需要一个文件路径/.test(missing.stderr || ''), `status=${missing.status}`)
 

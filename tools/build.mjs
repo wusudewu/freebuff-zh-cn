@@ -36,6 +36,13 @@ for (const file of files.sort()) {
 const ruleFile = path.join(dictDir, '_rules.json')
 if (fs.existsSync(ruleFile)) {
   const data = JSON.parse(fs.readFileSync(ruleFile, 'utf8'))
+  // from+to 完全相同的规则一定冗余；from 不同、to 相同是「同一句中文的多种英文写法」，合法。
+  const seenRules = new Set()
+  for (const rule of data.rules || []) {
+    const key = `${rule.from}|||${rule.to}`
+    if (seenRules.has(key)) throw new Error(`_rules.json: 规则完全重复 -> ${JSON.stringify(rule)}`)
+    seenRules.add(key)
+  }
   for (const rule of data.rules || []) {
     const from = String(rule.from || '')
     const to = String(rule.to || '')
