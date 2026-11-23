@@ -82,6 +82,7 @@ Freebuff\resources\
 ```
 npm run build            # dict/*.json → dist/freebuff-zh-cn.js（有冲突直接失败、不落盘）
 node tools/audit.mjs     # 地区用词、标点、机器味、长度检查
+node tools/probe-anchors.mjs   # Freebuff 升级后先跑：检查安装器依赖的锚点是否还在
 cd tests && npm install
 
 npm test                 # 离线八件：构建 / 安装器错误路径 / asar 手术往返 / 引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，约一分钟）
@@ -97,7 +98,7 @@ dict/            词表批次 18 个：00-core / 05-datetime / 10-chrome / 15-no
                  50-site / 60-errors / 70-deep / 80-integrations / 85-countries / 90-account / 95-last /
                  97-runtime / 99-final，外加 _rules.json（带变量规则）
 src/engine.js    引擎模板（构建时注入词表与规则）
-tools/           build / audit / patch-app（注入与还原）/ asar 读写 / gen-main-strings / style-history / coverage
+tools/           build / audit / patch-app（注入与还原）/ asar 读写 / gen-main-strings / probe-anchors / style-history / coverage
 tests/           jsdom 引擎测试 + Chrome 集成测试
 dist/            构建产物（安装器只认这里）
 FreebuffZhPatch.ps1   安装器：Install / Restore / Status / Verify

@@ -150,5 +150,8 @@
  "Copying…": "正在复制…",
  "Stopping…": "正在停止…",
  "Importing…": "正在导入…",
- "Uploading…": "正在上传…"
+ "Uploading…": "正在上传…",
+ "Send a message to start this chat, then browse here with the agent.": "先发一条消息开始此对话，再让智能体在这里浏览。",
+ "Open panel tab": "打开面板标签页",
+ "Search or enter URL": "搜索或输入网址"
 }

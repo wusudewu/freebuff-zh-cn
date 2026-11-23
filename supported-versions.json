@@ -1,6 +1,7 @@
 {
   "versions": [
-    "0.0.204"
+    "0.0.204",
+    "0.0.205"
   ],
-  "note": "Freebuff Desktop 0.0.204 适配；其他版本请先确认 app.asar 结构再更新本清单"
+  "note": "Freebuff Desktop 0.0.204 / 0.0.205 已适配；其他版本请先跑 node tools/probe-anchors.mjs 确认锚点再更新本清单"
 }

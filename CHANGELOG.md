@@ -1,5 +1,16 @@
 # 更新日志
 
+## 0.3.13 · 2026-11-23
+
+跟进 Freebuff **0.0.205**：
+
+- 新包锚点全命中（360 个条目；`attachWindow`、原生菜单、对话框、57 处主进程文案一个没变），
+  主进程字符串表按新包重新生成；`supported-versions.json` 加上 0.0.205。
+- 新增版本升级用的结构探针 `tools/probe-anchors.mjs`：升级后先跑一次，就能知道哪些锚点要跟进、
+  或哪个文件改名/被删，不必等安装失败才发现。
+- 0.0.205 的新界面文案补译 3 条：`Open panel tab`→打开面板标签页、`Search or enter URL`→搜索或输入网址、
+  `Send a message to start this chat, then browse here with the agent.`→先发一条消息开始此对话，再让智能体在这里浏览。
+
 ## 0.3.12 · 2026-11-23
 
 安装器日志与边角：
