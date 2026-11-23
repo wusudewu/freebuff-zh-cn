@@ -6,6 +6,13 @@
 > 补丁只改界面文字：不联网、不上报、不读账号或会话内容。
 > Freebuff、Buffy 及各模型/产品名称的所有权归其各自权利人，本项目与 Freebuff 官方无关。
 
+## 界面预览
+
+以下截图均为打补丁后的真实界面（免费版主界面、侧栏与聊天页）：
+
+| 项目主页 | 主界面 / 项目侧栏 | 新建对话 |
+| --- | --- | --- |
+| ![Freebuff 中文首页](docs/screenshots/home-zh.png) | ![Freebuff 中文主界面](docs/screenshots/projects-zh.png) | ![Freebuff 中文聊天页](docs/screenshots/chat-zh.png) |
 ## 三步安装
 
 1. 先装好 Freebuff 官方桌面版，并**完全退出**（含托盘图标）。
