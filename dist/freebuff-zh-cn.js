@@ -9,7 +9,7 @@
   'use strict'
 
   const PATCH_ID = 'freebuff-zh-cn'
-  const PATCH_VERSION = '0.3.11'
+  const PATCH_VERSION = '0.3.12'
   const existing = globalThis.__FREEBUFF_ZH__
   if (existing && existing.id === PATCH_ID && existing.version === PATCH_VERSION) return
   if (existing && existing.dispose) {

@@ -77,18 +77,17 @@ function Clear-OldBackups([string]$KeepDir, [int]$KeepCount) {
     $backupRoot = Join-Path $StateRoot 'backup'
     if (-not (Test-Path $backupRoot)) { return }
     $all = @(Get-ChildItem -LiteralPath $backupRoot -Directory | Sort-Object Name -Descending)
-    $keep = @($KeepDir)
-    $kept = 0
+    $kept = 1
     $removed = 0
     foreach ($dir in $all) {
       if ($dir.FullName -eq $KeepDir) { continue }
-      if ($kept -lt $KeepCount) { $kept += 1; continue }
+      if ($kept -le $KeepCount) { $kept += 1; continue }
       try {
         Remove-Item -LiteralPath $dir.FullName -Recurse -Force -ErrorAction Stop
         $removed += 1
       } catch { }
     }
-    if ($removed -gt 0) { Write-Step "清理旧备份 $removed 份（保留最近 $KeepCount 份）" }
+    if ($removed -gt 0) { Write-Step "清理旧备份 $removed 份（保留本次 1 份 + 之前 $KeepCount 份）" }
   } catch { }
 }
 
@@ -307,7 +306,7 @@ function Install-Patch {
   }
 
   New-Item -ItemType Directory -Force -Path $StateRoot | Out-Null
-  $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+  $stamp = Get-Date -Format 'yyyyMMdd-HHmmss-fff'
   $backupDir = Join-Path $StateRoot ("backup\$appVersion-$stamp")
   New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
   Write-Step "备份到 $backupDir"
@@ -360,6 +359,7 @@ function Install-Patch {
   Write-Host '✓ 安装完成' -ForegroundColor Green
   Write-Host "  中文界面在重新打开 Freebuff 后生效；词表共 $($meta.entries) 条。"
   Write-Host '  想还原：双击「恢复英文.cmd」。'
+  Write-Host '  若 Freebuff 之后自动更新，补丁会被覆盖，重跑一次「安装.cmd」即可。'
   Write-Host ''
 }
 
