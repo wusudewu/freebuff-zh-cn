@@ -153,6 +153,8 @@ setTimeout(async () => {
     ['shadow DOM', shadow.textContent === '新建项目'],
     ['nav 无英文残留', !/Home|Sites|Projects|Settings/.test(nav.textContent)],
     ['调试口可用', typeof window.__FREEBUFF_ZH__.stats === 'function' && window.__FREEBUFF_ZH__.stats().applied > 10],
+    // 规则编译失败现在会 warn + 计数；当前数据不应有坏规则（这条锁住字段与口径）
+    ['没有编译失败的规则', window.__FREEBUFF_ZH__.stats().badRules === 0 && window.__FREEBUFF_ZH__.stats().rules === 55],
     ['通知被主世界 shim 包装', typeof window.Notification === 'function' && window.Notification.__freebuffZh === true],
     // 真正的「只包装一次」：重复执行 shim 不会换掉同一个包装对象。
     ['通知只包装一次', repeatedShim === window.Notification && window.__freebuffZhMain === true],
