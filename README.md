@@ -82,7 +82,7 @@ Freebuff\resources\
 ```
 npm run build            # dict/*.json → dist/freebuff-zh-cn.js（有冲突直接失败、不落盘）
 node tools/audit.mjs     # 地区用词、标点、机器味、长度检查
-node tools/probe-anchors.mjs   # Freebuff 升级后先跑：检查安装器依赖的锚点是否还在
+node tools/probe-anchors.mjs   # Freebuff 升级后先跑：检查安装器依赖的锚点是否还在（对原始包用 --asar <app.asar>）
 cd tests && npm install
 
 npm test                 # 离线八件：构建 / 安装器错误路径 / asar 手术往返 / 引擎 / 结构 / 对抗 / 分片 / 性能（jsdom，约一分钟）

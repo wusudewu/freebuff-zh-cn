@@ -10,6 +10,10 @@
   或哪个文件改名/被删，不必等安装失败才发现。
 - 0.0.205 的新界面文案补译 3 条：`Open panel tab`→打开面板标签页、`Search or enter URL`→搜索或输入网址、
   `Send a message to start this chat, then browse here with the agent.`→先发一条消息开始此对话，再让智能体在这里浏览。
+- `probe-anchors.mjs` 认得「已打补丁的包」：对装好补丁的 asar 跑会直接拒绝并给出 `--asar <备份包>` 的用法，
+  不再满屏假警报（真漂移会被淹没）。
+- 口径统一：`Daily hours: {0} of {1} remaining` 的规则输出从「每日小时：」改成「每日小时数：」，
+  与词表 `Daily hours`→「每日小时数」的定稿一致。
 
 ## 0.3.12 · 2026-11-23
 

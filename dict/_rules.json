@@ -43,7 +43,7 @@
     },
     {
       "from": "Daily hours: {0} of {1} remaining",
-      "to": "每日小时：剩余 {0} / {1}"
+      "to": "每日小时数：剩余 {0} / {1}"
     },
     {
       "from": "{0} left of {1}",

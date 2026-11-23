@@ -37,7 +37,7 @@ setTimeout(() => {
     ['节点结构未变动', structural === 0],
     ['拆分节点仍是两个节点', doc.getElementById('a').children.length === 2],
     ['单节点句子已翻译', /运行/.test(sentence)],
-    ['带变量句子已翻译', /每日小时：剩余 5:00 \/ 5:00/.test(hours)],
+    ['带变量句子已翻译', /每日小时数：剩余 5:00 \/ 5:00/.test(hours)],
   ]
   let failed = 0
   for (const [name, ok] of checks) {
